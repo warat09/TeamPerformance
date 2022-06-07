@@ -1,0 +1,33 @@
+th{
+    padding: 10px 10px 10px 10px;
+}
+td{
+    padding: 10px 10px 10px 10px;
+}
+h2{
+    font-weight: bold;
+    font-size: 2rem;
+    font-family: 'Reenie Beanie'
+}
+.card{
+    background-color: bisque;
+    width: 100px;
+    height: 100px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    transform: rotate(-3deg);
+    padding-top: 5px;
+    display: block;
+    text-decoration:none;
+    border-radius: 2%;
+}
+.card .grap{
+    padding-top: 20px;
+}
+input{
+    font-weight: bold;
+    font-size: 2rem;
+    width: 50px;
+    background-color: bisque;
+    font-family: 'Reenie Beanie'
+}
+
