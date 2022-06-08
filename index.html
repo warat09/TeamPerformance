@@ -10,15 +10,18 @@
         <button onclick="addrow()">adduser</button>
         <input type="text" placeholder="Type Work..." id="mywork">
         <button onclick="addwork()">addwork</button>
-        <input type="text" placeholder="Type Work..." id="removework">
+            <select id="mySelect">
+              <option>selectworkremove</option>
+            </select>
         <button onclick="removework()">removework</button>
+
         
         <table id="mytable">
             <thead>
 
                 <tr>
-                    <td><h2>select</h2></td>
-                    <td><h2>Name</h2></td>
+                    <td>select</td>
+                    <td>Name</td>
                 </tr>
             </thead>
 
@@ -32,7 +35,7 @@
                     <td>
                         <div class="card">
                             <div class="grap">
-                                <input type="text" id="row-0_col-0" `+`value="${inputuser}" value="User1"/>
+                                <input type="text" id="row-0_col-1" value="User1"/>
                             </div>
                         </div>
                     </td>
@@ -44,13 +47,15 @@
 
     </body>
     <script>
+        function myFunction() {
+        var x = document.getElementById("mySelect");
+        console.log(x.value)
+        }
         function onClick(){
-            let user1 = document.getElementById("user-1").value
-            let test1 = document.getElementById("score-1").value
-            let test2 = document.getElementById("score-2").value
-            let test3 = document.getElementById("score-3").value
-            let sum = Number(test1) + Number(test2) + Number(test3);
-             alert(sum)
+            let inputValue = document.getElementById("row-0_col-2").value; 
+
+            // let sum = Number(test1) + Number(test2) + Number(test3);
+             alert(inputValue)
         }
         const addrow =()=>{
             let table = document.getElementById("mytable")
@@ -68,7 +73,7 @@
                         cell2.innerHTML = `<th><div class="card"><div class="grap"><input type="text" id="row-`+(table.tBodies[0].rows.length-1)+`_col-`+(i)+`" `+`value="${inputuser}"/></div></div></th>`
                     }
                     else{
-                        cell2.innerHTML = `<th><div class="card"><div class="grap"><input type="text" id="row-`+(table.tBodies[0].rows.length-1)+`_col-`+(i)+`" `+`value="2"/></div></div></th>`
+                        cell2.innerHTML = `<th><div class="card"><div class="grap"><input type="text" id="row-`+(table.tBodies[0].rows.length-1)+`_col-`+(i)+`" `+`value=""/></div></div></th>`
                     }
                         // cell2.innerHTML = '[td] row:' + (table.tBodies[0].rows.length-1) + ', cell: '+i
                     
@@ -105,31 +110,41 @@
             }
             function removework() {
                 var tble = document.getElementById('mytable');
-                var inputremovework = document.getElementById("removework").value;
-                var newinput = `<h2>${inputremovework}</h2>`
+                var select = document.getElementById("mySelect");
+                var option = document.getElementById("mySelect").options;
+                var x = document.getElementById("mySelect").selectedIndex;
                 var row = tble.rows; // Getting the rows
-                for (var i = 0; i < row[0].cells.length; i++) {
+                if(option[x].index == 0){
+                    alert("pls select remove")
+                }
+                else{
+                    for (var i = 0; i < row[0].cells.length; i++) {
                     // Getting the text of columnName
                         var str = row[0].cells[i].innerHTML;
                         console.log(str)
-                        if(str == newinput) { 
+                        console.log(i)
+
+                        if(str == select.value) { 
                             if(i==0 || i==1){
                                 alert("no")
                                 break
                             }
                             else{
                                 for (var j = 0; j < row.length; j++) {
-                                    row[j].deleteCell(i);                            
+                                    row[j].deleteCell(i);
                                 }
+                                select.remove(i-1)
                             alert("found")
                             break
                             }
                         }
-                        else if(i == row[0].cells.length-1 && str != newinput){
+                        else if(i == row[0].cells.length-1 && str !=  select.value){
                             alert("notfound")
                         }
                     }
-        }
+                }
+
+            }
             const addwork =()=>{
                 let table = document.getElementById("mytable")
                 var tblHeadObj = document.getElementById("mytable").tHead;
@@ -140,7 +155,11 @@
                 for (var h=0; h<tblHeadObj.rows.length; h++) {
                     var newTH = document.createElement('td');
                     tblHeadObj.rows[h].appendChild(newTH);
-                    newTH.innerHTML = `<h2>${inputwork}</h2>`
+                    newTH.innerHTML = `${inputwork}`
+                    var select = document.getElementById("mySelect");
+                    var option = document.createElement("option");
+                    option.text = `${inputwork}`
+                    select.add(option)
                     // <h2>adsadas</h2>
                     // '[th] row:' + h + ', cell: ' + (tblHeadObj.rows[h].cells.length - 1)
                 }
