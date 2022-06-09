@@ -35,7 +35,7 @@
                     <td>
                         <div class="card">
                             <div class="grap">
-                                <input type="text" id="row-0_col-1" value="User1"/>
+                                <input type="text" name="array[]" id="row-0_col-1" value="User1"/>
                             </div>
                         </div>
                     </td>
@@ -44,18 +44,59 @@
         </table>
         <button onclick="onClick()">submit</button>
         <button onclick="removeuser()">removeuser</button>
+        <p id="par"></p>
+
 
     </body>
     <script>
+                var k = "The respective values are :";
         function myFunction() {
         var x = document.getElementById("mySelect");
         console.log(x.value)
         }
         function onClick(){
-            let inputValue = document.getElementById("row-0_col-2").value; 
-
+            // let inputValue = document.getElementById("row-0_col-2").value;
             // let sum = Number(test1) + Number(test2) + Number(test3);
-             alert(inputValue)
+            //  alert(inputValue)
+
+            var tRows = [];
+            var n = 0;
+            tab = document.getElementById('mytable');
+
+            for (var r = 0; r < tab.rows.length; r++) {
+            var tRow = [];// start new row array
+            for (var c = 1; c < tab.rows[r].cells.length; c++) {
+                // console.log(tRow[c-1]);
+                if(r ==0){
+                    tRow[c-1] = tab.rows[r].cells[c].innerHTML;
+                }
+                else{
+                    var input = document.getElementsByName('array[]');
+                    console.log(input)
+                        // tRow[c-1] = input[i].value;
+                        console.log(tRow);
+                        tRow[c-1] = input[n].value;
+                    n++
+                }
+
+                console.log(`row = ${r},col = ${c}`)
+       
+            }
+            tRows.push(tRow);
+            }
+            console.log(tRows);
+
+            // var input = document.getElementsByName('array[]');
+            // console.log(input[0].value)
+            // for (var i = 0; i < input.length; i++) {
+            //     var a = input[i];
+            //     k = k + "array[" + i + "].value= "
+            //                        + a.value + " ";
+            // }
+ 
+            // document.getElementById("par").innerHTML = k;
+
+
         }
         const addrow =()=>{
             let table = document.getElementById("mytable")
@@ -70,10 +111,10 @@
                         cell2.innerHTML = `<input type="checkbox" name="record">`
                     }
                     else if(i==1){
-                        cell2.innerHTML = `<th><div class="card"><div class="grap"><input type="text" id="row-`+(table.tBodies[0].rows.length-1)+`_col-`+(i)+`" `+`value="${inputuser}"/></div></div></th>`
+                        cell2.innerHTML = `<th><div class="card"><div class="grap"><input type="text" name="array[]" id="row-`+(table.tBodies[0].rows.length-1)+`_col-`+(i)+`" `+`value="${inputuser}"/></div></div></th>`
                     }
                     else{
-                        cell2.innerHTML = `<th><div class="card"><div class="grap"><input type="text" id="row-`+(table.tBodies[0].rows.length-1)+`_col-`+(i)+`" `+`value=""/></div></div></th>`
+                        cell2.innerHTML = `<th><div class="card"><div class="grap"><input type="text" name="array[]" id="row-`+(table.tBodies[0].rows.length-1)+`_col-`+(i)+`" `+`value="2"/></div></div></th>`
                     }
                         // cell2.innerHTML = '[td] row:' + (table.tBodies[0].rows.length-1) + ', cell: '+i
                     
@@ -167,7 +208,7 @@
                 var tblBodyObj = document.getElementById("mytable").tBodies[0];
                 for (var i=0; i<tblBodyObj.rows.length; i++) {
                     var newCell = tblBodyObj.rows[i].insertCell(-1);
-                    newCell.innerHTML = `<th><div class="card"><div class="grap"><input type="text" id="row-${i}_col-`+(tblBodyObj.rows[i].cells.length - 1)+`" `+`value=""/></div></div></th>`
+                    newCell.innerHTML = `<th><div class="card"><div class="grap"><input type="text" name="array[]" id="row-${i}_col-`+(tblBodyObj.rows[i].cells.length - 1)+`" `+`value="2"/></div></div></th>`
                     // newCell.innerHTML ='[th] row:' + i + ', cell: ' + (tblBodyObj.rows[i].cells.length - 1)
                 }
              }   
