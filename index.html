@@ -14,6 +14,7 @@
               <option>selectworkremove</option>
             </select>
         <button onclick="removework()">removework</button>
+        <button onclick="logout()">Logout</button>
 
         
         <table id="mytable">
@@ -49,7 +50,29 @@
 
     </body>
     <script>
-                var k = "The respective values are :";
+        var checktoken = localStorage.getItem("tokenlogin")
+
+         const main = async()=>{
+            if(checktoken == null) {
+            window.location.href = './login.html'
+            }
+            else{
+                const response = await fetch('http://localhost:9090/User/checktoken?' + new URLSearchParams({
+                    token: checktoken
+                }))
+                const responseStatus = await response.json();
+                if(responseStatus.status == "ex"){
+                    window.location.href = './login.html'
+                }
+            }
+        }
+        main();
+
+        const logout =()=>{
+            window.localStorage.clear();
+            window.location.href = './login.html'
+        }
+
         function myFunction() {
         var x = document.getElementById("mySelect");
         console.log(x.value)
@@ -95,8 +118,6 @@
             // }
  
             // document.getElementById("par").innerHTML = k;
-
-
         }
         const addrow =()=>{
             let table = document.getElementById("mytable")
