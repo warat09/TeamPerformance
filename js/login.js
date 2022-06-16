@@ -8,7 +8,8 @@ console.log(email)
 const response = await fetch('http://localhost:9090/User/login',{
     method:'post',
     headers:{
-        'Content-Type':'application/json'
+        'Content-Type':'application/json',
+        'Authorization': 'Bearer ' + this.state.clientToken,
     },
     body: JSON.stringify({
         "email":email,
