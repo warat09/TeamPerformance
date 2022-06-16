@@ -7,15 +7,7 @@ var cors =  require('cors')
 var config = require('./config/config')
 var user = require('./routes/Users')
 
-sql.connect((err)=>{
-    if(err){
-        console.log("connection lost sql err is ",err)
-    }
-    else{
-        console.log("connection success ")
-        startserver()
-    }
-})
+
 
 const startserver=()=>{
     router.use(morgan('dev'))
@@ -45,3 +37,4 @@ const startserver=()=>{
     console.log('Application started on port 9090!')
   );
 }
+startserver()
