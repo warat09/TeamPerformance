@@ -1,8 +1,12 @@
 var jwt = require('jsonwebtoken');
+var config = require('../config/config')
+
  
 exports.verifitoken= async(req,res,next)=>{
-    const authHeader = await req.header['access-token'];
-    const token = await authHeader;
+    const authHeader = await req.headers.authorization;
+    const token = await authHeader.split(' ')[1];
+
+    console.log(authHeader)
     if (!token) {
         return res.status(403).send("A token is required for authentication");
       }
@@ -10,9 +14,10 @@ exports.verifitoken= async(req,res,next)=>{
         jwt.verify(token,config.Token.TOKEN_SECRET,async (err, user) => {
             if (err) {
               console.log("tokeneex");
-              return res.json({ status:"ex",message: "tokeneex"});
+              return res.json({ status:0,message: "tokeneex"});
           } else {
-              return res.json({ status:"ok",message: "notex"});
+            console.log("tokennotex");
+              return res.json({ status:1,email:user.User_email,message: "notex"});
             }
           })
       } catch (err) {

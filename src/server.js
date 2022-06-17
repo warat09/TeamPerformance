@@ -6,6 +6,7 @@ var morgan = require('morgan')
 var cors =  require('cors')
 var config = require('./config/config')
 var user = require('./routes/Users')
+var department = require("./routes/Departments")
 
 
 
@@ -27,6 +28,7 @@ const startserver=()=>{
         next();
       });
     router.use("/User", user);
+    router.use("/Department",department)
     router.get("/ping", (req, res, next) =>
     res.status(200).json({ message: "Hello!!!!" })
     );

@@ -62,66 +62,39 @@ exports.Login =(req,res,next)=>{
     var password = req.body.password;
     console.log("Login email",email);
     console.log("Login password",password);
-    // bcrypt.compare(Password, user!.User_Password)
     try{
         sql.login(email).then(result=>{
-            console.log(result)
-            if(result.status == 1){
-                // var hashpassword = result[0].password
-        //             console.log(hashpassword)
-        //             bcrypt.compare(password, hashpassword).then((result) => {
-        //                 console.log(result)
-        //                 if (result) {
-        //                   const token = jwt.sign(
-        //                     { User_email: email },
-        //                     config.Token.TOKEN_SECRET,
-        //                     { expiresIn: "30d" }
-        //                   );
-        //                 return res.json({ status:"ok",message: "Login Success!! ",token});
-        //                 } else {
-        //                 return res.status(400).json({ message: "Password not corrct "});
-        //                 }
-        //               });
-        //         }
-        //         else{
-        //             return res.status(400).json({message:"email not exit"});
-        //         }
-                const token = jwt.sign(
-                                        { User_email: email },
-                                        config.Token.TOKEN_SECRET,
-                                        { expiresIn: "30d" }
-                                      );
-                return res.json({ status:"ok",message: "Login Success!! ",token});
+            console.log("checkdata",Object.keys(result.data).length)
+            // if(result){
+            //     console.log("no data")
+            // }
+            // if(result.status == 1){
+            //     const token = jwt.sign(
+            //      { User_email: email },
+            //     config.Token.TOKEN_SECRET,
+            //     { expiresIn: "30d" }
+            //     );
+            //     console.log(token)
+            //     return res.json({ status:1,message: "Login Success!! ",token});
+            // }
+            if(Object.keys(result.data).length == 0){
+                console.log("0000")
             }
+            else{
+                // console.log("111")
+                // bcrypt.compare(password, result.data.password)
+                if(result.status == 1){
+                const token = jwt.sign(
+                 { User_email: email },
+                config.Token.TOKEN_SECRET,
+                { expiresIn: "30d" }
+                );
+                console.log(token)
+                return res.json({ status:1,message: "Login Success!! ",token});
+                }
+            }
+
         })
-        // sql.query("SELECT COUNT(email) AS Count,password FROM User WHERE email = ?",[email],(err,result)=>{
-        //     if(err){
-        //         console.log("Error select ",err);
-        //         return res.status(400).send();
-        //     }
-        //     else{
-        //         if(result[0].Count != 0){
-        //             var hashpassword = result[0].password
-        //             console.log(hashpassword)
-        //             bcrypt.compare(password, hashpassword).then((result) => {
-        //                 console.log(result)
-        //                 if (result) {
-        //                   const token = jwt.sign(
-        //                     { User_email: email },
-        //                     config.Token.TOKEN_SECRET,
-        //                     { expiresIn: "30d" }
-        //                   );
-        //                 return res.json({ status:"ok",message: "Login Success!! ",token});
-        //                 } else {
-        //                 return res.status(400).json({ message: "Password not corrct "});
-        //                 }
-        //               });
-        //         }
-        //         else{
-        //             return res.status(400).json({message:"email not exit"});
-        //         }
-        //     }
-        // })
     }catch(err){
         console.log("error is",err);
         return res.status(500).send()
