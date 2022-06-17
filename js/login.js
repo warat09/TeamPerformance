@@ -8,8 +8,7 @@ console.log(email)
 const response = await fetch('http://localhost:9090/User/login',{
     method:'post',
     headers:{
-        'Content-Type':'application/json',
-        'Authorization': 'Bearer ' + this.state.clientToken,
+        'Content-Type':'application/json'    
     },
     body: JSON.stringify({
         "email":email,
@@ -19,7 +18,8 @@ const response = await fetch('http://localhost:9090/User/login',{
 })
 
 const responseStatus = await response.json();
-if(responseStatus.status == "ok"){
+console.log(responseStatus.status)
+if(responseStatus.status == 1){
     localStorage.setItem("tokenlogin",responseStatus.token)
     window.location.href = './index.html'
     console.log("ok mak")

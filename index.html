@@ -6,48 +6,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Reenie+Beanie&display=swap" rel="stylesheet">
     </head>
     <body>
-        <input type="text" placeholder="Type User..." id="myuser">
-        <button onclick="addrow()">adduser</button>
-        <input type="text" placeholder="Type Work..." id="mywork">
-        <button onclick="addwork()">addwork</button>
-            <select id="mySelect">
-              <option>selectworkremove</option>
-            </select>
-        <button onclick="removework()">removework</button>
-        <button onclick="logout()">Logout</button>
-
-        
-        <table id="mytable">
-            <thead>
-
-                <tr>
-                    <td>select</td>
-                    <td>Name</td>
-                </tr>
-            </thead>
-
-            <tbody>
-                <tr>
-                    <td>
-                            <div class="grap">
-                                <input type="checkbox" name="record">
-                            </div>
-                    </td>
-                    <td>
-                        <div class="card">
-                            <div class="grap">
-                                <input type="text" name="array[]" id="row-0_col-1" value="User1"/>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <button onclick="onClick()">submit</button>
-        <button onclick="removeuser()">removeuser</button>
         <p id="par"></p>
-
-
     </body>
     <script>
         var checktoken = localStorage.getItem("tokenlogin")
@@ -57,12 +16,20 @@
             window.location.href = './login.html'
             }
             else{
-                const response = await fetch('http://localhost:9090/User/checktoken?' + new URLSearchParams({
-                    token: checktoken
-                }))
+                const response = await fetch('http://localhost:9090/User/checktoken',{
+                method:'GET',
+                headers:{
+                    'Content-Type':'application/json',
+                    'Authorization': 'Bearer ' + checktoken,
+                },
+                })
                 const responseStatus = await response.json();
-                if(responseStatus.status == "ex"){
+                console.log(responseStatus)
+                if(responseStatus.status == 0){
                     window.location.href = './login.html'
+                }
+                else{
+                    document.getElementById("par").innerHTML = responseStatus.email;
                 }
             }
         }
@@ -72,166 +39,5 @@
             window.localStorage.clear();
             window.location.href = './login.html'
         }
-
-        function myFunction() {
-        var x = document.getElementById("mySelect");
-        console.log(x.value)
-        }
-        function onClick(){
-            // let inputValue = document.getElementById("row-0_col-2").value;
-            // let sum = Number(test1) + Number(test2) + Number(test3);
-            //  alert(inputValue)
-
-            var tRows = [];
-            var n = 0;
-            tab = document.getElementById('mytable');
-
-            for (var r = 0; r < tab.rows.length; r++) {
-            var tRow = [];// start new row array
-            for (var c = 1; c < tab.rows[r].cells.length; c++) {
-                // console.log(tRow[c-1]);
-                if(r ==0){
-                    tRow[c-1] = tab.rows[r].cells[c].innerHTML;
-                }
-                else{
-                    var input = document.getElementsByName('array[]');
-                    console.log(input)
-                        // tRow[c-1] = input[i].value;
-                        console.log(tRow);
-                        tRow[c-1] = input[n].value;
-                    n++
-                }
-
-                console.log(`row = ${r},col = ${c}`)
-       
-            }
-            tRows.push(tRow);
-            }
-            console.log(tRows);
-
-            // var input = document.getElementsByName('array[]');
-            // console.log(input[0].value)
-            // for (var i = 0; i < input.length; i++) {
-            //     var a = input[i];
-            //     k = k + "array[" + i + "].value= "
-            //                        + a.value + " ";
-            // }
- 
-            // document.getElementById("par").innerHTML = k;
-        }
-        const addrow =()=>{
-            let table = document.getElementById("mytable")
-            var totalRowCount = table.tBodies[0].rows.length;
-            var tbodyColumnCount = table.rows[0].cells.length;
-            var row = table.insertRow(totalRowCount+1);
-            var inputuser = document.getElementById("myuser").value;
-
-                for(let i = 0;i < tbodyColumnCount;i++){
-                var cell2 = row.insertCell(i);
-                    if(i == 0){
-                        cell2.innerHTML = `<input type="checkbox" name="record">`
-                    }
-                    else if(i==1){
-                        cell2.innerHTML = `<th><div class="card"><div class="grap"><input type="text" name="array[]" id="row-`+(table.tBodies[0].rows.length-1)+`_col-`+(i)+`" `+`value="${inputuser}"/></div></div></th>`
-                    }
-                    else{
-                        cell2.innerHTML = `<th><div class="card"><div class="grap"><input type="text" name="array[]" id="row-`+(table.tBodies[0].rows.length-1)+`_col-`+(i)+`" `+`value="2"/></div></div></th>`
-                    }
-                        // cell2.innerHTML = '[td] row:' + (table.tBodies[0].rows.length-1) + ', cell: '+i
-                    
-                }
-                var totalRowCount = table.tBodies[0].rows.length;
-                var tbodyColumnCount = table.rows[0].cells.length;
-
-
-                console.log("rows is",totalRowCount)
-                console.log("columns is",tbodyColumnCount)
-            }
-            const removeuser=()=>{
-
-
-                    var table = document.getElementById("mytable").tBodies[0];
-                    var rowCount = table.rows.length;
-                    // console.log(rowCount)
-
-
-                    for(var i=1; i<rowCount; i++){
-                        var row = table.rows[i];
-                        // index of td contain checkbox is 8
-                        var chkbox = row.cells[0].getElementsByTagName('input')[0];
-                        console.log(i)
-                        console.log(chkbox.checked)
-                        if('checkbox' == chkbox.type && true == chkbox.checked) {
-                            table.deleteRow(i)
-                            rowCount--
-                            i--
-                        }
-                    }
-
-
-            }
-            function removework() {
-                var tble = document.getElementById('mytable');
-                var select = document.getElementById("mySelect");
-                var option = document.getElementById("mySelect").options;
-                var x = document.getElementById("mySelect").selectedIndex;
-                var row = tble.rows; // Getting the rows
-                if(option[x].index == 0){
-                    alert("pls select remove")
-                }
-                else{
-                    for (var i = 0; i < row[0].cells.length; i++) {
-                    // Getting the text of columnName
-                        var str = row[0].cells[i].innerHTML;
-                        console.log(str)
-                        console.log(i)
-
-                        if(str == select.value) { 
-                            if(i==0 || i==1){
-                                alert("no")
-                                break
-                            }
-                            else{
-                                for (var j = 0; j < row.length; j++) {
-                                    row[j].deleteCell(i);
-                                }
-                                select.remove(i-1)
-                            alert("found")
-                            break
-                            }
-                        }
-                        else if(i == row[0].cells.length-1 && str !=  select.value){
-                            alert("notfound")
-                        }
-                    }
-                }
-
-            }
-            const addwork =()=>{
-                let table = document.getElementById("mytable")
-                var tblHeadObj = document.getElementById("mytable").tHead;
-                var inputwork = document.getElementById("mywork").value;
-
-                var totalRowCount = table.tBodies[0].rows.length;
-                var tbodyColumnCount = table.rows[0].cells.length;
-                for (var h=0; h<tblHeadObj.rows.length; h++) {
-                    var newTH = document.createElement('td');
-                    tblHeadObj.rows[h].appendChild(newTH);
-                    newTH.innerHTML = `${inputwork}`
-                    var select = document.getElementById("mySelect");
-                    var option = document.createElement("option");
-                    option.text = `${inputwork}`
-                    select.add(option)
-                    // <h2>adsadas</h2>
-                    // '[th] row:' + h + ', cell: ' + (tblHeadObj.rows[h].cells.length - 1)
-                }
-
-                var tblBodyObj = document.getElementById("mytable").tBodies[0];
-                for (var i=0; i<tblBodyObj.rows.length; i++) {
-                    var newCell = tblBodyObj.rows[i].insertCell(-1);
-                    newCell.innerHTML = `<th><div class="card"><div class="grap"><input type="text" name="array[]" id="row-${i}_col-`+(tblBodyObj.rows[i].cells.length - 1)+`" `+`value="2"/></div></div></th>`
-                    // newCell.innerHTML ='[th] row:' + i + ', cell: ' + (tblBodyObj.rows[i].cells.length - 1)
-                }
-             }   
     </script>
 </html>
