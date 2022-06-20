@@ -1,16 +1,16 @@
 const {connection,mssql} = require("../config/db")
-const cmdqury = require("../sqlcommand/Department")
+const cmdqury = require("../sqlcommand/Job")
 const Iquery = require("../model/Iquery")
 const IAdd = require("../model/Iadd")
 
-exports.AddDepartment =async(input)=>{
+exports.AddJob =async(input)=>{
     let queryresult
-        const queryDepartment = cmdqury.AddDepartment()
+        const queryJob = cmdqury.AddJob()
         const pool = await connection
         await pool.request()
-        .input("department",mssql.NVarChar(100),input)
-        .query(queryDepartment)
-        .then(res=>{
+        .input("job",mssql.NVarChar(100),input)
+        .query(queryJob)
+        .then(()=>{
             console.log("YES add")
             queryresult = new IAdd(1,"success")
         }).catch(err=>{
@@ -19,13 +19,13 @@ exports.AddDepartment =async(input)=>{
         })
         return queryresult
 }
-exports.CheckDepartment =async(input)=>{
+exports.CheckJob =async(input)=>{
     let queryresult
-        const queryDepartment = cmdqury.CheckDepartment()
+        const queryJob = cmdqury.CheckJob()
         const pool = await connection
         await pool.request()
-        .input("department",mssql.NVarChar(100),input)
-        .query(queryDepartment)
+        .input("job",mssql.NVarChar(100),input)
+        .query(queryJob)
         .then(res=>{
             console.log(res.recordset)
             console.log("YES")

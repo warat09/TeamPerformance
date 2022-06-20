@@ -1,4 +1,3 @@
-const e = require("express");
 const sql = require("../query/department");
 
 exports.AddDepartment=async(req,res,next)=>{

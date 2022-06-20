@@ -5,8 +5,11 @@ const sql = require("./config/db");
 var morgan = require('morgan')
 var cors =  require('cors')
 var config = require('./config/config')
+
 var user = require('./routes/Users')
 var department = require("./routes/Departments")
+var member = require("./routes/Members")
+var job = require("./routes/Jobs")
 
 
 
@@ -29,6 +32,8 @@ const startserver=()=>{
       });
     router.use("/User", user);
     router.use("/Department",department)
+    router.use("/Member",member)
+    router.use("/Job",job)
     router.get("/ping", (req, res, next) =>
     res.status(200).json({ message: "Hello!!!!" })
     );
