@@ -8,3 +8,8 @@ exports.CheckJob =()=>{
     SELECT JOB FROM TleDatabase.dbo.[job] WHERE JOB = @job 
     `
 }
+exports.AllJob=()=>{
+    return `
+    SELECT * FROM TleDatabase.dbo.[job]
+    `
+}

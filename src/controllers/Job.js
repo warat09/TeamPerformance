@@ -25,5 +25,12 @@ exports.AddJob=async(req,res,next)=>{
         }
 }
 exports.AddJobToDepartment=async(req,res,next)=>{
-
+    try{
+        sql.JobToDepartment().then(result=>{
+            return res.json({job:result.queryresult,Department:result.queryresultDepartment});
+        })
+    }catch(err){
+        console.log("error is",err);
+        return res.status(500).send()
+        }
 }

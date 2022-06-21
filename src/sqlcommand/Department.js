@@ -8,3 +8,8 @@ exports.CheckDepartment =()=>{
     SELECT Department_Name FROM TleDatabase.dbo.[department] WHERE Department_Name = @department 
     `
 }
+exports.AllDepartment =()=>{
+    return `
+    SELECT * FROM TleDatabase.dbo.[department]
+    `
+}
