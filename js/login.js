@@ -1,4 +1,8 @@
 var form = document.getElementById('form')
+var checktoken = localStorage.getItem("tokenlogin")
+if(checktoken !== null) {
+    window.location.href = 'index.html'
+}
 form.addEventListener('submit',async(event)=>{
     event.preventDefault()
     var email = document.getElementById("email").value;
