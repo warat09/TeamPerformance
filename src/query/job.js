@@ -4,7 +4,7 @@ const cmdquryDepartment = require("../sqlcommand/Department")
 const Iquery = require("../model/Iquery")
 const IAdd = require("../model/Iadd")
 
-exports.AddJob =async(input)=>{
+exports.AddJob =async(input)=>{ 
     let queryresult
         const queryJob = cmdqury.AddJob()
         const pool = await connection
@@ -67,4 +67,22 @@ exports.JobToDepartment=async()=>{
 
 
     return {queryresult,queryresultDepartment}
+}
+
+exports.OptionJob =async(input)=>{
+    const queryJob = cmdqury.OptionJob()
+    const pool = await connection
+    await pool.request()
+    .input("job",mssql.NVarChar(100),input)
+    .query(queryJob)
+    .then(res=>{
+        console.log(res.recordset)
+        console.log("YES")
+        queryresult = res.recordset
+
+    }).catch(err=>{
+        console.log("NO")
+        queryresult = new Iquery(res.recordset,0,err.message)
+    })
+    return queryresult
 }

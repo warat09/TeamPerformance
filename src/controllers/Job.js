@@ -34,3 +34,16 @@ exports.AddJobToDepartment=async(req,res,next)=>{
         return res.status(500).send()
         }
 }
+exports.OptionJob =async(req,res,next)=>{
+    try{
+        var id = req.query.IdDepartment;
+        sql.OptionJob(id).then(result=>{
+            console.log(result)
+            return res.json({job:result});
+        })
+    }catch(err){
+        console.log("error is",err);
+        return res.status(500).send()
+    }
+
+}
