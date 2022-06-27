@@ -8,3 +8,13 @@ exports.CheckMember =()=>{
     SELECT MEMBER FROM TleDatabase.dbo.[member] WHERE MEMBER = @member 
     `
 }
+exports.AllMember=()=>{
+    return`
+    SELECT * FROM TleDatabase.dbo.[member]     
+    `
+}
+exports.OptionMember=()=>{
+    return`
+    
+    `
+}
