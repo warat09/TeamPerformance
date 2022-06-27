@@ -21,7 +21,7 @@ exports.AddJob =async(input)=>{
         return queryresult
 }
 exports.CheckJob =async(input)=>{
-    let queryresult
+        let queryresult
         const queryJob = cmdqury.CheckJob()
         const pool = await connection
         await pool.request()
@@ -38,35 +38,48 @@ exports.CheckJob =async(input)=>{
         })
         return queryresult
 }
-exports.JobToDepartment=async()=>{
-    const queryJob = cmdqury.AllJob()
-    const queryDepartment = cmdquryDepartment.AllDepartment()
+exports.CheckJobAddToDepartment=async(IdJob,IdDepartment)=>{
+    let queryresult
+    const queryCheckJobAndDepartment = cmdqury.CheckJobAddToDepartment()
     const pool = await connection
     await pool.request()
-    .query(queryJob)
+    .input("job",mssql.Int(4),IdJob)
+    .input("department",mssql.Int(4),IdDepartment)
+    .query(queryCheckJobAndDepartment)
     .then(res=>{
         console.log(res.recordset)
         console.log("YES")
-        queryresult = res.recordset
-
+        queryresult = new Iquery(res.recordset,1,"success")
     }).catch(err=>{
         console.log("NO")
         queryresult = new Iquery(res.recordset,0,err.message)
     })
+    return queryresult
+}
+exports.JobToDepartment=async(IdJob,IdDepartment)=>{
+    let queryresult
+    const queryAddJobToDepartment = cmdqury.AddJobToDepartment()
+    const pool = await connection
     await pool.request()
-    .query(queryDepartment)
-    .then(res=>{
-        console.log(res.recordset)
-        console.log("YES")
-        queryresultDepartment = res.recordset
-
+    .input("job",mssql.Int(4),IdJob)
+    .input("department",mssql.Int(4),IdDepartment)
+    .query(queryAddJobToDepartment)
+    .then(()=>{
+    console.log("YES add")
+    queryresult = new IAdd(1,"success")
     }).catch(err=>{
-        console.log("NO")
-        queryresultDepartment = new Iquery(res.recordset,0,err.message)
-    })
-
-
-    return {queryresult,queryresultDepartment}
+        console.log("no add")
+        queryresult = new IAdd(0,err.message)
+    })    
+    return queryresult
+}
+exports.AllJobToDepartment=async(Job,IdDepartment)=>{
+    const queryAllJobToDepartment = cmdqury.AddAllJobToDepartment()
+    const pool = await connection
+    await pool.request()
+    .input("job",mssql.NVarChar(100),Job)
+    .input("department",mssql.Int(4),IdDepartment)
+    .query(queryAllJobToDepartment)
 }
 
 exports.OptionJob =async(input)=>{

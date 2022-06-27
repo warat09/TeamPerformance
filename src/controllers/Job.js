@@ -1,4 +1,6 @@
 const sql = require("../query/job");
+const sqldepartment = require("../query/department");
+
 
 exports.AddJob=async(req,res,next)=>{
     var job = req.body.job;
@@ -7,7 +9,14 @@ exports.AddJob=async(req,res,next)=>{
             if(Object.keys(result.data).length == 0){
                 sql.AddJob(job).then(result=>{
                     if(result.status == 1){
-                        return res.json({ status:1,message: `Insert Job ${job} success`});
+                        sqldepartment.AllDepartment().then(result=>{
+                            let lengthdepartment = Object.keys(result).length
+                            console.log(lengthdepartment)
+                            for(let i = 0;i < lengthdepartment;i++){
+                                sql.AllJobToDepartment(job,result[i].ID)
+                            }
+                        })
+                        // return res.json({ status:1,message: `Insert Job ${job} success`});
                     }
                     else{
                         return res.json({ status:0,message: `Can't Insert Job ${job}`});
@@ -26,8 +35,23 @@ exports.AddJob=async(req,res,next)=>{
 }
 exports.AddJobToDepartment=async(req,res,next)=>{
     try{
-        sql.JobToDepartment().then(result=>{
-            return res.json({job:result.queryresult,Department:result.queryresultDepartment});
+        var Id_Job = req.body.job;
+        var Id_Department = req.body.department;
+        console.log(Id_Department," ",Id_Job)
+        sql.CheckJobAddToDepartment(Id_Job,Id_Department).then(result=>{
+            if(Object.keys(result.data).length == 0){
+                sql.JobToDepartment(Id_Job,Id_Department).then(result=>{
+                    if(result.status == 1){
+                        return res.json({ status:1,message: `Insert Job success`});
+                    }
+                    else{
+                        return res.json({ status:0,message: `Can't Insert Job`});
+                    }
+                })
+            }
+            else{
+                return res.json({ status:0,message: "have Job"});
+            }
         })
     }catch(err){
         console.log("error is",err);
