@@ -5,7 +5,7 @@ form.addEventListener("submit",async(event)=>{
     var job = document.getElementById("job").value
     const response = await fetch('http://localhost:9090/Job/AddJob',{
         method:'post',
-        headers:{
+        headers:{   
             'Content-Type':'application/json'    
         },
         body: JSON.stringify({

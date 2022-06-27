@@ -4,12 +4,11 @@ var selectjob = document.getElementById("job")
 selectjob[0]= new Option("pls select department to add job");
 
 
-fetch('http://localhost:9090/Job/AddJobToDepartment')
+fetch('http://localhost:9090/Department/AllDepartment')
   .then(res => res.json())
   .then(data =>{
-    var job = data.job
+    // var job = data.job
     var department = data.Department
-    console.log(job)
     for (i=0;i<department.length+1;i++){
         if(i==0){
             select.options[i] = new Option("selecysepartment");
@@ -17,7 +16,7 @@ fetch('http://localhost:9090/Job/AddJobToDepartment')
         else{
             select.options[i] = new Option(department[i-1].Department_Name,department[i-1].ID);
         }
-  }
+    }
   } )
 
   form.addEventListener('submit',async(event)=>{
@@ -29,8 +28,21 @@ fetch('http://localhost:9090/Job/AddJobToDepartment')
     console.log("Job id is ",y.value)
     console.log("Department index is ",x.selectedIndex)
     console.log("Job index is ",y.selectedIndex)
-    if(x !=0 && y !=0){
-      selectjob.remove(selectjob.selectedIndex)
+    if(x.selectedIndex !=0 && y.selectedIndex !=0){
+      const response = await fetch('http://localhost:9090/Job/AddJobToDepartment',{
+          method:'post',
+          headers:{
+              'Content-Type':'application/json'    
+          },
+          body: JSON.stringify({
+              "job":y.value,
+              "department":x.value
+          })
+      })
+
+      const responseStatus = await response.json();
+      console.log(responseStatus)
+        selectjob.remove(selectjob.selectedIndex)
     }
 
 })
