@@ -8,7 +8,14 @@ exports.AddDepartment=async(req,res,next)=>{
             if(Object.keys(result.data).length == 0){
                 sql.AddDepartment(department).then(result=>{
                     if(result.status == 1){
-                        sqljob.CheckJob
+                        sqljob.AllJob().then(result=>{
+                            console.log("result is ",result)
+                            let lengthjob = Object.keys(result).length
+                            console.log("lengthjob is ",lengthjob)
+                            for(let i = 0;i < lengthjob;i++){
+                                sql.AllJobToDepartment(result[i].ID,department)
+                            }
+                        })
                         
                     }
                     else{

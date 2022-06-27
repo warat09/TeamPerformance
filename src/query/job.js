@@ -82,6 +82,29 @@ exports.AllJobToDepartment=async(Job,IdDepartment)=>{
     .query(queryAllJobToDepartment)
 }
 
+exports.AllJob=async()=>{
+    try{
+        const queryAllJob = cmdqury.AllJob()
+        const pool = await connection
+        await pool.request()
+        .query(queryAllJob)
+        .then(res=>{
+            console.log(res.recordset)
+            console.log("YES")
+            queryresult = res.recordset
+    
+        }).catch(err=>{
+            console.log("NO")
+            queryresult = new Iquery(res.recordset,0,err.message)
+        })
+
+    }catch(err){
+        console.log("error is",err);
+        return res.status(500).send()
+        }
+        return queryresult
+}
+
 exports.OptionJob =async(input)=>{
     const queryJob = cmdqury.OptionJob()
     const pool = await connection

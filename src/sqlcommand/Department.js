@@ -13,3 +13,8 @@ exports.AllDepartment =()=>{
     SELECT * FROM TleDatabase.dbo.[department]
     `
 }
+exports.AddAllJobToDepartment=()=>{
+    return`
+    INSERT INTO TleDatabase.dbo.[all_job_department] (ID_JOB,ID_DEPARTMENT) VALUES (@job,(SELECT ID  FROM TleDatabase.dbo.[department] WHERE Department_Name = @department))    
+    `
+}

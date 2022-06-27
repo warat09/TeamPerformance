@@ -54,6 +54,11 @@ exports.AllDepartment =async()=>{
     return queryresultDepartment
 }
 
-exports.AllJobToDepartment=async()=>{
-    
+exports.AllJobToDepartment=async(IdJob,Department)=>{
+    const queryAllJobToDepartment = cmdqury.AddAllJobToDepartment()
+    const pool = await connection
+    await pool.request()
+    .input("job",mssql.Int(4),IdJob)
+    .input("department",mssql.NVarChar(100),Department)
+    .query(queryAllJobToDepartment)
 }
