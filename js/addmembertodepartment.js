@@ -21,21 +21,17 @@ fetch('http://localhost:9090/Department/AllDepartment')
 
   form.addEventListener('submit',async(event)=>{
     event.preventDefault()
-    var x = document.getElementById("demo");
-    var y = document.getElementById("job");
+    var x = document.getElementById("department");
+    var y = document.getElementById("member");
 
-    console.log("Department id is ",x.value)
-    console.log("Job id is ",y.value)
-    console.log("Department index is ",x.selectedIndex)
-    console.log("Job index is ",y.selectedIndex)
     if(x.selectedIndex !=0 && y.selectedIndex !=0){
-      const response = await fetch('http://localhost:9090/Job/AddJobToDepartment',{
+      const response = await fetch('http://localhost:9090/Member/AddMemberToDepartment',{
           method:'post',
           headers:{
               'Content-Type':'application/json'    
           },
           body: JSON.stringify({
-              "job":y.value,
+              "member":y.value,
               "department":x.value
           })
       })
@@ -47,20 +43,19 @@ fetch('http://localhost:9090/Department/AllDepartment')
 
 })
 async function myFunction () {
-  var x = document.getElementById("demo");
+  var x = document.getElementById("department");
   selectjob.innerText = null;
 
 
   console.log(x)
   if(x.selectedIndex != 0){
-    const response = await fetch('http://localhost:9090/Job/OptionJob?' + new URLSearchParams({
+    const response = await fetch('http://localhost:9090/Member/OptionMember?' + new URLSearchParams({
       IdDepartment: x.value
     }))
     const responsedata = await response.json();
-    var job = responsedata.job
-    console.log(job.length)
-    for(j = 0;j<=job.length-1;j++){
-      selectjob[j]= new Option(job[j].JOB,job[j].ID);
+    var member = responsedata.member
+    for(j = 0;j<=member.length-1;j++){
+      selectjob[j]= new Option(member[j].MEMBER,member[j].ID);
     }
   }
   else{
