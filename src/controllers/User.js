@@ -58,12 +58,11 @@ exports.Register =(req,res,next)=>{
         }
 }
 exports.Login =(req,res,next)=>{
-    var email = req.body.email;
-    var password = req.body.password;
-    console.log("Login email",email);
-    console.log("Login password",password);
+    var user = req.body.User_name;
+    var password = req.body.User_password;
+
     try{
-        sql.login(email).then(result=>{
+        sql.login(user).then(result=>{
             console.log("checkdata",Object.keys(result.data).length)
             // if(result){
             //     console.log("no data")
@@ -85,7 +84,7 @@ exports.Login =(req,res,next)=>{
                 // bcrypt.compare(password, result.data.password)
                 if(result.status == 1){
                 const token = jwt.sign(
-                 { User_email: email },
+                 { User_name: user },
                 config.Token.TOKEN_SECRET,
                 { expiresIn: "30d" }
                 );

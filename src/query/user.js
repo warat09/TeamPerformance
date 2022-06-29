@@ -7,7 +7,7 @@ exports.login =async(input)=>{
         const querylogin = cmdqury.login()
         const pool = await connection
         await pool.request()
-        .input("email",mssql.NVarChar(100),input)
+        .input("User_name",mssql.NVarChar(100),input)
         .query(querylogin)
         .then(res=>{
             console.log(res)

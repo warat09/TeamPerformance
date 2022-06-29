@@ -1,5 +1,6 @@
 const sql = require("../query/department");
 const sqljob = require("../query/job")
+const sqlmember = require("../query/member")
 
 exports.AddDepartment=async(req,res,next)=>{
     var department = req.body.department;
@@ -15,6 +16,12 @@ exports.AddDepartment=async(req,res,next)=>{
                             for(let i = 0;i < lengthjob;i++){
                                 sql.AllJobToDepartment(result[i].ID,department)
                             }
+                         sqlmember.AllMember().then(result=>{
+                            let lengthmember = Object.keys(result).length
+                            for(let i = 0;i < lengthmember;i++){
+                                sql.AllMemberToDepartment(result[i].ID,department)
+                            }                            
+                         })
                         })
                         
                     }

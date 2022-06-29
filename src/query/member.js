@@ -3,6 +3,28 @@ const cmdqury = require("../sqlcommand/Member")
 const Iquery = require("../model/Iquery")
 const IAdd = require("../model/Iadd")
 
+exports.AllMember=async()=>{
+    try{
+        const queryAllMember = cmdqury.AllMember()
+        const pool = await connection
+        await pool.request()
+        .query(queryAllMember)
+        .then(res=>{
+            console.log(res.recordset)
+            console.log("YES")
+            queryresult = res.recordset
+    
+        }).catch(err=>{
+            console.log("NO")
+            queryresult = new Iquery(res.recordset,0,err.message)
+        })
+
+    }catch(err){
+        console.log("error is",err);
+        return res.status(500).send()
+        }
+        return queryresult
+}
 exports.AddMember =async(input)=>{
     let queryresult
         const queryMember = cmdqury.AddMember()
