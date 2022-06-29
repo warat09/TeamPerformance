@@ -5,9 +5,8 @@ if(checktoken !== null) {
 }
 form.addEventListener('submit',async(event)=>{
     event.preventDefault()
-    var email = document.getElementById("email").value;
-    var password = document.getElementById("password").value;
-console.log(email)
+    var user = document.getElementById("User_name").value;
+    var password = document.getElementById("User_password").value;
 
 const response = await fetch('http://localhost:9090/User/login',{
     method:'post',
@@ -15,8 +14,8 @@ const response = await fetch('http://localhost:9090/User/login',{
         'Content-Type':'application/json'    
     },
     body: JSON.stringify({
-        "email":email,
-        "password":password
+        "User_name":user,
+        "User_password":password
     })
 
 })

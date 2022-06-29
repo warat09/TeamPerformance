@@ -9,6 +9,7 @@
         <p id="par"></p>
         <label>logout</label>
         <button onclick="logout()">logout</button>
+
     </body>
     <script>
         var checktoken = localStorage.getItem("tokenlogin")
@@ -31,7 +32,8 @@
                     window.location.href = './login.html'
                 }
                 else{
-                    document.getElementById("par").innerHTML = responseStatus.email;
+                    console.log(responseStatus)
+                    document.getElementById("par").innerHTML = responseStatus.User_name;
                 }
             }
         }
