@@ -17,7 +17,7 @@ exports.verifitoken= async(req,res,next)=>{
               return res.json({ status:0,message: "tokeneex"});
           } else {
             console.log("tokennotex");
-              return res.json({ status:1,email:user.User_email,message: "notex"});
+              return res.json({ status:1,User:user.userName,message: "notex"});
             }
           })
       } catch (err) {

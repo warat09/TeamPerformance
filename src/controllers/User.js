@@ -2,103 +2,62 @@ const sql = require("../query/user");
 const bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 var config = require('../config/config')
-
-exports.Checktoken =(req,res,next)=>{
+const axios = require('axios')
+exports.GetallData =async(req,res,next)=>{
     // return res.json({message: "Login Success!! "+req.query.token});
+    const authHeader = await req.headers.authorization;
+    const token = await authHeader.split(' ')[1];
     jwt.verify(
-        req.query.token,
+      token,
         config.Token.TOKEN_SECRET,
         async (err, user) => {
           if (err) {
             console.log("tokeneex");
-            return res.json({ status:"ex",message: "tokeneex"});
+            return res.json({ status:400,message: "tokeneex"});
         } else {
-            return res.json({ status:"ok",message: "notex"});
+          await axios.post('http://bwc-webserv02.bdms.co.th:3300/bwcportaluser/api/login', {
+            userName: user.userName,
+            password: user.password,
+            appId:user.appId
+          })
+          .then((response)=> {
+            var result = response.data;
+            console.log(result.data)
+            return res.status(200).json({data:result.data,status:result.status});        
+          })
+          .catch((err)=> {
+            return res.status(400).json(err);
+          });
           }
         }
       );
 }
 
-exports.Register =(req,res,next)=>{
-    var email = req.body.email;
+exports.Login =async(req,res,next)=>{
+    var user = req.body.userName;
     var password = req.body.password;
-    try{
-        sql.query("SELECT COUNT(*) AS Count FROM User WHERE email = ?",[email],(err,result)=>{
-            if(err){
-                console.log("Error select ",err);
-                return res.status(400).send();
-            }
-            else{
-                if(result[0].Count != 0){
-                    return res.status(400).json({message:"email have"});
-                }
-                else{
-                    bcrypt.hash(password, 10).then((hashpassword)=>{
-                        console.log("password ",password);
-                        console.log("hashpassword ",hashpassword);
-
-                        bcrypt.compare(password, hashpassword, function(err, result) {
-                            if (err) { throw (err); }
-                            console.log(result);
-                        });
-                        sql.query("INSERT INTO User(email, password) VALUES (?,?)",[email,hashpassword],(err,result)=>{
-                            if(err){
-                                console.log("Error insert ",err);
-                                return res.status(400).send();
-                            }
-                            return res.status(201).json({message:"Create success"})
-                            })
-                    })
-                }
-            }
-        })
-    }catch(err){
-        console.log("error is",err);
-        return res.status(500).send()
-        }
-}
-exports.Login =(req,res,next)=>{
-    var user = req.body.User_name;
-    var password = req.body.User_password;
-
-    try{
-        sql.login(user).then(result=>{
-            console.log("checkdata",Object.keys(result.data).length)
-            // if(result){
-            //     console.log("no data")
-            // }
-            // if(result.status == 1){
-            //     const token = jwt.sign(
-            //      { User_email: email },
-            //     config.Token.TOKEN_SECRET,
-            //     { expiresIn: "30d" }
-            //     );
-            //     console.log(token)
-            //     return res.json({ status:1,message: "Login Success!! ",token});
-            // }
-            if(Object.keys(result.data).length == 0){
-                console.log("0000")
-            }
-            else{
-                // console.log("111")
-                // bcrypt.compare(password, result.data.password)
-                if(result.status == 1){
-                const token = jwt.sign(
-                 { User_name: user },
-                config.Token.TOKEN_SECRET,
-                { expiresIn: "30d" }
-                );
-                console.log(token)
-                return res.json({ status:1,message: "Login Success!! ",token});
-                }
-            }
-
-        })
-    }catch(err){
-        console.log("error is",err);
-        return res.status(500).send()
-        }
-
+    var appId = req.body.appId;
+    await axios.post('http://bwc-webserv02.bdms.co.th:3300/bwcportaluser/api/login', {
+        userName: user,
+        password: password,
+        appId:appId
+      })
+      .then((response)=> {
+        var result = response.data;
+        const token = jwt.sign(
+            { 
+              userName: user,
+              password: password,
+              appId:appId
+            },
+           config.Token.TOKEN_SECRET,
+           { expiresIn: "30d" }
+           );
+        return res.status(200).json({status:result.status,token:token});        
+      })
+      .catch((err)=> {
+        return res.status(400).json(err);
+      });
 }
 
 
