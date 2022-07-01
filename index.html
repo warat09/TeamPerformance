@@ -13,32 +13,35 @@
     </body>
     <script>
         var checktoken = localStorage.getItem("tokenlogin")
-
-         const main = async()=>{
-            if(checktoken == null) {
+        const main =async()=>{
+            if(checktoken === null || checktoken == " ") {
             window.location.href = './login.html'
             }
             else{
-                const response = await fetch('http://localhost:9090/User/checktoken',{
+                const response = await fetch('http://localhost:9090/User/getdatauser',{
                 method:'GET',
                 headers:{
                     'Content-Type':'application/json',
                     'Authorization': 'Bearer ' + checktoken,
-                },
+                    },
                 })
                 const responseStatus = await response.json();
                 console.log(responseStatus)
-                if(responseStatus.status == 0){
+                // .then(res=>res.json()) 
+                // .then(data =>{
+                if(responseStatus.status == 400){
+                    window.localStorage.clear();
                     window.location.href = './login.html'
                 }
                 else{
-                    console.log(responseStatus)
-                    document.getElementById("par").innerHTML = responseStatus.User_name;
+                   var jsondata = await JSON.stringify(responseStatus.data)
+                   await localStorage.setItem("data",jsondata)
                 }
             }
+            var Userdata = await JSON.parse(localStorage.getItem("data"))
+            document.getElementById("par").innerHTML = await Userdata.userFname;
         }
-        main();
-
+        main()
         const logout =()=>{
             window.localStorage.clear();
             window.location.href = './login.html'

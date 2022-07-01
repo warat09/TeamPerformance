@@ -1,7 +1,7 @@
 var form = document.getElementById('form')
 var checktoken = localStorage.getItem("tokenlogin")
 if(checktoken !== null) {
-    window.location.href = 'index.html'
+    window.location.href = '../'
 }
 form.addEventListener('submit',async(event)=>{
     event.preventDefault()
@@ -14,20 +14,22 @@ const response = await fetch('http://localhost:9090/User/login',{
         'Content-Type':'application/json'    
     },
     body: JSON.stringify({
-        "User_name":user,
-        "User_password":password
+        "userName":user,
+        "password":password,
+        "appId":4
     })
 
 })
 
-const responseStatus = await response.json();
-console.log(responseStatus.status)
-if(responseStatus.status == 1){
-    localStorage.setItem("tokenlogin",responseStatus.token)
-    window.location.href = './index.html'
-    console.log("ok mak")
+const responseData = await response.json();
+if(responseData.status == 200){
+    localStorage.setItem("tokenlogin",responseData.token)
+    console.log(responseData)
+        window.location.href = '../'
+        console.log("ok mak")
+
 }
-else{
+else if(responseData.status == 400){
     console.log("no")
 }
 // .catch(err=>console.log(err))

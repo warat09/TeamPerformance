@@ -28,7 +28,7 @@ fetch('http://localhost:9090/Department/AllDepartment')
     console.log("Job id is ",y.value)
     console.log("Department index is ",x.selectedIndex)
     console.log("Job index is ",y.selectedIndex)
-    if(x.selectedIndex !=0 && y.selectedIndex !=0){
+    if(x.selectedIndex !=0){
       const response = await fetch('http://localhost:9090/Job/AddJobToDepartment',{
           method:'post',
           headers:{

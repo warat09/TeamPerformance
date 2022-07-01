@@ -24,7 +24,7 @@ fetch('http://localhost:9090/Department/AllDepartment')
     var x = document.getElementById("department");
     var y = document.getElementById("member");
 
-    if(x.selectedIndex !=0 && y.selectedIndex !=0){
+    if(x.selectedIndex !=0){
       const response = await fetch('http://localhost:9090/Member/AddMemberToDepartment',{
           method:'post',
           headers:{
@@ -55,7 +55,7 @@ async function myFunction () {
     const responsedata = await response.json();
     var member = responsedata.member
     for(j = 0;j<=member.length-1;j++){
-      selectjob[j]= new Option(member[j].MEMBER,member[j].ID);
+      selectjob[j]= new Option(member[j].Member_Fname,member[j].ID);
     }
   }
   else{

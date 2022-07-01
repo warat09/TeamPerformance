@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Edit Score</title>
+    </head>
+    <body>
+        <form id="form">
+            <select id="member">
+            </select>
+            <input type="submit" value="add">
+        </form>
+    </body>
+    <script>
+        var select = document.getElementById("member");
+        var form = document.getElementById("form")
+        var Userdata = JSON.parse(localStorage.getItem("data"))
+        var member
+        fetch('http://localhost:9090/Member/OptionMemberDepartment?' + new URLSearchParams({
+            userName: Userdata.userName
+         }))
+        .then(res => res.json())
+        .then(result =>{
+    // var job = data.job
+        member = result.member
+        console.log(member)
+        for (i=0;i<member.length+1;i++){
+            if(i==0){
+                select.options[i] = new Option("SelectMember");
+            }
+            else{
+                select.options[i] = new Option(member[i-1].Member_Fname,member[i-1].ID);
+            }
+        }
+    } )
+    form.addEventListener('submit',async(event)=>{
+    event.preventDefault()
+    const response = await fetch('http://localhost:9090/Member/AddMemberScore',{
+        method:'post',
+        headers:{   
+            'Content-Type':'application/json'    
+        },
+        body: JSON.stringify({
+            "Member_ID":member[select.selectedIndex-1].ID,
+            "Member_Name":member[select.selectedIndex-1].Member_Name,
+            "Member_Fname":member[select.selectedIndex-1].Member_Fname
+        })
+
+    })
+    const responseStatus = await response.json();
+    console.log(responseStatus)
+    })
+    </script>
+</html>
