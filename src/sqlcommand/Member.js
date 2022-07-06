@@ -8,6 +8,11 @@ exports.CheckMember =()=>{
     SELECT Member_Name FROM TleDatabase.dbo.[member] WHERE Member_Name = @member 
     `
 }
+exports.CheckMemberScore =()=>{
+    return `
+    SELECT Member_Fname FROM TleDatabase.dbo.[member_score] WHERE Member_Fname = @member_fname 
+    `
+}
 exports.CheckMemberAddToDepartment=()=>{
     return`
     SELECT ID FROM TleDatabase.dbo.[member_department] WHERE ID_MEMBER = @member AND ID_DEPARTMENT = @member
@@ -40,6 +45,23 @@ exports.OptionMemberDepartment=()=>{
 }
 exports.AddMemberScore=()=>{
     return`
-    INSERT INTO TleDatabase.dbo.[member_score] (ID,Member_Name,Member_Fname) VALUES (@id,@member_name,@member_fname)
+    INSERT INTO TleDatabase.dbo.[member_score] (Member_Fname) VALUES (@member_fname)
     `
 }
+
+exports.CheckScore=()=>{
+    return`
+    SELECT * FROM TleDatabase.dbo.[score] WHERE ID_MEMBER = (SELECT ID FROM TleDatabase.dbo.[member_score] WHERE Member_Fname = @member) AND ID_JOB = ((SELECT ID FROM TleDatabase.dbo.[job_score] WHERE JOB = @job))
+    `
+}
+exports.UpdateScore=()=>{
+    return`
+    UPDATE TleDatabase.dbo.[score] SET RATE = @score WHERE ID_MEMBER = (SELECT ID FROM TleDatabase.dbo.[member_score] WHERE Member_Fname = @member) AND ID_JOB = ((SELECT ID FROM TleDatabase.dbo.[job_score] WHERE JOB = @job))
+    `
+}
+exports.AddScore=()=>{
+    return`
+    INSERT INTO TleDatabase.dbo.[score] (ID_MEMBER,ID_JOB,RATE) VALUES ((SELECT ID FROM TleDatabase.dbo.[member_score] WHERE Member_Fname = @member),(SELECT ID FROM TleDatabase.dbo.[job_score] WHERE JOB = @job),@score)    
+    `
+}
+

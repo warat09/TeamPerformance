@@ -2,6 +2,7 @@ const {connection,mssql} = require("../config/db")
 const cmdqury = require("../sqlcommand/Member")
 const Iquery = require("../model/Iquery")
 const IAdd = require("../model/Iadd")
+const Iscore = require("../model/Iscore")
 
 exports.AllMember=async()=>{
     try{
@@ -39,6 +40,25 @@ exports.AddMember =async(Member_Name,Member_FName)=>{
         }).catch(err=>{
             console.log("no add")
             queryresult = new IAdd(0,err.message)
+        })
+        return queryresult
+}
+exports.CheckMemberScore =async(input)=>{
+    console.log("input sql",input)
+    let queryresult
+        const queryMember = cmdqury.CheckMemberScore()
+        const pool = await connection
+        await pool.request()
+        .input("member_fname",mssql.NVarChar(100),input)
+        .query(queryMember)
+        .then(res=>{
+            console.log(res.recordset)
+            console.log("YES")
+            queryresult = new Iquery(res.recordset,1,"success")
+
+        }).catch(err=>{
+            console.log("NO")
+            queryresult = new Iquery(res.recordset,0,err.message)
         })
         return queryresult
 }
@@ -136,15 +156,94 @@ exports.OptionMemberDepartment =async(input)=>{
     })
     return queryresult
 }
-exports.AddMemberScore =async(ID_Member,Member_Name,Member_FName)=>{
+exports.AddMemberScore =async(input)=>{
+    console.log("memner input",input)
     let queryresult
         const queryMember = cmdqury.AddMemberScore()
         const pool = await connection
         await pool.request()
-        .input("id",mssql.Int(4),ID_Member)
-        .input("member_name",mssql.NVarChar(100),Member_Name)
-        .input("member_fname",mssql.NVarChar(100),Member_FName)
+        .input("member_fname",mssql.NVarChar(100),input)
         .query(queryMember)
+        .then(()=>{
+            console.log("YES add")
+            queryresult = new IAdd(1,"success")
+        }).catch(err=>{
+            console.log("no add")
+            queryresult = new IAdd(0,err.message)
+        })
+        return queryresult
+}
+exports.CheckMemberAndScore=async(member,job,score)=>{
+    
+    let queryresult
+    const queryMemberAndScore = cmdqury.CheckScore()
+    const pool = await connection
+    await pool.request()
+    .input("member",mssql.NVarChar(100),member)
+    .input("job",mssql.NVarChar(100),job)
+    .input("score",mssql.Int(4),score)
+    .query(queryMemberAndScore)
+    .then(res=>{
+        console.log(res.recordset.length)
+        console.log("YES")
+        queryresult = new Iscore(member,job,score,res.recordset.length)
+    }).catch(err=>{
+        console.log("NO")
+        queryresult = new Iquery(res.recordset,0,err.message)
+    })
+    return queryresult
+    // console.log("sql member is",member)
+    // console.log("sql job is",job)
+    // console.log("sql score is",score)
+    // let queryresult
+    // const queryMemberAndScore = cmdqury.CheckScore()
+    // const pool = await connection
+    // await pool.request()
+    // .input("member",mssql.NVarChar(100),member)
+    // .input("job",mssql.NVarChar(100),job)
+    // .input("score",mssql.Int(4),score)
+    // .query(queryMemberAndScore)
+    // .then(res=>{
+    //     console.log(res.recordset)
+    //     console.log("YES")
+    //     queryresult = new Iquery(res.recordset,1,"success")
+    // }).catch(err=>{
+    //     console.log("NO")
+    //     queryresult = new Iquery(res.recordset,0,err.message)
+    // })
+    // return queryresult
+}
+exports.AddScore =async(member,job,score)=>{
+
+    let queryresult
+        const queryMember = cmdqury.AddScore()
+        const pool = await connection
+        await pool.request()
+        .input("member",mssql.NVarChar(100),member)
+        .input("job",mssql.NVarChar(100),job)
+        .input("score",mssql.Int(4),score)
+        .query(queryMember)
+        .then(()=>{
+            console.log("YES add")
+            queryresult = new IAdd(1,"success")
+        }).catch(err=>{
+            console.log("no add")
+            queryresult = new IAdd(0,err.message)
+        })
+        return queryresult
+}
+exports.UpdateScore =async(member,job,score)=>{
+    console.log("sql update member is",member)
+    console.log("sql update job is",job)
+    console.log("sql update score is",score)
+    let queryresult
+        const queryScore = cmdqury.UpdateScore()
+        const pool = await connection
+        await pool.request()
+        .input("member",mssql.NVarChar(100),member)
+        .input("job",mssql.NVarChar(100),job)
+        .input("score",mssql.Int(4),score)
+        .query(queryScore)
         .then(()=>{
             console.log("YES add")
             queryresult = new IAdd(1,"success")

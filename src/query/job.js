@@ -56,6 +56,25 @@ exports.CheckJobAddToDepartment=async(IdJob,IdDepartment)=>{
     })
     return queryresult
 }
+exports.CheckJobScore =async(input)=>{
+    console.log("input sql",input)
+    let queryresult
+        const queryJob = cmdqury.CheckJobScore()
+        const pool = await connection
+        await pool.request()
+        .input("job",mssql.NVarChar(100),input)
+        .query(queryJob)
+        .then(res=>{
+            console.log(res.recordset)
+            console.log("YES")
+            queryresult = new Iquery(res.recordset,1,"success")
+
+        }).catch(err=>{
+            console.log("NO")
+            queryresult = new Iquery(res.recordset,0,err.message)
+        })
+        return queryresult
+}
 exports.JobToDepartment=async(IdJob,IdDepartment)=>{
     let queryresult
     const queryAddJobToDepartment = cmdqury.AddJobToDepartment()
@@ -121,4 +140,37 @@ exports.OptionJob =async(input)=>{
         queryresult = new Iquery(res.recordset,0,err.message)
     })
     return queryresult
+}
+
+exports.OptionJobDepartment=async(input)=>{
+    const queryJob = cmdqury.OptionJobDepartment();
+    const pool = await connection
+    await pool.request()
+    .input("department",mssql.NVarChar(100),input)
+    .query(queryJob)
+    .then(res=>{
+        console.log(res.recordset)
+        console.log("YES")
+        queryresult = res.recordset
+    }).catch(err=>{
+        console.log("NO")
+        queryresult = new Iquery(res.recordset,0,err.message)
+    })
+    return queryresult
+}
+exports.AddJobScore =async(Job_Name)=>{
+    let queryresult
+        const queryJob = cmdqury.AddJobScore()
+        const pool = await connection
+        await pool.request()
+        .input("job",mssql.NVarChar(100),Job_Name)
+        .query(queryJob)
+        .then(()=>{
+            console.log("YES add")
+            queryresult = new IAdd(1,"success")
+        }).catch(err=>{
+            console.log("no add")
+            queryresult = new IAdd(0,err.message)
+        })
+        return queryresult
 }

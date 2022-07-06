@@ -1,5 +1,7 @@
 const sql = require("../query/member");
 const sqldepartment = require("../query/department");
+const sqljob = require("../query/job");
+
 
 
 exports.AddMember=async(req,res,next)=>{
@@ -104,4 +106,93 @@ exports.AddMemberScore=async(req,res,next)=>{
         console.log("error is",err);
         return res.status(500).send()
     }
+}
+
+exports.MemberScore=async(req,res,next)=>{
+    try{
+        var score = req.body.score;
+        var columnname = req.body.rowname;
+        console.log(score)
+        console.log(columnname)
+        // let obj = score.find(o => o.Name === 'Thanachai Thoungpugdee');
+        // console.log(obj);
+        // let itemYouWant = null;
+        // score.forEach((item) => {
+        //     console.log(item.Name)
+            // if (item.Name === 'Thanachai Thoungpugdee') {
+            //     itemYouWant = item;
+            // }
+        // });
+        // console.log("hhhhhhhhhhhhhhhhhhhhhhh",itemYouWant);
+        for(var i = 1;i < columnname.length;i++){
+            await sqljob.CheckJobScore(columnname[i]).then(result=>{
+                if(Object.keys(result.data).length == 0){
+                    sqljob.AddJobScore(columnname[i])
+                }
+            })
+        }
+        for(var i =0;i<score.length;i++){
+           await sql.CheckMemberScore(score[i].Name).then(result=>{
+                if(Object.keys(result.data).length == 0){
+                    // console.log(score[i].Name)
+                    sql.AddMemberScore(score[i].Name)
+                }
+            })
+        }
+        var Name
+        await score.forEach(async(item,i) => {
+            console.log(item.Name)
+            // console.log(item.itemYouWant)
+            console.log(i)
+            Name = item.Name
+            await columnname.forEach(async(JOB,i)=>{
+                if(i > 0){
+
+
+                    // console.log(i)
+                    // console.log(a)
+                    var obj = score.find(o => o.Name === Name);
+                    // console.log(obj[JOB])
+                    //  console.log("jOB SCORE",obj[i]);
+                    //  sql.CheckMemberAndScore(Name,JOB,obj[JOB]).then(result=>{
+                    //     if(Object.keys(result.data).length == 0){
+                    //         console.log("Jobssss Name",JOB)
+                    //          console.log("Namesss",Name)
+                    //         sql.AddScore(Name,JOB,obj[JOB])
+                    //     }
+                    // })
+                    //  await sql.UpdateScore(Name,JOB,obj[JOB])
+                    // await sql.AddScore(Name,JOB,obj[JOB])
+
+                     sql.CheckMemberAndScore(Name,JOB,obj[JOB]).then(result=>{
+                        //  console.log("Job Name",JOB)
+                        //  console.log("Name",Name)
+                        if(result.status == 0){
+                            sql.AddScore(result.member,result.job,result.score)
+                        }
+                        else{
+                            sql.UpdateScore(result.member,result.job,result.score)
+                        }
+                            // if(result.data == 0){
+                            //     sql.AddScore(Name,JOB,obj[JOB])
+                            // }
+                        })
+                    // sql.AddScore(Name,JOB,obj[JOB])
+
+                    console.log("-----------------------------------------------------------------------------------------------------")
+                }
+            })
+            // if (item.Name === 'Thanachai Thoungpugdee') {
+            // }
+        });
+
+
+
+    }catch(err){
+        console.log("error is",err);
+        return res.status(500).send()
+    }
+}
+exports.AllScoreTable=async(req,res,next)=>{
+
 }

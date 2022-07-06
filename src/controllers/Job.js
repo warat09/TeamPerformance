@@ -71,3 +71,33 @@ exports.OptionJob =async(req,res,next)=>{
     }
 
 }
+exports.OptionJobDepartment=async(req,res,next)=>{
+    try{
+        var userName = req.query.userName;
+        sql.OptionJobDepartment(userName).then(result=>{
+            console.log(result)
+            return res.json({job:result});
+        })
+    }catch(err){
+        console.log("error is",err);
+        return res.status(500).send()
+    }
+}
+
+exports.AddJobScore=async(req,res,next)=>{
+    try{
+        var Id_Job = req.body.Job_ID;
+        var Job_Name = req.body.Job_Name;
+        sql.AddJobScore(Id_Job,Job_Name).then(result=>{
+            if(result.status == 1){
+                return res.json({ status:1,message: `Insert Job success`});
+            }
+            else{
+                return res.json({ status:0,message: `Can't Insert Member`});
+            }
+        })
+    }catch(err){
+        console.log("error is",err);
+        return res.status(500).send()
+    }
+}
