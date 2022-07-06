@@ -19,7 +19,7 @@
                 <thead>
                     <tr>
                         <th>select</th>
-                        <th>Name</th>
+                        <!-- <th>Name</th> -->
                     </tr>
                 </thead>
                 <tbody>
@@ -34,6 +34,53 @@
         var selectjob = document.getElementById("job");
         var Userdata = JSON.parse(localStorage.getItem("data"))
         var member,job
+        let employees = [
+            { name: 'James', WEB: 21, IOS: 1 },
+            { name: 'Rony', WEB: 31, IOS: 2 },
+            { name: 'Peter', WEB: 58, IOS: 3 },
+            { name: 'Marks', WEB: 20, IOS: 4 }
+        ]
+        let headers = ['Name', 'WEB', 'IOS'];
+        var tablerow = document.getElementById("mytable").tHead;
+        let headerRow = document.createElement('tr');
+        let table = document.getElementById('mytable').tBodies[0]
+
+        headers.forEach(headerText => {
+            var newTH = document.createElement('th');
+            
+            tablerow.rows[0].appendChild(newTH);
+            newTH.style.width = "150px";
+            newTH.innerHTML = `${headerText}`
+
+        // headerRow.appendChild(header);
+        // tablerow.appendChild(headerRow);
+
+    });
+    // tablerow.appendChild(headerRow);
+    employees.forEach((emp,i) => {
+        let row = document.createElement('tr');
+        row.innerHTML = `<td><input type="checkbox" name="record"></td>`
+
+        Object.values(emp).forEach((text,i) => {
+            let cell = document.createElement('td');
+            let textNode = document.createTextNode(text);
+            // if(i == 0){
+                // cell.innerHTML = `<td><input type="checkbox" name="record"></td>`
+            // }
+            
+            // else if(i ==1){
+            //     cell.innerHTML = `<td><input type="text" name="array[]" value="${text}"/></td>`
+            // }
+            // else{
+            //     cell.appendChild(textNode);
+            // }
+            cell.appendChild(textNode);
+
+            row.appendChild(cell);
+            
+        })
+        table.appendChild(row);
+    });
         fetch('http://localhost:9090/Member/OptionMemberDepartment?' + new URLSearchParams({
             userName: Userdata.userName
          }))
