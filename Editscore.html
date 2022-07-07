@@ -41,6 +41,11 @@
             { name: 'Marks', WEB: 20, IOS: 4 }
         ]
         let headers = ['Name', 'WEB', 'IOS'];
+        fetch('http://localhost:9090/Member/AllScore')
+            .then(res => res.json())
+            .then(data =>{
+                console.log(data)
+            } )
         var tablerow = document.getElementById("mytable").tHead;
         let headerRow = document.createElement('tr');
         let table = document.getElementById('mytable').tBodies[0]
@@ -60,22 +65,16 @@
     employees.forEach((emp,i) => {
         let row = document.createElement('tr');
         row.innerHTML = `<td><input type="checkbox" name="record"></td>`
+        
 
         Object.values(emp).forEach((text,i) => {
             let cell = document.createElement('td');
-            let textNode = document.createTextNode(text);
-            // if(i == 0){
-                // cell.innerHTML = `<td><input type="checkbox" name="record"></td>`
-            // }
-            
-            // else if(i ==1){
-            //     cell.innerHTML = `<td><input type="text" name="array[]" value="${text}"/></td>`
-            // }
-            // else{
-            //     cell.appendChild(textNode);
-            // }
-            cell.appendChild(textNode);
-
+            if(i == 0){
+                cell.innerHTML = `<td ><input type="text" name="array[]" id="row-`+(table.rows.length)+`_col-`+(i+1)+`" `+`value="${text}"  disabled/></td>`
+            }
+            else{
+                cell.innerHTML = `<td><input type="text" name="array[]" id="row-`+(table.rows.length)+`_col-`+(i+1)+`" `+`value="${text}"/></td>`
+            }
             row.appendChild(cell);
             
         })
@@ -139,7 +138,7 @@
                 cell2.innerHTML = `<td><input type="checkbox" name="record"></td>`
             }
             else if(i==1){
-                cell2.innerHTML = `<td><input type="text" name="array[]" id="row-`+(table.tBodies[0].rows.length-1)+`_col-`+(i)+`" `+`value="${select.options[select.selectedIndex].text}"/></td>`
+                cell2.innerHTML = `<td><input type="text" name="array[]" id="row-`+(table.tBodies[0].rows.length-1)+`_col-`+(i)+`" `+`value="${select.options[select.selectedIndex].text}" disabled/></td>`
             }
             else{
                 cell2.innerHTML = `<td><input type="text" name="array[]" id="row-`+(table.tBodies[0].rows.length-1)+`_col-`+(i)+`" `+`value="0"/></td>`
@@ -244,19 +243,19 @@
 
             console.log(newRows);
     
-            const response = await fetch('http://localhost:9090/Member/MemberScore',{
-                method:'post',
-                headers:{
-                    'Content-Type':'application/json'    
-                },
-                body: JSON.stringify({
-                    "score":newRows,
-                    "rowname":tRowsh
-                })
+            // const response = await fetch('http://localhost:9090/Member/MemberScore',{
+            //     method:'post',
+            //     headers:{
+            //         'Content-Type':'application/json'    
+            //     },
+            //     body: JSON.stringify({
+            //         "score":newRows,
+            //         "rowname":tRowsh
+            //     })
 
-            })
+            // })
 
-            const responseData = await response.json();
+            // const responseData = await response.json();
 
 
         }
