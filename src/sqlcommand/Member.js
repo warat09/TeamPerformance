@@ -65,3 +65,9 @@ exports.AddScore=()=>{
     `
 }
 
+exports.AllTableScore=()=>{
+    return`
+    SELECT ms.Member_Fname,js.JOB,s.RATE  FROM TleDatabase.dbo.score s JOIN TleDatabase.dbo.member_score ms ON s.ID_MEMBER = ms.ID JOIN TleDatabase.dbo.job_score js ON s.ID_JOB = js.ID
+    `
+}
+

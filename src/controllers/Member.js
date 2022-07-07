@@ -194,5 +194,19 @@ exports.MemberScore=async(req,res,next)=>{
     }
 }
 exports.AllScoreTable=async(req,res,next)=>{
+    try{
+        sql.AllScoreTable().then(result=>{
+            const unique = [...new Set(result.map(item => item.group))];
+            console.log(unique)
+            // const res = result.filter((item, index, obj) => 
+            //     obj.indexOf(item) && obj.lastIndexOf(item)
+            // );
 
+            // console.log("ressssssss",res);
+            // return res.json({member:result});
+        })
+    }catch(err){
+        console.log("error is",err);
+        return res.status(500).send()
+    }
 }
