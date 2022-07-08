@@ -2,7 +2,47 @@ var select = document.getElementById("department");
 var form = document.getElementById("form")
 var selectjob = document.getElementById("member")
 selectjob[0]= new Option("pls select department to add job");
+var checktoken = localStorage.getItem("tokenlogin")
 
+const main =async()=>{
+    if(checktoken === null || checktoken == " ") {
+    window.location.href = './login.html'
+    }
+    else{
+        const response = await fetch('http://localhost:9090/User/getdatauser',{
+        method:'GET',
+        headers:{
+            'Content-Type':'application/json',
+            'Authorization': 'Bearer ' + checktoken,
+            },
+        })
+        const responseStatus = await response.json();
+        console.log(responseStatus)
+        if(responseStatus.status == 400){
+            window.localStorage.clear();
+            window.location.href = './login.html'
+        }
+        else{
+           var jsondata = JSON.stringify(responseStatus.data)
+            localStorage.setItem("data",jsondata)
+        }
+    }
+    var Userdata = await JSON.parse(localStorage.getItem("data"))
+    document.getElementById("par").innerHTML = await Userdata.userFname;
+    console.log(Userdata.menu)
+    var checklink = 0
+    Userdata.menu.forEach((Item)=> {
+        if (Item.menuId === 7) {
+            checklink = 1
+        }
+        return checklink
+    });
+    if(checklink !== 1){
+        window.location.href = './'
+    }
+
+}
+main()
 
 fetch('http://localhost:9090/Department/AllDepartment')
   .then(res => res.json())
@@ -62,4 +102,10 @@ async function myFunction () {
     selectjob[0]= new Option("pls select");
   }
 }
+
+const logout =()=>{
+  window.localStorage.clear();
+  window.location.href = './login.html'
+}
+
 

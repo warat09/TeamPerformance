@@ -1,8 +1,49 @@
 var select = document.getElementById("demo");
 var form = document.getElementById("form")
 var selectjob = document.getElementById("job")
-selectjob[0]= new Option("pls select department to add job");
+var checktoken = localStorage.getItem("tokenlogin")
 
+const main =async()=>{
+    if(checktoken === null || checktoken == " ") {
+    window.location.href = './login.html'
+    }
+    else{
+        const response = await fetch('http://localhost:9090/User/getdatauser',{
+        method:'GET',
+        headers:{
+            'Content-Type':'application/json',
+            'Authorization': 'Bearer ' + checktoken,
+            },
+        })
+        const responseStatus = await response.json();
+        console.log(responseStatus)
+        if(responseStatus.status == 400){
+            window.localStorage.clear();
+            window.location.href = './login.html'
+        }
+        else{
+           var jsondata = JSON.stringify(responseStatus.data)
+            localStorage.setItem("data",jsondata)
+        }
+    }
+    var Userdata = await JSON.parse(localStorage.getItem("data"))
+    document.getElementById("par").innerHTML = await Userdata.userFname;
+    console.log(Userdata.menu)
+    var checklink = 0
+    Userdata.menu.forEach((Item)=> {
+        if (Item.menuId === 7) {
+            checklink = 1
+        }
+        return checklink
+    });
+    if(checklink !== 1){
+        window.location.href = './'
+    }
+
+}
+main()
+
+selectjob[0]= new Option("Please Select Department to Add Job");
 
 fetch('http://localhost:9090/Department/AllDepartment')
   .then(res => res.json())
@@ -11,7 +52,7 @@ fetch('http://localhost:9090/Department/AllDepartment')
     var department = data.Department
     for (i=0;i<department.length+1;i++){
         if(i==0){
-            select.options[i] = new Option("selecysepartment");
+            select.options[i] = new Option("Please Select Department");
         }
         else{
             select.options[i] = new Option(department[i-1].Department_Name,department[i-1].ID);
@@ -66,5 +107,9 @@ async function myFunction () {
   else{
     selectjob[0]= new Option("pls select");
   }
+}
+const logout =()=>{
+  window.localStorage.clear();
+  window.location.href = './login.html'
 }
 

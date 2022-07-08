@@ -1,5 +1,46 @@
 var select = document.getElementById("member");
 var form = document.getElementById("form")
+var checktoken = localStorage.getItem("tokenlogin")
+
+const main =async()=>{
+    if(checktoken === null || checktoken == " ") {
+    window.location.href = './login.html'
+    }
+    else{
+        const response = await fetch('http://localhost:9090/User/getdatauser',{
+        method:'GET',
+        headers:{
+            'Content-Type':'application/json',
+            'Authorization': 'Bearer ' + checktoken,
+            },
+        })
+        const responseStatus = await response.json();
+        console.log(responseStatus)
+        if(responseStatus.status == 400){
+            window.localStorage.clear();
+            window.location.href = './login.html'
+        }
+        else{
+           var jsondata = JSON.stringify(responseStatus.data)
+            localStorage.setItem("data",jsondata)
+        }
+    }
+    var Userdata = await JSON.parse(localStorage.getItem("data"))
+    document.getElementById("par").innerHTML = await Userdata.userFname;
+    console.log(Userdata.menu)
+    var checklink = 0
+    Userdata.menu.forEach((Item)=> {
+        if (Item.menuId === 7) {
+            checklink = 1
+        }
+        return checklink
+    });
+    if(checklink !== 1){
+        window.location.href = './'
+    }
+
+}
+main()
 
 fetch('http://bwc-webserv02.bdms.co.th:3300/bwcportaluser/api/list/user')
   .then(res => res.json())
@@ -38,3 +79,7 @@ fetch('http://bwc-webserv02.bdms.co.th:3300/bwcportaluser/api/list/user')
       }
 
 })
+const logout =()=>{
+    window.localStorage.clear();
+    window.location.href = './login.html'
+}

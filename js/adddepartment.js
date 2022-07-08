@@ -1,26 +1,43 @@
 var checktoken = localStorage.getItem("tokenlogin")
-var checkdata = localStorage.getItem("data")
-let data = JSON.parse(checkdata);
-if(checktoken === null || checkdata === null) {
+const main =async()=>{
+    if(checktoken === null || checktoken == " ") {
     window.location.href = './login.html'
-}
-else{
-        fetch('http://localhost:9090/User/checktoken',{
+    }
+    else{
+        const response = await fetch('http://localhost:9090/User/getdatauser',{
         method:'GET',
         headers:{
             'Content-Type':'application/json',
             'Authorization': 'Bearer ' + checktoken,
-        },
-    }).then(res=>{
-        if(res.status == 0){
+            },
+        })
+        const responseStatus = await response.json();
+        console.log(responseStatus)
+        if(responseStatus.status == 400){
             window.localStorage.clear();
             window.location.href = './login.html'
         }
-    })
+        else{
+           var jsondata = JSON.stringify(responseStatus.data)
+            localStorage.setItem("data",jsondata)
+        }
+    }
+    var Userdata = await JSON.parse(localStorage.getItem("data"))
+    document.getElementById("par").innerHTML = await Userdata.userFname;
+    console.log(Userdata.menu)
+    var checklink = 0
+    Userdata.menu.forEach((Item)=> {
+        if (Item.menuId === 7) {
+            checklink = 1
+        }
+        return checklink
+    });
+    if(checklink !== 1){
+        window.location.href = './'
+    }
 
 }
-var form = document.getElementById('form')
-document.getElementById("par").innerHTML = data.userFname;
+main()
 
 form.addEventListener('submit',async(event)=>{
  event.preventDefault()
@@ -40,3 +57,8 @@ form.addEventListener('submit',async(event)=>{
      console.log(responseStatus)
 
  })
+
+const logout =()=>{
+    window.localStorage.clear();
+    window.location.href = './login.html'
+}

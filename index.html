@@ -2,49 +2,27 @@
 <html>
     <head>
         <title>Team Performance</title>
-        <link rel="stylesheet" href="./css/index.css">
         <link href="https://fonts.googleapis.com/css2?family=Reenie+Beanie&display=swap" rel="stylesheet">
     </head>
     <body>
-        <p id="par"></p>
-        <label>logout</label>
-        <button onclick="logout()">logout</button>
-
+        <style>
+            table, th, td {
+              border: 1px solid;
+            }
+            </style>
+        <p id="par"></p><label>logout</label><button onclick="logout()">logout</button>
+        <div id="setting"> 
+          </div>
+          <table id="mytable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
     </body>
-    <script>
-        var checktoken = localStorage.getItem("tokenlogin")
-        const main =async()=>{
-            if(checktoken === null || checktoken == " ") {
-            window.location.href = './login.html'
-            }
-            else{
-                const response = await fetch('http://localhost:9090/User/getdatauser',{
-                method:'GET',
-                headers:{
-                    'Content-Type':'application/json',
-                    'Authorization': 'Bearer ' + checktoken,
-                    },
-                })
-                const responseStatus = await response.json();
-                console.log(responseStatus)
-                // .then(res=>res.json()) 
-                // .then(data =>{
-                if(responseStatus.status == 400){
-                    window.localStorage.clear();
-                    window.location.href = './login.html'
-                }
-                else{
-                   var jsondata = await JSON.stringify(responseStatus.data)
-                   await localStorage.setItem("data",jsondata)
-                }
-            }
-            var Userdata = await JSON.parse(localStorage.getItem("data"))
-            document.getElementById("par").innerHTML = await Userdata.userFname;
-        }
-        main()
-        const logout =()=>{
-            window.localStorage.clear();
-            window.location.href = './login.html'
-        }
+    <script src="js/home.js">
     </script>
 </html>
