@@ -40,7 +40,7 @@ exports.AddAllJobToDepartment=()=>{
 }
 exports.OptionJobDepartment=()=>{
     return`
-    SELECT j.ID,j.JOB,jd.ID_DEPARTMENT FROM TleDatabase.dbo.[job] j JOIN TleDatabase.dbo.[job_department] jd ON j.ID = jd.ID_JOB LEFT JOIN TleDatabase.dbo.[job_score] js ON js.ID = jd.ID_JOB WHERE jd.ID_DEPARTMENT = (SELECT md.ID_DEPARTMENT  FROM TleDatabase.dbo.[member] m JOIN TleDatabase.dbo.[member_department] md ON m.ID = md.ID_MEMBER  WHERE m.Member_Name = 'rosemary') AND js.ID IS NULL
+    SELECT j.ID,j.JOB,jd.ID_DEPARTMENT FROM TleDatabase.dbo.[job] j JOIN TleDatabase.dbo.[job_department] jd ON j.ID = jd.ID_JOB LEFT JOIN TleDatabase.dbo.[job_score] js ON js.JOB  = j.JOB WHERE jd.ID_DEPARTMENT = (SELECT md.ID_DEPARTMENT  FROM TleDatabase.dbo.[member] m JOIN TleDatabase.dbo.[member_department] md ON m.ID = md.ID_MEMBER  WHERE m.Member_Name = @department) AND js.ID IS NULL
     `
 }
 

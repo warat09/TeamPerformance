@@ -40,7 +40,7 @@ exports.AddAllMemberToDepartment=()=>{
 }
 exports.OptionMemberDepartment=()=>{
     return`
-    SELECT m.ID,m.Member_Name ,m.Member_Fname ,md.ID_DEPARTMENT FROM TleDatabase.dbo.[member] m JOIN TleDatabase.dbo.[member_department] md ON m.ID = md.ID_MEMBER LEFT JOIN TleDatabase.dbo.[member_score] ms ON ms.ID = md.ID_MEMBER WHERE md.ID_DEPARTMENT = (SELECT md.ID_DEPARTMENT  FROM TleDatabase.dbo.[member] m JOIN TleDatabase.dbo.[member_department] md ON m.ID = md.ID_MEMBER WHERE m.Member_Name = @department) AND ms.ID IS NULL 
+    SELECT m.ID,m.Member_Name ,m.Member_Fname ,md.ID_DEPARTMENT FROM TleDatabase.dbo.[member] m JOIN TleDatabase.dbo.[member_department] md ON m.ID = md.ID_MEMBER LEFT JOIN TleDatabase.dbo.[member_score] ms ON ms.Member_Fname  = m.Member_Fname  WHERE md.ID_DEPARTMENT = (SELECT md.ID_DEPARTMENT  FROM TleDatabase.dbo.[member] m JOIN TleDatabase.dbo.[member_department] md ON m.ID = md.ID_MEMBER WHERE m.Member_Name = 'rosemary') AND ms.ID IS NULL  
     `
 }
 exports.AddMemberScore=()=>{
@@ -68,6 +68,12 @@ exports.AddScore=()=>{
 exports.AllTableScore=()=>{
     return`
     SELECT ms.Member_Fname,js.JOB,s.RATE  FROM TleDatabase.dbo.score s JOIN TleDatabase.dbo.member_score ms ON s.ID_MEMBER = ms.ID JOIN TleDatabase.dbo.job_score js ON s.ID_JOB = js.ID
+    `
+}
+
+exports.ColumName=()=>{
+    return`
+    SELECT DISTINCT js.JOB FROM TleDatabase.dbo.score s JOIN TleDatabase.dbo.job_score js ON s.ID_JOB = js.ID
     `
 }
 

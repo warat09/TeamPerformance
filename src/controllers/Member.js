@@ -195,16 +195,42 @@ exports.MemberScore=async(req,res,next)=>{
 }
 exports.AllScoreTable=async(req,res,next)=>{
     try{
-        sql.AllScoreTable().then(result=>{
-            const unique = [...new Set(result.map(item => item.group))];
-            console.log(unique)
-            // const res = result.filter((item, index, obj) => 
-            //     obj.indexOf(item) && obj.lastIndexOf(item)
-            // );
-
-            // console.log("ressssssss",res);
-            // return res.json({member:result});
+        const allcolumn = await sql.AllColumn()
+        const alltable = await sql.AllScoreTable()
+          var Arraycolumn = allcolumn.map(function (obj) {
+            return obj.JOB;
+          });
+        let a = []
+        alltable.forEach((valueData)=>{
+            let isName = false
+            a.forEach((valueA)=>{
+                if(valueA.name === valueData.Member_Fname){
+                    isName = true
+                    index(valueA,valueData.JOB,valueData.RATE)
+                }
+            })
+            if(!isName){
+                let someData =  {name:valueData.Member_Fname}
+                Arraycolumn.forEach((value)=>{
+                    index(someData,value,0)
+                })
+                index(someData,valueData.JOB,valueData.RATE)
+                a.push(someData)
+            }
         })
+        return res.json({ status:1,Head:Arraycolumn,Body:a});
+        // console.log(a)
+
+        function index(obj,is, value) {
+            if (typeof is == 'string')
+                return index(obj,is.split('.'), value);
+            else if (is.length==1 && value!==undefined)
+                return obj[is[0]] = value;
+            else if (is.length==0)
+                return obj;
+            else
+                return index(obj[is[0]],is.slice(1), value);
+        }
     }catch(err){
         console.log("error is",err);
         return res.status(500).send()

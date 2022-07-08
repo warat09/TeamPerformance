@@ -253,6 +253,22 @@ exports.UpdateScore =async(member,job,score)=>{
         })
         return queryresult
 }
+exports.AllColumn=async()=>{
+    let queryresult
+    const queryColumnName = cmdqury.ColumName()
+    const pool = await connection
+    await pool.request()
+    .query(queryColumnName)
+    .then(res=>{
+        console.log(res.recordset)
+        console.log("YES")
+        queryresult = res.recordset
+    }).catch(err=>{
+        console.log("NO")
+        queryresult = new Iquery(res.recordset,0,err.message)
+    })
+    return queryresult
+}
 exports.AllScoreTable=async()=>{
     let queryresult
     const queryTableScore = cmdqury.AllTableScore()
