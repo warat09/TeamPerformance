@@ -71,8 +71,12 @@ const main =async()=>{
         table.appendChild(row);
     });
     } )
+
 }
 main()
+console.log(document.getElementById("mytable").tHead.rows[0].cells[1].innerHTML)
+
+// var theadname = document.getElementById("mytable").tHead
 const logout =()=>{
     window.localStorage.clear();
     window.location.href = './login.html'
