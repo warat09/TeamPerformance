@@ -101,3 +101,37 @@ exports.AddJobScore=async(req,res,next)=>{
         return res.status(500).send()
     }
 }
+exports.OptionRemoveJobScore=async(req,res,next)=>{
+    try{
+        var userName = req.query.userName;
+        sql.OptionRemoveJobScore(userName).then(result=>{
+            console.log(result)
+            return res.json({job:result});
+        })
+    }catch(err){
+        console.log("error is",err);
+        return res.status(500).send()
+    }
+}
+exports.RemoveJobScore=async(req,res,next)=>{
+    try{
+        var Job_Name = req.body.Job_Name;
+        var userName = req.body.userName;
+        sql.RemoveJobScore(Job_Name,userName).then(result=>{
+            console.log(result)
+        })
+    }catch(err){
+        console.log("error is",err);
+        return res.status(500).send()
+    }
+}
+exports.AllJob=async(req,res,next)=>{
+    try{
+        sql.AllJob().then(result=>{
+            return res.json({job:result});
+        })
+    }catch(err){
+        console.log("error is",err);
+        return res.status(500).send()
+    }
+}

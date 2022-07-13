@@ -195,8 +195,9 @@ exports.MemberScore=async(req,res,next)=>{
 }
 exports.AllScoreTable=async(req,res,next)=>{
     try{
-        const allcolumn = await sql.AllColumn()
-        const alltable = await sql.AllScoreTable()
+        var IdDepartment = req.query.IdDepartment;
+        const allcolumn = await sql.AllColumn(IdDepartment)
+        const alltable = await sql.AllScoreTable(IdDepartment)
           var Arraycolumn = allcolumn.map(function (obj) {
             return obj.JOB;
           });
@@ -231,6 +232,29 @@ exports.AllScoreTable=async(req,res,next)=>{
             else
                 return index(obj[is[0]],is.slice(1), value);
         }
+    }catch(err){
+        console.log("error is",err);
+        return res.status(500).send()
+    }
+}
+exports.RemoveScore=async(req,res,next)=>{
+    try{
+        var userName = req.body.userName;
+        var MemberRemove = req.body.MemberRemove;
+        for(let i = 0;i<MemberRemove.length;i++){
+            await sql.RemoveScore(userName,MemberRemove[i])
+            await sql.RemoveMemberScore(MemberRemove[i])
+        }
+    }catch(err){
+        console.log("error is",err);
+        return res.status(500).send()
+    }
+}
+exports.AllMember=(req,res,next)=>{
+    try{
+        sql.AllMember().then(result=>{
+            return res.json({member:result});
+        })
     }catch(err){
         console.log("error is",err);
         return res.status(500).send()

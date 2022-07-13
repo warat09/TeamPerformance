@@ -50,3 +50,36 @@ exports.AllDepartment=async(req,res,next)=>{
         return res.status(500).send()
         }
 }
+exports.CheckMemberDepartment=async(req,res,next)=>{
+    try{
+        var userName = req.query.userName;
+        sql.CheckMemberDepartment(userName).then(result=>{
+            return res.json(result);
+        })      
+    }catch(err){
+        console.log("error is",err);
+        return res.status(500).send()
+        }
+}
+exports.AllJobDepartment=async(req,res,next)=>{
+    try{
+        sql.AllJobDepartment().then(result=>{
+            console.log(result)
+            return res.json({JobDepartment:result});
+        })
+    }catch(err){
+        console.log("error is",err);
+        return res.status(500).send()
+        }
+}
+exports.AllMemberDepartment=async(req,res,next)=>{
+    try{
+        sql.AllMemberDepartment().then(result=>{
+            console.log(result)
+            return res.json({MemberDepartment:result});
+        })
+    }catch(err){
+        console.log("error is",err);
+        return res.status(500).send()
+        }
+}

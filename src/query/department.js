@@ -71,3 +71,55 @@ exports.AllMemberToDepartment =async(IdMember,Department)=>{
     .input("department",mssql.NVarChar(100),Department)
     .query(queryAllMemberToDepartment)
 }
+exports.CheckMemberDepartment =async(userName)=>{
+    let queryresult
+    const queryMemberDepartment = cmdqury.CheckMemberDepartment()
+    const pool = await connection
+    await pool.request()
+    .input("member",mssql.NVarChar(100),userName)
+    .query(queryMemberDepartment)
+    .then(res=>{
+        console.log(res.recordset)
+        console.log("YES")
+        queryresult = res.recordset
+
+    }).catch(err=>{
+        console.log("NO")
+        queryresult = new Iquery(res.recordset,0,err.message)
+    })
+    return queryresult
+}
+exports.AllJobDepartment=async()=>{
+    let queryresult
+    const queryAllJobDepartment = cmdqury.AllJobDepartment()
+    const pool = await connection
+    await pool.request()
+    .query(queryAllJobDepartment)
+    .then(res=>{
+        console.log(res.recordset)
+        console.log("YES")
+        queryresult = res.recordset
+
+    }).catch(err=>{
+        console.log("NO")
+        queryresult = new Iquery(res.recordset,0,err.message)
+    })
+    return queryresult
+}
+exports.AllMemberDepartment=async()=>{
+    let queryresult
+    const queryAllMemberDepartment = cmdqury.AllMemberDepartment()
+    const pool = await connection
+    await pool.request()
+    .query(queryAllMemberDepartment)
+    .then(res=>{
+        console.log(res.recordset)
+        console.log("YES")
+        queryresult = res.recordset
+
+    }).catch(err=>{
+        console.log("NO")
+        queryresult = new Iquery(res.recordset,0,err.message)
+    })
+    return queryresult
+}

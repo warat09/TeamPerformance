@@ -49,3 +49,13 @@ exports.AddJobScore=()=>{
     INSERT INTO TleDatabase.dbo.[job_score] (JOB) VALUES (@job)
     `
 }
+exports.OptionRemoveJobScore=()=>{
+    return`
+    SELECT j.ID,j.JOB,jd.ID_DEPARTMENT FROM TleDatabase.dbo.[job] j JOIN TleDatabase.dbo.[job_department] jd ON j.ID = jd.ID_JOB LEFT JOIN TleDatabase.dbo.[job_score] js ON js.JOB  = j.JOB WHERE jd.ID_DEPARTMENT = (SELECT md.ID_DEPARTMENT  FROM TleDatabase.dbo.[member] m JOIN TleDatabase.dbo.[member_department] md ON m.ID = md.ID_MEMBER  WHERE m.Member_Name = @member) AND js.ID IS NOT NULL
+    `
+}
+exports.RemoveJobScore=()=>{
+    return`
+    DELETE js FROM TleDatabase.dbo.[job_score] js JOIN TleDatabase.dbo.[job] j ON js.JOB = j.JOB JOIN TleDatabase.dbo.[job_department] jd ON jd.ID_JOB = j.ID WHERE js.JOB = @job AND jd.ID_DEPARTMENT = (SELECT md.ID_DEPARTMENT  FROM TleDatabase.dbo.[member] m JOIN TleDatabase.dbo.[member_department] md ON m.ID = md.ID_MEMBER  WHERE m.Member_Name = @member)
+    `
+}

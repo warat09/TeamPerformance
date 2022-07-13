@@ -23,3 +23,18 @@ exports.AddAllMemberToDepartment=()=>{
     INSERT INTO TleDatabase.dbo.[all_member_department] (ID_MEMBER,ID_DEPARTMENT) VALUES (@member,(SELECT ID  FROM TleDatabase.dbo.[department] WHERE Department_Name = @department))    
     `
 }
+exports.CheckMemberDepartment=()=>{
+    return`
+    SELECT d.ID,d.Department_Name FROM TleDatabase.dbo.[member_department] md JOIN TleDatabase.dbo.[member] m ON md.ID_MEMBER = m.ID JOIN TleDatabase.dbo.[department] d ON md.ID_DEPARTMENT = d.ID WHERE m.Member_Name = @member ORDER BY d.ID
+    `
+}
+exports.AllMemberDepartment=()=>{
+    return`
+    SELECT m.Member_Fname,d.Department_Name  FROM TleDatabase.dbo.[member_department] md JOIN TleDatabase.dbo.[member] m ON m.ID  = md.ID_MEMBER JOIN TleDatabase.dbo.[department] d ON md.ID_DEPARTMENT  = d.ID ORDER BY md.ID_DEPARTMENT  
+    `
+}
+exports.AllJobDepartment=()=>{
+    return`
+    SELECT j.JOB,d.Department_Name  FROM TleDatabase.dbo.[job_department] jd JOIN TleDatabase.dbo.[job] j ON j.ID = jd.ID_JOB JOIN TleDatabase.dbo.[department] d ON jd.ID_DEPARTMENT = d.ID ORDER BY jd.ID_DEPARTMENT 
+    `
+}

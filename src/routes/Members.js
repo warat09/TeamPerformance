@@ -6,12 +6,15 @@ router.post("/AddMember", controller.AddMember);
 router.post("/AddMemberToDepartment",controller.AddMemberToDepartment)
 router.post("/AddMemberScore",controller.AddMemberScore);
 router.post("/MemberScore",controller.MemberScore);
-
+router.post("/RemoveScore",controller.RemoveScore);
 
 
 router.get("/OptionMember",controller.OptionMember);
 router.get("/OptionMemberDepartment",controller.OptionMemberDepartment);
 router.get("/AllScore",controller.AllScoreTable);
+router.get("/AllMember",controller.AllMember);
+
+
 
 
 

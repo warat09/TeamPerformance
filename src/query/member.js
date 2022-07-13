@@ -253,11 +253,12 @@ exports.UpdateScore =async(member,job,score)=>{
         })
         return queryresult
 }
-exports.AllColumn=async()=>{
+exports.AllColumn=async(IdDepartment)=>{
     let queryresult
     const queryColumnName = cmdqury.ColumName()
     const pool = await connection
     await pool.request()
+    .input("department",mssql.NVarChar(100),IdDepartment)
     .query(queryColumnName)
     .then(res=>{
         console.log(res.recordset)
@@ -269,11 +270,12 @@ exports.AllColumn=async()=>{
     })
     return queryresult
 }
-exports.AllScoreTable=async()=>{
+exports.AllScoreTable=async(IdDepartment)=>{
     let queryresult
     const queryTableScore = cmdqury.AllTableScore()
     const pool = await connection
     await pool.request()
+    .input("department",mssql.NVarChar(100),IdDepartment)
     .query(queryTableScore)
     .then(res=>{
         console.log(res.recordset)
@@ -282,6 +284,41 @@ exports.AllScoreTable=async()=>{
     }).catch(err=>{
         console.log("NO")
         queryresult = new Iquery(res.recordset,0,err.message)
+    })
+    return queryresult
+}
+exports.RemoveScore=async(userName,MemberRemove)=>{
+    console.log(userName,MemberRemove)
+    let queryresult
+    const queryRemovescore = cmdqury.RemoveScore()
+    const pool = await connection
+    await pool.request()
+    .input("fname",mssql.NVarChar(100),MemberRemove)
+    .input("member",mssql.NVarChar(100),userName)
+    .query(queryRemovescore)
+    .then(()=>{
+        console.log("YES add")
+        queryresult = new IAdd(1,"success")
+    }).catch(err=>{
+        console.log("no add")
+        queryresult = new IAdd(0,err.message)
+    })
+    return queryresult
+}
+exports.RemoveMemberScore=async(MemberRemove)=>{
+    console.log(MemberRemove)
+    let queryresult
+    const queryRemovemember = cmdqury.RemoveMemberScore()
+    const pool = await connection
+    await pool.request()
+    .input("fname",mssql.NVarChar(100),MemberRemove)
+    .query(queryRemovemember)
+    .then(()=>{
+        console.log("YES add")
+        queryresult = new IAdd(1,"success")
+    }).catch(err=>{
+        console.log("no add")
+        queryresult = new IAdd(0,err.message)
     })
     return queryresult
 }

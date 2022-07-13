@@ -174,3 +174,36 @@ exports.AddJobScore =async(Job_Name)=>{
         })
         return queryresult
 }
+exports.OptionRemoveJobScore=async(input)=>{
+    const queryJobRemove = cmdqury.OptionRemoveJobScore();
+    const pool = await connection
+    await pool.request()
+    .input("member",mssql.NVarChar(100),input)
+    .query(queryJobRemove)
+    .then(res=>{
+        console.log(res.recordset)
+        console.log("YES")
+        queryresult = res.recordset
+    }).catch(err=>{
+        console.log("NO")
+        queryresult = new Iquery(res.recordset,0,err.message)
+    })
+    return queryresult
+}
+exports.RemoveJobScore=async(Job_Name,userName)=>{
+    const queryRemoveJobScore = cmdqury.RemoveJobScore();
+    const pool = await connection
+    await pool.request()
+    .input("member",mssql.NVarChar(100),userName)
+    .input("job",mssql.NVarChar(100),Job_Name)
+    .query(queryRemoveJobScore)
+    .then(res=>{
+        console.log(res.recordset)
+        console.log("YES")
+        queryresult = new IAdd(1,"success")
+    }).catch(err=>{
+        console.log("NO")
+        queryresult = new IAdd(0,err.message)
+    })
+    return queryresult
+}
