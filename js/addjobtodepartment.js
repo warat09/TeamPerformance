@@ -28,6 +28,12 @@ const main =async()=>{
     }
     var Userdata = await JSON.parse(localStorage.getItem("data"))
     document.getElementById("par").innerHTML = await Userdata.userFname;
+    document.getElementById("username").innerHTML = await Userdata.userName;
+    const response = await fetch('http://localhost:9090/Department/CheckMemberDepartment?'+ new URLSearchParams({
+        userName: Userdata.userName
+     }))
+     const resultresponse = await response.json();
+    document.getElementById("department").innerHTML = await resultresponse[0].Department_Name;
     console.log(Userdata.menu)
     var checklink = 0
     Userdata.menu.forEach((Item)=> {
@@ -39,6 +45,33 @@ const main =async()=>{
     if(checklink !== 1){
         window.location.href = './'
     }
+    fetch('http://localhost:9090/Department/AllJobDepartment')
+    .then(res => res.json())
+    .then(data =>{
+        let job = data.JobDepartment;
+        var tablerow = document.getElementById("mytable").tHead;
+        let headerRow = document.createElement('tr');
+        let table = document.getElementById('mytable').tBodies[0]
+
+        Object.keys(job[0]).forEach(headerText => {
+            var newTH = document.createElement('th');
+                        newTH.style.width = "150px";
+            newTH.innerHTML = `${headerText}`
+            
+            headerRow.appendChild(newTH)
+
+    });
+    tablerow.appendChild(headerRow);
+    job.forEach((emp,i) => {
+        let row = document.createElement('tr');
+        Object.values(emp).forEach((text,i) => {
+            let cell = document.createElement('td');
+            cell.innerHTML = `${text}`
+            row.appendChild(cell);
+        })
+        table.appendChild(row);
+    });
+    } )
 
 }
 main()

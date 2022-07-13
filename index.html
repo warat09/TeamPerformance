@@ -4,15 +4,17 @@
         <title>Team Performance</title>
         <link href="https://fonts.googleapis.com/css2?family=Reenie+Beanie&display=swap" rel="stylesheet">
     </head>
-    <body>
+    <br>
         <style>
             table, th, td {
               border: 1px solid;
             }
             </style>
-        <p id="par"></p><label>logout</label><button onclick="logout()">logout</button>
+        Name: <label id="par"></label></br></br>UserName: <label id="username"></label></br></br>Department: <label id="department"></label></br></br><label>logout</label><button onclick="logout()">logout</button>
         <div id="setting"> 
           </div>
+          <select id="changedepartment" onchange="changedepartment()">
+        </select>
           <table id="mytable">
             <thead>
                 <tr>

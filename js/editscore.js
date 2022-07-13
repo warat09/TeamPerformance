@@ -1,5 +1,9 @@
 var select = document.getElementById("member");
 var selectjob = document.getElementById("job");
+var selectremovejob = document.getElementById("removejob");
+var selectchangedepartment = document.getElementById("changedepartment")
+var department = document.getElementById("department")
+
 var Userdata = JSON.parse(localStorage.getItem("data"))
 var member,job
 
@@ -29,22 +33,18 @@ const main =async()=>{
     }
     var Userdata = await JSON.parse(localStorage.getItem("data"))
     document.getElementById("par").innerHTML = await Userdata.userFname;
-    console.log(Userdata.menu)
-    var checklink = 0
-    Userdata.menu.forEach((Item)=> {
-        if (Item.menuId === 7) {
-            checklink = 1
-        }
-        return checklink
-    });
-    if(checklink !== 1){
-        window.location.href = './'
+    document.getElementById("username").innerHTML = await Userdata.userName;
+    const response = await fetch('http://localhost:9090/Department/CheckMemberDepartment?'+ new URLSearchParams({
+        userName: Userdata.userName
+     }))
+     const resultresponse = await response.json();
+     for (i=0;i<resultresponse.length;i++){
+        selectchangedepartment.options[i] = new Option(resultresponse[i].Department_Name,resultresponse[i].ID);
     }
-
-}
-main()
-
-fetch('http://localhost:9090/Member/AllScore')
+    department.innerHTML = await selectchangedepartment.options[selectchangedepartment.selectedIndex].innerHTML;
+    fetch('http://localhost:9090/Member/AllScore?'+ new URLSearchParams({
+        IdDepartment: selectchangedepartment.options[selectchangedepartment.selectedIndex].value
+     }))
     .then(res => res.json())
     .then(data =>{
         let employees = data.Body
@@ -73,17 +73,29 @@ fetch('http://localhost:9090/Member/AllScore')
         Object.values(emp).forEach((text,i) => {
             let cell = document.createElement('td');
             if(i == 0){
-                cell.innerHTML = `<td ><input type="text" name="array[]" id="row-`+(table.rows.length)+`_col-`+(i+1)+`" `+`value="${text}"  disabled/></td>`
+                cell.innerHTML = `<td >${text}</td>`
             }
             else{
                 cell.innerHTML = `<td><input type="text" name="array[]" id="row-`+(table.rows.length)+`_col-`+(i+1)+`" `+`value="${text}"/></td>`
             }
             row.appendChild(cell);
-            
         })
         table.appendChild(row);
     });
     } )
+    var checklink = 0
+    Userdata.menu.forEach((Item)=> {
+        if (Item.menuId === 7) {
+            checklink = 1
+        }
+        return checklink
+    });
+    if(checklink !== 1){
+        window.location.href = './'
+    }
+
+}
+main()
 
 fetch('http://localhost:9090/Member/OptionMemberDepartment?' + new URLSearchParams({
     userName: Userdata.userName
@@ -117,6 +129,21 @@ for (i=0;i<job.length+1;i++){
     }
 }
 } )
+fetch("http://localhost:9090/Job/OptionRemoveJobScore?" + new URLSearchParams({
+    userName: Userdata.userName
+ }))
+ .then(res => res.json())
+.then(result =>{
+job = result.job
+for (i=0;i<job.length+1;i++){
+    if(i==0){
+        selectremovejob.options[i] = new Option("SelectRemoveJob");
+    }
+    else{
+        selectremovejob.options[i] = new Option(job[i-1].JOB,job[i-1].ID);
+    }
+}
+} )
 const addmember=async()=>{
 //     const response = await fetch('http://localhost:9090/Member/AddMemberScore',{
 //     method:'post',
@@ -143,7 +170,7 @@ var cell2 = row.insertCell(i);
         cell2.innerHTML = `<td><input type="checkbox" name="record"></td>`
     }
     else if(i==1){
-        cell2.innerHTML = `<td><input type="text" name="array[]" id="row-`+(table.tBodies[0].rows.length-1)+`_col-`+(i)+`" `+`value="${select.options[select.selectedIndex].text}" disabled/></td>`
+        cell2.innerHTML = `<td>${select.options[select.selectedIndex].text}</td>`
     }
     else{
         cell2.innerHTML = `<td><input type="text" name="array[]" id="row-`+(table.tBodies[0].rows.length-1)+`_col-`+(i)+`" `+`value="0"/></td>`
@@ -175,21 +202,34 @@ const addjob=async()=>{
 
         var totalRowCount = table.tBodies[0].rows.length;
         var tbodyColumnCount = table.rows[0].cells.length;
-        for (var h=0; h<tblHeadObj.rows.length; h++) {
-            var newTH = document.createElement('th');
-            tblHeadObj.rows[h].appendChild(newTH);
-            newTH.innerHTML = `${selectjob.options[selectjob.selectedIndex].text}`
-            // <h2>adsadas</h2>
-            // '[th] row:' + h + ', cell: ' + (tblHeadObj.rows[h].cells.length - 1)
-        }
-        var tblBodyObj = document.getElementById("mytable").tBodies[0];
-        for (var i=0; i<tblBodyObj.rows.length; i++) {
-            var newCell = tblBodyObj.rows[i].insertCell(-1);
-            newCell.innerHTML = `<td><input type="text" name="array[]" id="row-${i}_col-`+(tblBodyObj.rows[i].cells.length - 1)+`" `+`value="0"/></td>`
-            // newCell.innerHTML ='[th] row:' + i + ', cell: ' + (tblBodyObj.rows[i].cells.length - 1)
-        }
-        selectjob.remove(selectjob.selectedIndex)
 
+        if(selectjob.options[selectjob.selectedIndex].index == 0){
+            alert("pls select remove")
+        }
+        else{
+            for (var h=0; h<tblHeadObj.rows.length; h++) {
+                var newTH = document.createElement('th');
+                tblHeadObj.rows[h].appendChild(newTH);
+                newTH.innerHTML = `${selectjob.options[selectjob.selectedIndex].text}`
+                // <h2>adsadas</h2>
+                // '[th] row:' + h + ', cell: ' + (tblHeadObj.rows[h].cells.length - 1)
+            }
+            var tblBodyObj = document.getElementById("mytable").tBodies[0];
+            for (var i=0; i<tblBodyObj.rows.length; i++) {
+                var newCell = tblBodyObj.rows[i].insertCell(-1);
+                newCell.innerHTML = `<td><input type="text" name="array[]" id="row-${i}_col-`+(tblBodyObj.rows[i].cells.length - 1)+`" `+`value="0"/></td>`
+                // newCell.innerHTML ='[th] row:' + i + ', cell: ' + (tblBodyObj.rows[i].cells.length - 1)
+            }
+                var option = document.createElement("option");
+                option.value = selectjob.options[selectjob.selectedIndex].value;
+                option.text = selectjob.options[selectjob.selectedIndex].text;
+                selectremovejob.add(option);
+                selectjob.remove(selectjob.selectedIndex)
+        }
+        
+        // selectremovejob.add(selectjob.options[selectjob.selectedIndex])
+        
+        
 }
 const onClick=async()=>{
     // let inputValue = document.getElementById("row-0_col-2").value;
@@ -199,23 +239,34 @@ const onClick=async()=>{
     var tRows = [];
     var tRowsh = [];
 
-    var n = 0;
     tab = document.getElementById('mytable').tBodies[0];
     tabh = document.getElementById('mytable');
+    var n = 0;
+
     for (var r = 0; r < tab.rows.length; r++) {
     var tRow = [];// start new row array
     for (var c = 1; c < tab.rows[r].cells.length; c++) {
+        var input = document.getElementsByName('array[]');
         if(r==0){
             tRowsh[c-1] = tabh.rows[r].cells[c].innerHTML;
         }
         // console.log(tRow[c-1]);
-            var input = document.getElementsByName('array[]');
-            console.log(input)
+        if(c==1){
+            tRow[0] = tab.rows[r].cells[1].innerHTML;
+        }
+        if(c<=tab.rows[r].cells.length-2 && n<input.length){
+                tRow[c] = input[n].value;
+                n++
+        }
+        // console.log(tabh.rows[r].cells[1].innerHTML)
+            // console.log("hhhhhh",input)
+            // console.log(c)
+
                 // tRow[c-1] = input[i].value;
-                console.log(tRow);
-                tRow[c-1] = input[n].value;
-            n++
-        
+                // console.log(tRow);
+                // tRow[1] = 1;
+                // tRow[2] = 1;
+                // tRow[3] = 1;
 
         console.log(`row = ${r},col = ${c}`)
 
@@ -261,4 +312,94 @@ const onClick=async()=>{
     })
 
     const responseData = await response.json();
+}
+const removeuser=async()=>{
+
+
+    var table = document.getElementById("mytable").tBodies[0];
+    var rowCount = table.rows.length;
+    // console.log(rowCount)
+
+    var memberremove=[]
+    for(var i=0; i<rowCount; i++){
+        var row = table.rows[i];
+        // index of td contain checkbox is 8
+        var chkbox = row.cells[0].getElementsByTagName('input')[0];
+        console.log(i)
+        console.log(chkbox.checked)
+        if('checkbox' == chkbox.type && true == chkbox.checked) {
+            // console.log(row.cells[1].innerHTML)
+            memberremove.push(row.cells[1].innerHTML)
+            table.deleteRow(i)
+            rowCount--
+            i--
+        }
+    }
+    const response = await fetch('http://localhost:9090/Member/RemoveScore',{
+        method:'post',
+        headers:{
+            'Content-Type':'application/json'    
+        },
+        body: JSON.stringify({
+            "userName": Userdata.userName,
+            "MemberRemove":memberremove
+        })
+    })
+
+    const responseData = await response.json();
+}
+const removework=async()=> {
+    var tble = document.getElementById('mytable');
+    var select = document.getElementById("removejob");
+    var option = document.getElementById("removejob").options;
+    var x = document.getElementById("removejob").selectedIndex;
+    var row = tble.rows; // Getting the rows
+    if(option[x].index == 0){
+        alert("pls select remove")
+    }
+    else{
+        for (var i = 0; i < row[0].cells.length; i++) {
+        // Getting the text of columnName
+            var str = row[0].cells[i].innerHTML;
+            console.log("str",str)
+            console.log("option value",option[x].text)
+            console.log(i)
+
+            if(str == option[x].text) { 
+                if(i==0 || i==1){
+                    alert("no")
+                    break
+                }
+                else{
+                    for (var j = 0; j < row.length; j++) {
+                        row[j].deleteCell(i);
+                    }
+                    const response = await fetch('http://localhost:9090/Job/RemoveJobScore',{
+                        method:'post',
+                        headers:{   
+                            'Content-Type':'application/json'    
+                        },
+                        body: JSON.stringify({
+                            "Job_ID":option[x].value,
+                            "Job_Name":option[x].text,
+                            "userName": Userdata.userName     
+                        })
+                    })
+                    const responseStatus = await response.json();
+                    selectjob.add(select.options[select.selectedIndex])
+                    select.remove(i-1)
+                    alert("found")           
+                    break
+                }
+            }
+            else if(i == row[0].cells.length-1 && str !=  select.value){
+                alert("notfound")
+            }
+        }
+    }
+
+}
+const logout =()=>{
+    window.localStorage.clear();
+    window.location.href = './login.html'
 }

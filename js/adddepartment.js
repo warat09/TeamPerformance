@@ -24,6 +24,12 @@ const main =async()=>{
     }
     var Userdata = await JSON.parse(localStorage.getItem("data"))
     document.getElementById("par").innerHTML = await Userdata.userFname;
+    document.getElementById("username").innerHTML = await Userdata.userName;
+    const response = await fetch('http://localhost:9090/Department/CheckMemberDepartment?'+ new URLSearchParams({
+        userName: Userdata.userName
+     }))
+     const resultresponse = await response.json();
+    document.getElementById("department").innerHTML = await resultresponse[0].Department_Name;
     console.log(Userdata.menu)
     var checklink = 0
     Userdata.menu.forEach((Item)=> {

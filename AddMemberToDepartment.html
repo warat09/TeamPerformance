@@ -4,14 +4,23 @@
         <title>Add Member Department</title>
     </head>
     <body>
-        <p id="par"></p><label>logout</label><button onclick="logout()">logout</button>
-        <form id="form">
-            <select id="department" onchange="myFunction()">
+        <style>
+            table, th, td {
+              border: 1px solid;
+            }
+        </style>
+        Name: <label id="par"></label></br></br>UserName: <label id="username"></label></br></br>Department: <label id="department"></label></br></br><label>logout</label><button onclick="logout()">logout</button>        <form id="form">
+            <select id="departments" onchange="myFunction()">
             </select>
             <select id="member">
             </select>
             <input type="submit" value="add">
-        </form>
+            <table id="mytable">
+                <thead>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
     </body>
     <script src="js/addmembertodepartment.js"></script>
 </html>

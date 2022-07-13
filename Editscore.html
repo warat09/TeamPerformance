@@ -8,14 +8,16 @@
             }
             </style>
     </head>
-    <body>
-        <p id="par"></p><label>logout</label><button onclick="logout()">logout</button>
-            <select id="member">
+    <br>
+        Name: <label id="par"></label></br></br>UserName: <label id="username"></label></br></br>Department: <label id="department"></label></br></br><label>logout</label><button onclick="logout()">logout</button>            <select id="member">
             </select>
             <button onclick="addmember()">adduser</button>
             <select id="job">
             </select>
             <button onclick="addjob()">addjob</button>
+            </br>
+            <select id="changedepartment" onchange="changedepartment()"></select>
+            </select>
             <table id="mytable">
                 <thead>
                     <tr>
@@ -27,6 +29,10 @@
                 </tbody>
             </table>
             <button onclick="onClick()">submit</button>
+            <button onclick="removeuser()">removeuser</button>
+            <select id="removejob">
+              </select>
+          <button onclick="removework()">removework</button>
 
             
     </body>

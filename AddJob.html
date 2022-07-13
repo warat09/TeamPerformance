@@ -4,11 +4,20 @@
         <title>Add Job</title>
     </head>
     <body>
-        <p id="par"></p><label>logout</label><button onclick="logout()">logout</button>
-        <form id="form">
+        <style>
+            table, th, td {
+              border: 1px solid;
+            }
+        </style>
+        Name: <label id="par"></label></br></br>UserName: <label id="username"></label></br></br>Department: <label id="department"></label></br></br><label>logout</label><button onclick="logout()">logout</button>        <form id="form">
             <input type="text" id="job" placeholder="Add Job">
             <input type="submit" value="add">
-        </form>
+            <table id="mytable">
+                <thead>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         <script src="js/addjob.js"></script>
     </body>
 </html>

@@ -1,6 +1,6 @@
-var select = document.getElementById("department");
-var form = document.getElementById("form")
+var select = document.getElementById("departments");
 var selectjob = document.getElementById("member")
+var form = document.getElementById("form")
 selectjob[0]= new Option("pls select department to add job");
 var checktoken = localStorage.getItem("tokenlogin")
 
@@ -29,6 +29,12 @@ const main =async()=>{
     }
     var Userdata = await JSON.parse(localStorage.getItem("data"))
     document.getElementById("par").innerHTML = await Userdata.userFname;
+    document.getElementById("username").innerHTML = await Userdata.userName;
+    const response = await fetch('http://localhost:9090/Department/CheckMemberDepartment?'+ new URLSearchParams({
+        userName: Userdata.userName
+     }))
+     const resultresponse = await response.json();
+    document.getElementById("department").innerHTML = await resultresponse[0].Department_Name;
     console.log(Userdata.menu)
     var checklink = 0
     Userdata.menu.forEach((Item)=> {
@@ -40,6 +46,33 @@ const main =async()=>{
     if(checklink !== 1){
         window.location.href = './'
     }
+    fetch('http://localhost:9090/Department/AllMemberDepartment')
+    .then(res => res.json())
+    .then(data =>{
+        let job = data.MemberDepartment;
+        var tablerow = document.getElementById("mytable").tHead;
+        let headerRow = document.createElement('tr');
+        let table = document.getElementById('mytable').tBodies[0]
+
+        Object.keys(job[0]).forEach(headerText => {
+            var newTH = document.createElement('th');
+                        newTH.style.width = "150px";
+            newTH.innerHTML = `${headerText}`
+            
+            headerRow.appendChild(newTH)
+
+    });
+    tablerow.appendChild(headerRow);
+    job.forEach((emp,i) => {
+        let row = document.createElement('tr');
+        Object.values(emp).forEach((text,i) => {
+            let cell = document.createElement('td');
+            cell.innerHTML = `${text}`
+            row.appendChild(cell);
+        })
+        table.appendChild(row);
+    });
+    } )
 
 }
 main()
@@ -49,9 +82,10 @@ fetch('http://localhost:9090/Department/AllDepartment')
   .then(data =>{
     // var job = data.job
     var department = data.Department
-    for (i=0;i<department.length+1;i++){
+    console.log(department)
+    for (var i=0;i<department.length+1;i++){
         if(i==0){
-            select.options[i] = new Option("selecysepartment");
+          select.options[i] = new Option("selectdepartment");            
         }
         else{
             select.options[i] = new Option(department[i-1].Department_Name,department[i-1].ID);
@@ -61,18 +95,15 @@ fetch('http://localhost:9090/Department/AllDepartment')
 
   form.addEventListener('submit',async(event)=>{
     event.preventDefault()
-    var x = document.getElementById("department");
-    var y = document.getElementById("member");
-
-    if(x.selectedIndex !=0){
+    if(select.selectedIndex !=0){
       const response = await fetch('http://localhost:9090/Member/AddMemberToDepartment',{
           method:'post',
           headers:{
               'Content-Type':'application/json'    
           },
           body: JSON.stringify({
-              "member":y.value,
-              "department":x.value
+              "member":selectjob.value,
+              "department":select.value
           })
       })
 
@@ -83,14 +114,10 @@ fetch('http://localhost:9090/Department/AllDepartment')
 
 })
 async function myFunction () {
-  var x = document.getElementById("department");
   selectjob.innerText = null;
-
-
-  console.log(x)
-  if(x.selectedIndex != 0){
+  if(select.selectedIndex != 0){
     const response = await fetch('http://localhost:9090/Member/OptionMember?' + new URLSearchParams({
-      IdDepartment: x.value
+      IdDepartment: select.value
     }))
     const responsedata = await response.json();
     var member = responsedata.member
