@@ -146,7 +146,7 @@ exports.OptionJobDepartment=async(input)=>{
     const queryJob = cmdqury.OptionJobDepartment();
     const pool = await connection
     await pool.request()
-    .input("department",mssql.NVarChar(100),input)
+    .input("department",mssql.Int(4),input)
     .query(queryJob)
     .then(res=>{
         console.log(res.recordset)
@@ -174,11 +174,11 @@ exports.AddJobScore =async(Job_Name)=>{
         })
         return queryresult
 }
-exports.OptionRemoveJobScore=async(input)=>{
+exports.OptionRemoveJobScore=async(IdDepartment)=>{
     const queryJobRemove = cmdqury.OptionRemoveJobScore();
     const pool = await connection
     await pool.request()
-    .input("member",mssql.NVarChar(100),input)
+    .input("department",mssql.Int(4),IdDepartment)
     .query(queryJobRemove)
     .then(res=>{
         console.log(res.recordset)
@@ -190,11 +190,11 @@ exports.OptionRemoveJobScore=async(input)=>{
     })
     return queryresult
 }
-exports.RemoveJobScore=async(Job_Name,userName)=>{
+exports.RemoveJobScore=async(Job_Name,IdDepartment)=>{
     const queryRemoveJobScore = cmdqury.RemoveJobScore();
     const pool = await connection
     await pool.request()
-    .input("member",mssql.NVarChar(100),userName)
+    .input("department",mssql.Int(4),IdDepartment)
     .input("job",mssql.NVarChar(100),Job_Name)
     .query(queryRemoveJobScore)
     .then(res=>{

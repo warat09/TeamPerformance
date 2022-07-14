@@ -73,8 +73,8 @@ exports.OptionJob =async(req,res,next)=>{
 }
 exports.OptionJobDepartment=async(req,res,next)=>{
     try{
-        var userName = req.query.userName;
-        sql.OptionJobDepartment(userName).then(result=>{
+        var IdDepartment = req.query.IdDepartment;
+        sql.OptionJobDepartment(IdDepartment).then(result=>{
             console.log(result)
             return res.json({job:result});
         })
@@ -103,8 +103,8 @@ exports.AddJobScore=async(req,res,next)=>{
 }
 exports.OptionRemoveJobScore=async(req,res,next)=>{
     try{
-        var userName = req.query.userName;
-        sql.OptionRemoveJobScore(userName).then(result=>{
+        var IdDepartment = req.query.IdDepartment;
+        sql.OptionRemoveJobScore(IdDepartment).then(result=>{
             console.log(result)
             return res.json({job:result});
         })
@@ -116,8 +116,8 @@ exports.OptionRemoveJobScore=async(req,res,next)=>{
 exports.RemoveJobScore=async(req,res,next)=>{
     try{
         var Job_Name = req.body.Job_Name;
-        var userName = req.body.userName;
-        sql.RemoveJobScore(Job_Name,userName).then(result=>{
+        var IdDepartment = req.body.IdDepartment;
+        sql.RemoveJobScore(Job_Name,IdDepartment).then(result=>{
             console.log(result)
         })
     }catch(err){

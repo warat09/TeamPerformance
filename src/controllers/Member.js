@@ -77,8 +77,8 @@ exports.OptionMember=async(req,res,next)=>{
 }
 exports.OptionMemberDepartment=async(req,res,next)=>{
     try{
-        var userName = req.query.userName;
-        sql.OptionMemberDepartment(userName).then(result=>{
+        var IdDepartment = req.query.IdDepartment;
+        sql.OptionMemberDepartment(IdDepartment).then(result=>{
             console.log(result)
             return res.json({member:result});
         })

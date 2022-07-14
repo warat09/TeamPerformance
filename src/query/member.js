@@ -140,11 +140,11 @@ exports.OptionMember =async(input)=>{
     })
     return queryresult
 }
-exports.OptionMemberDepartment =async(input)=>{
+exports.OptionMemberDepartment =async(IdDepartment)=>{
     const queryMember = cmdqury.OptionMemberDepartment()
     const pool = await connection
     await pool.request()
-    .input("department",mssql.NVarChar(100),input)
+    .input("department",mssql.Int(4),IdDepartment)
     .query(queryMember)
     .then(res=>{
         console.log(res.recordset)
