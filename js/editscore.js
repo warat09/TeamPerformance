@@ -3,9 +3,9 @@ var selectjob = document.getElementById("job");
 var selectremovejob = document.getElementById("removejob");
 var selectchangedepartment = document.getElementById("changedepartment")
 var department = document.getElementById("department")
-
 var Userdata = JSON.parse(localStorage.getItem("data"))
 var member,job
+var keepid
 
 var checktoken = localStorage.getItem("tokenlogin")
 const main =async()=>{
@@ -42,6 +42,54 @@ const main =async()=>{
         selectchangedepartment.options[i] = new Option(resultresponse[i].Department_Name,resultresponse[i].ID);
     }
     department.innerHTML = await selectchangedepartment.options[selectchangedepartment.selectedIndex].innerHTML;
+    keepid = await selectchangedepartment.options[selectchangedepartment.selectedIndex].value
+    fetch('http://localhost:9090/Member/OptionMemberDepartment?' + new URLSearchParams({
+    IdDepartment: selectchangedepartment.options[selectchangedepartment.selectedIndex].value
+    }))
+    .then(res => res.json())
+    .then(result =>{
+    // var job = data.job
+    member = result.member
+    console.log(member)
+    for (i=0;i<member.length+1;i++){
+        if(i==0){
+            select.options[i] = new Option("SelectMember");
+        }
+        else{
+            select.options[i] = new Option(member[i-1].Member_Fname,member[i-1].ID);
+        }
+    }
+    } )
+    fetch("http://localhost:9090/Job/OptionJobDepartment?" + new URLSearchParams({
+    IdDepartment: selectchangedepartment.options[selectchangedepartment.selectedIndex].value
+    }))
+    .then(res => res.json())
+    .then(result =>{
+    job = result.job
+    for (i=0;i<job.length+1;i++){
+        if(i==0){
+            selectjob.options[i] = new Option("SelectJob");
+        }
+        else{
+            selectjob.options[i] = new Option(job[i-1].JOB,job[i-1].ID);
+        }
+    }
+    } )
+    fetch("http://localhost:9090/Job/OptionRemoveJobScore?" + new URLSearchParams({
+        IdDepartment: selectchangedepartment.options[selectchangedepartment.selectedIndex].value
+    }))
+    .then(res => res.json())
+    .then(result =>{
+    job = result.job
+    for (i=0;i<job.length+1;i++){
+        if(i==0){
+            selectremovejob.options[i] = new Option("SelectRemoveJob");
+        }
+        else{
+            selectremovejob.options[i] = new Option(job[i-1].JOB,job[i-1].ID);
+        }
+    }
+    } )
     fetch('http://localhost:9090/Member/AllScore?'+ new URLSearchParams({
         IdDepartment: selectchangedepartment.options[selectchangedepartment.selectedIndex].value
      }))
@@ -97,53 +145,6 @@ const main =async()=>{
 }
 main()
 
-fetch('http://localhost:9090/Member/OptionMemberDepartment?' + new URLSearchParams({
-    userName: Userdata.userName
- }))
-.then(res => res.json())
-.then(result =>{
-// var job = data.job
-member = result.member
-console.log(member)
-for (i=0;i<member.length+1;i++){
-    if(i==0){
-        select.options[i] = new Option("SelectMember");
-    }
-    else{
-        select.options[i] = new Option(member[i-1].Member_Fname,member[i-1].ID);
-    }
-}
-} )
-fetch("http://localhost:9090/Job/OptionJobDepartment?" + new URLSearchParams({
-    userName: Userdata.userName
- }))
- .then(res => res.json())
-.then(result =>{
-job = result.job
-for (i=0;i<job.length+1;i++){
-    if(i==0){
-        selectjob.options[i] = new Option("SelectJob");
-    }
-    else{
-        selectjob.options[i] = new Option(job[i-1].JOB,job[i-1].ID);
-    }
-}
-} )
-fetch("http://localhost:9090/Job/OptionRemoveJobScore?" + new URLSearchParams({
-    userName: Userdata.userName
- }))
- .then(res => res.json())
-.then(result =>{
-job = result.job
-for (i=0;i<job.length+1;i++){
-    if(i==0){
-        selectremovejob.options[i] = new Option("SelectRemoveJob");
-    }
-    else{
-        selectremovejob.options[i] = new Option(job[i-1].JOB,job[i-1].ID);
-    }
-}
-} )
 const addmember=async()=>{
 //     const response = await fetch('http://localhost:9090/Member/AddMemberScore',{
 //     method:'post',
@@ -349,6 +350,7 @@ const removeuser=async()=>{
     const responseData = await response.json();
 }
 const removework=async()=> {
+    var selectchangedepartment = document.getElementById("changedepartment")
     var tble = document.getElementById('mytable');
     var select = document.getElementById("removejob");
     var option = document.getElementById("removejob").options;
@@ -382,7 +384,7 @@ const removework=async()=> {
                         body: JSON.stringify({
                             "Job_ID":option[x].value,
                             "Job_Name":option[x].text,
-                            "userName": Userdata.userName     
+                            "IdDepartment": selectchangedepartment.options[selectchangedepartment.selectedIndex].value     
                         })
                     })
                     const responseStatus = await response.json();
@@ -398,6 +400,116 @@ const removework=async()=> {
         }
     }
 
+}
+const changedepartment=async()=>{
+    // var selectchangedepartment = document.getElementById("changedepartment")
+    department.innerHTML = await selectchangedepartment.options[selectchangedepartment.selectedIndex].innerHTML;
+    for(var i =0;i < selectjob.options.length;i++){
+        selectjob.remove(i)
+    }
+    for (var j = 0;j < select.options.length;j++){
+        select.remove(j)
+    }
+    for (var k = 0;k < selectremovejob.options.length;k++){
+        selectremovejob.remove(k)
+    }
+    
+    await fetch('http://localhost:9090/Member/OptionMemberDepartment?' + new URLSearchParams({
+        IdDepartment: selectchangedepartment.options[selectchangedepartment.selectedIndex].value
+        }))
+        .then(res => res.json())
+        .then(result =>{
+        // var job = data.job
+        member = result.member
+        console.log(member)
+        for (i=0;i<member.length+1;i++){
+            if(i==0){
+                select.options[i] = new Option("SelectMember");
+            }
+            else{
+                select.options[i] = new Option(member[i-1].Member_Fname,member[i-1].ID);
+            }
+        }
+        } )
+        await fetch("http://localhost:9090/Job/OptionJobDepartment?" + new URLSearchParams({
+        IdDepartment: selectchangedepartment.options[selectchangedepartment.selectedIndex].value
+        }))
+        .then(res => res.json())
+        .then(result =>{
+        job = result.job
+        for (i=0;i<job.length+1;i++){
+            if(i==0){
+                selectjob.options[i] = new Option("SelectJob");
+            }
+            else{
+                selectjob.options[i] = new Option(job[i-1].JOB,job[i-1].ID);
+            }
+        }
+        } )
+        await fetch("http://localhost:9090/Job/OptionRemoveJobScore?" + new URLSearchParams({
+            IdDepartment: selectchangedepartment.options[selectchangedepartment.selectedIndex].value
+        }))
+        .then(res => res.json())
+        .then(result =>{
+        job = result.job
+        for (i=0;i<job.length+1;i++){
+            if(i==0){
+                selectremovejob.options[i] = new Option("SelectRemoveJob");
+            }
+            else{
+                selectremovejob.options[i] = new Option(job[i-1].JOB,job[i-1].ID);
+            }
+        }
+        } )
+        await fetch('http://localhost:9090/Member/AllScore?' + new URLSearchParams({
+        IdDepartment: selectchangedepartment.options[selectchangedepartment.selectedIndex].value
+     }))
+    .then(res => res.json())
+    .then(data =>{
+        let employees = data.Body
+        let headers = data.Head;
+        let tableall = document.getElementById('mytable')
+        var tablerow = document.getElementById("mytable").tHead;
+        let headerRow = document.createElement('tr');
+        let table = document.getElementById('mytable').tBodies[0]
+        var rowName = tablerow.rows[0].cells.length;
+        var rowCount = table.rows.length;
+        for (var x=rowCount-1; x>=0; x--) {
+            table.deleteRow(x);
+        }
+        for (var x=rowName-1; x>1; x--) {
+        tableall.rows[0].deleteCell(x);
+        }
+        headers.forEach(headerText => {
+            var newTH = document.createElement('th');
+            
+            tablerow.rows[0].appendChild(newTH);
+            newTH.style.width = "150px";
+            newTH.innerHTML = `${headerText}`
+
+        // headerRow.appendChild(header);
+        // tablerow.appendChild(headerRow);
+
+    });
+    // tablerow.appendChild(headerRow);
+    employees.forEach((emp,i) => {
+        let row = document.createElement('tr');
+        row.innerHTML = `<td><input type="checkbox" name="record"></td>`
+        
+
+        Object.values(emp).forEach((text,i) => {
+            let cell = document.createElement('td');
+            if(i == 0){
+                cell.innerHTML = `<td >${text}</td>`
+            }
+            else{
+                cell.innerHTML = `<td><input type="text" name="array[]" id="row-`+(table.rows.length)+`_col-`+(i+1)+`" `+`value="${text}"/></td>`
+            }
+            row.appendChild(cell);
+        })
+        table.appendChild(row);
+    });
+    } )
 }
 const logout =()=>{
     window.localStorage.clear();
