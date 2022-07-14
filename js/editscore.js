@@ -236,6 +236,7 @@ const onClick=async()=>{
     // let inputValue = document.getElementById("row-0_col-2").value;
     // let sum = Number(test1) + Number(test2) + Number(test3);
     //  alert(inputValue)
+    var selectchangedepartment = document.getElementById("changedepartment")
 
     var tRows = [];
     var tRowsh = [];
@@ -307,7 +308,8 @@ const onClick=async()=>{
         },
         body: JSON.stringify({
             "score":newRows,
-            "rowname":tRowsh
+            "rowname":tRowsh,
+            "IdDepartment": selectchangedepartment.options[selectchangedepartment.selectedIndex].value   
         })
 
     })
@@ -351,6 +353,7 @@ const removeuser=async()=>{
 }
 const removework=async()=> {
     var selectchangedepartment = document.getElementById("changedepartment")
+    
     var tble = document.getElementById('mytable');
     var select = document.getElementById("removejob");
     var option = document.getElementById("removejob").options;
