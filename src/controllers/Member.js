@@ -112,8 +112,10 @@ exports.MemberScore=async(req,res,next)=>{
     try{
         var score = req.body.score;
         var columnname = req.body.rowname;
+        var IdDepartment = req.body.IdDepartment
         console.log(score)
         console.log(columnname)
+        console.log(IdDepartment)
         // let obj = score.find(o => o.Name === 'Thanachai Thoungpugdee');
         // console.log(obj);
         // let itemYouWant = null;
@@ -125,17 +127,17 @@ exports.MemberScore=async(req,res,next)=>{
         // });
         // console.log("hhhhhhhhhhhhhhhhhhhhhhh",itemYouWant);
         for(var i = 1;i < columnname.length;i++){
-            await sqljob.CheckJobScore(columnname[i]).then(result=>{
+            await sqljob.CheckJobScore(columnname[i],IdDepartment).then(result=>{
                 if(Object.keys(result.data).length == 0){
-                    sqljob.AddJobScore(columnname[i])
+                    sqljob.AddJobScore(columnname[i],IdDepartment)
                 }
             })
         }
         for(var i =0;i<score.length;i++){
-           await sql.CheckMemberScore(score[i].Name).then(result=>{
+           await sql.CheckMemberScore(score[i].Name,IdDepartment).then(result=>{
                 if(Object.keys(result.data).length == 0){
                     // console.log(score[i].Name)
-                    sql.AddMemberScore(score[i].Name)
+                    sql.AddMemberScore(score[i].Name,IdDepartment)
                 }
             })
         }
@@ -147,8 +149,6 @@ exports.MemberScore=async(req,res,next)=>{
             Name = item.Name
             await columnname.forEach(async(JOB,i)=>{
                 if(i > 0){
-
-
                     // console.log(i)
                     // console.log(a)
                     var obj = score.find(o => o.Name === Name);
@@ -164,14 +164,15 @@ exports.MemberScore=async(req,res,next)=>{
                     //  await sql.UpdateScore(Name,JOB,obj[JOB])
                     // await sql.AddScore(Name,JOB,obj[JOB])
 
-                     sql.CheckMemberAndScore(Name,JOB,obj[JOB]).then(result=>{
+                     sql.CheckMemberAndScore(Name,JOB,obj[JOB],IdDepartment).then(result=>{
                         //  console.log("Job Name",JOB)
                         //  console.log("Name",Name)
+                        console.log(result)
                         if(result.status == 0){
-                            sql.AddScore(result.member,result.job,result.score)
+                            sql.AddScore(result.member,result.job,result.score,IdDepartment)
                         }
                         else{
-                            sql.UpdateScore(result.member,result.job,result.score)
+                            sql.UpdateScore(result.member,result.job,result.score,IdDepartment)
                         }
                             // if(result.data == 0){
                             //     sql.AddScore(Name,JOB,obj[JOB])

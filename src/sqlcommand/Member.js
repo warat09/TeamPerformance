@@ -10,7 +10,7 @@ exports.CheckMember =()=>{
 }
 exports.CheckMemberScore =()=>{
     return `
-    SELECT Member_Fname FROM TleDatabase.dbo.[member_score] WHERE Member_Fname = @member_fname 
+    SELECT Member_Fname FROM TleDatabase.dbo.[member_score] WHERE Member_Fname = @member_fname  AND ID_DEPARTMENT = @department 
     `
 }
 exports.CheckMemberAddToDepartment=()=>{
@@ -40,40 +40,40 @@ exports.AddAllMemberToDepartment=()=>{
 }
 exports.OptionMemberDepartment=()=>{
     return`
-    SELECT m.ID,m.Member_Name ,m.Member_Fname ,md.ID_DEPARTMENT FROM TleDatabase.dbo.[member] m JOIN TleDatabase.dbo.[member_department] md ON m.ID = md.ID_MEMBER LEFT JOIN TleDatabase.dbo.[member_score] ms ON ms.Member_Fname  = m.Member_Fname  WHERE md.ID_DEPARTMENT = @department AND ms.ID IS NULL  
+    SELECT m.ID,m.Member_Name ,m.Member_Fname ,md.ID_DEPARTMENT FROM TleDatabase.dbo.[member_department] md JOIN TleDatabase.dbo.[member] m ON m.ID = md.ID_MEMBER WHERE md.ID_DEPARTMENT = @department AND m.Member_Fname NOT IN (SELECT ms.Member_Fname FROM TleDatabase.dbo.[member_score] ms WHERE ms.ID_DEPARTMENT = @department) 
     `
 }
 exports.AddMemberScore=()=>{
     return`
-    INSERT INTO TleDatabase.dbo.[member_score] (Member_Fname) VALUES (@member_fname)
+    INSERT INTO TleDatabase.dbo.[member_score] (Member_Fname,ID_DEPARTMENT) VALUES (@member,@department)
     `
 }
 
 exports.CheckScore=()=>{
     return`
-    SELECT * FROM TleDatabase.dbo.[score] WHERE ID_MEMBER = (SELECT ID FROM TleDatabase.dbo.[member_score] WHERE Member_Fname = @member) AND ID_JOB = ((SELECT ID FROM TleDatabase.dbo.[job_score] WHERE JOB = @job))
+    SELECT * FROM TleDatabase.dbo.[score] WHERE ID_MEMBER = (SELECT ID FROM TleDatabase.dbo.[member_score] WHERE Member_Fname = @member AND ID_DEPARTMENT = @department ) AND ID_JOB = (SELECT ID FROM TleDatabase.dbo.[job_score] WHERE JOB = @job AND ID_DEPARTMENT = @department)
     `
 }
 exports.UpdateScore=()=>{
     return`
-    UPDATE TleDatabase.dbo.[score] SET RATE = @score WHERE ID_MEMBER = (SELECT ID FROM TleDatabase.dbo.[member_score] WHERE Member_Fname = @member) AND ID_JOB = ((SELECT ID FROM TleDatabase.dbo.[job_score] WHERE JOB = @job))
+    UPDATE TleDatabase.dbo.[score] SET RATE = @score WHERE ID_MEMBER = (SELECT ID FROM TleDatabase.dbo.[member_score] WHERE Member_Fname = @member AND ID_DEPARTMENT = @department) AND ID_JOB = (SELECT ID FROM TleDatabase.dbo.[job_score] WHERE JOB = @job AND ID_DEPARTMENT = @department)
     `
 }
 exports.AddScore=()=>{
     return`
-    INSERT INTO TleDatabase.dbo.[score] (ID_MEMBER,ID_JOB,RATE) VALUES ((SELECT ID FROM TleDatabase.dbo.[member_score] WHERE Member_Fname = @member),(SELECT ID FROM TleDatabase.dbo.[job_score] WHERE JOB = @job),@score)    
+    INSERT INTO TleDatabase.dbo.[score] (ID_MEMBER,ID_JOB,RATE) VALUES ((SELECT ID FROM TleDatabase.dbo.[member_score] WHERE Member_Fname = @member AND ID_DEPARTMENT = @department),(SELECT ID FROM TleDatabase.dbo.[job_score] WHERE JOB = @job AND ID_DEPARTMENT = @department),@score)    
     `
 }
 
 exports.AllTableScore=()=>{
     return`
-    SELECT ms.Member_Fname,js.JOB,s.RATE FROM TleDatabase.dbo.score s JOIN TleDatabase.dbo.member_score ms ON s.ID_MEMBER = ms.ID JOIN TleDatabase.dbo.job_score js ON s.ID_JOB = js.ID JOIN TleDatabase.dbo.[job] j ON j.JOB = js.JOB JOIN TleDatabase.dbo.[job_department] jd ON j.ID = jd.ID_JOB WHERE jd.ID_DEPARTMENT = @department  
+    SELECT ms.Member_Fname,js.JOB,s.RATE FROM TleDatabase.dbo.score s JOIN TleDatabase.dbo.member_score ms ON s.ID_MEMBER = ms.ID JOIN TleDatabase.dbo.job_score js ON s.ID_JOB = js.ID JOIN TleDatabase.dbo.[job] j ON j.JOB = js.JOB WHERE ms.ID_DEPARTMENT = @department AND js.ID_DEPARTMENT = @department
     `
 }
 
 exports.ColumName=()=>{
     return`
-    SELECT DISTINCT js.JOB,jd.ID_DEPARTMENT FROM TleDatabase.dbo.[job] j JOIN TleDatabase.dbo.[job_department] jd ON j.ID = jd.ID_JOB JOIN TleDatabase.dbo.job_score js ON js.JOB = j.JOB JOIN TleDatabase.dbo.score s ON s.ID_JOB = js.ID WHERE jd.ID_DEPARTMENT = @department 
+    SELECT DISTINCT js.JOB,js.ID_DEPARTMENT FROM TleDatabase.dbo.[job_score] js WHERE js.ID_DEPARTMENT = @department
     `
 }
 exports.RemoveScore=()=>{

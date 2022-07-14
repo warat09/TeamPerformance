@@ -10,7 +10,7 @@ exports.CheckJob =()=>{
 }
 exports.CheckJobScore=()=>{
     return `
-    SELECT JOB FROM TleDatabase.dbo.[job_score] WHERE JOB = @job 
+    SELECT JOB FROM TleDatabase.dbo.[job_score] WHERE JOB = @job AND ID_DEPARTMENT = @department
     `
 }
 exports.AllJob=()=>{
@@ -40,18 +40,18 @@ exports.AddAllJobToDepartment=()=>{
 }
 exports.OptionJobDepartment=()=>{
     return`
-    SELECT j.ID,j.JOB,jd.ID_DEPARTMENT FROM TleDatabase.dbo.[job] j JOIN TleDatabase.dbo.[job_department] jd ON j.ID = jd.ID_JOB LEFT JOIN TleDatabase.dbo.[job_score] js ON js.JOB  = j.JOB WHERE jd.ID_DEPARTMENT = @department AND js.ID IS NULL
+    SELECT j.ID,j.JOB,jd.ID_DEPARTMENT FROM TleDatabase.dbo.[job_department] jd JOIN TleDatabase.dbo.[job] j ON j.ID = jd.ID_JOB WHERE jd.ID_DEPARTMENT = @department AND j.JOB NOT IN (SELECT js.JOB FROM TleDatabase.dbo.[job_score] js WHERE js.ID_DEPARTMENT = @department) 
     `
 }
 
 exports.AddJobScore=()=>{
     return`
-    INSERT INTO TleDatabase.dbo.[job_score] (JOB) VALUES (@job)
+    INSERT INTO TleDatabase.dbo.[job_score] (JOB,ID_DEPARTMENT) VALUES (@job,@department)
     `
 }
 exports.OptionRemoveJobScore=()=>{
     return`
-    SELECT j.ID,j.JOB,jd.ID_DEPARTMENT FROM TleDatabase.dbo.[job] j JOIN TleDatabase.dbo.[job_department] jd ON j.ID = jd.ID_JOB LEFT JOIN TleDatabase.dbo.[job_score] js ON js.JOB  = j.JOB WHERE jd.ID_DEPARTMENT = @department AND js.ID IS NOT NULL
+    SELECT j.ID,j.JOB,jd.ID_DEPARTMENT FROM TleDatabase.dbo.[job] j JOIN TleDatabase.dbo.[job_department] jd ON j.ID = jd.ID_JOB WHERE jd.ID_DEPARTMENT = @department AND j.JOB IN (SELECT js.JOB  FROM TleDatabase.dbo.[job_score] js WHERE js.ID_DEPARTMENT=@department) 
     `
 }
 exports.RemoveJobScore=()=>{

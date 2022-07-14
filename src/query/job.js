@@ -56,13 +56,13 @@ exports.CheckJobAddToDepartment=async(IdJob,IdDepartment)=>{
     })
     return queryresult
 }
-exports.CheckJobScore =async(input)=>{
-    console.log("input sql",input)
+exports.CheckJobScore =async(input,IdDepartment)=>{
     let queryresult
         const queryJob = cmdqury.CheckJobScore()
         const pool = await connection
         await pool.request()
         .input("job",mssql.NVarChar(100),input)
+        .input("department",mssql.Int(4),IdDepartment)
         .query(queryJob)
         .then(res=>{
             console.log(res.recordset)
@@ -158,12 +158,13 @@ exports.OptionJobDepartment=async(input)=>{
     })
     return queryresult
 }
-exports.AddJobScore =async(Job_Name)=>{
+exports.AddJobScore =async(Job_Name,IdDepartment)=>{
     let queryresult
         const queryJob = cmdqury.AddJobScore()
         const pool = await connection
         await pool.request()
         .input("job",mssql.NVarChar(100),Job_Name)
+        .input("department",mssql.Int(4),IdDepartment)
         .query(queryJob)
         .then(()=>{
             console.log("YES add")

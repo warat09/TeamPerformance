@@ -43,13 +43,14 @@ exports.AddMember =async(Member_Name,Member_FName)=>{
         })
         return queryresult
 }
-exports.CheckMemberScore =async(input)=>{
+exports.CheckMemberScore =async(input,IdDepartment)=>{
     console.log("input sql",input)
     let queryresult
         const queryMember = cmdqury.CheckMemberScore()
         const pool = await connection
         await pool.request()
         .input("member_fname",mssql.NVarChar(100),input)
+        .input("department",mssql.Int(4),IdDepartment)
         .query(queryMember)
         .then(res=>{
             console.log(res.recordset)
@@ -156,13 +157,13 @@ exports.OptionMemberDepartment =async(IdDepartment)=>{
     })
     return queryresult
 }
-exports.AddMemberScore =async(input)=>{
-    console.log("memner input",input)
+exports.AddMemberScore =async(input,IdDepartment)=>{
     let queryresult
         const queryMember = cmdqury.AddMemberScore()
         const pool = await connection
         await pool.request()
-        .input("member_fname",mssql.NVarChar(100),input)
+        .input("member",mssql.NVarChar(100),input)
+        .input("department",mssql.Int(4),IdDepartment)
         .query(queryMember)
         .then(()=>{
             console.log("YES add")
@@ -173,15 +174,14 @@ exports.AddMemberScore =async(input)=>{
         })
         return queryresult
 }
-exports.CheckMemberAndScore=async(member,job,score)=>{
-    
+exports.CheckMemberAndScore=async(member,job,score,IdDepartment)=>{
     let queryresult
     const queryMemberAndScore = cmdqury.CheckScore()
     const pool = await connection
     await pool.request()
     .input("member",mssql.NVarChar(100),member)
     .input("job",mssql.NVarChar(100),job)
-    .input("score",mssql.Int(4),score)
+    .input("department",mssql.Int(4),IdDepartment)
     .query(queryMemberAndScore)
     .then(res=>{
         console.log(res.recordset.length)
@@ -213,7 +213,7 @@ exports.CheckMemberAndScore=async(member,job,score)=>{
     // })
     // return queryresult
 }
-exports.AddScore =async(member,job,score)=>{
+exports.AddScore =async(member,job,score,IdDepartment)=>{
 
     let queryresult
         const queryMember = cmdqury.AddScore()
@@ -222,6 +222,7 @@ exports.AddScore =async(member,job,score)=>{
         .input("member",mssql.NVarChar(100),member)
         .input("job",mssql.NVarChar(100),job)
         .input("score",mssql.Int(4),score)
+        .input("department",mssql.Int(4),IdDepartment)
         .query(queryMember)
         .then(()=>{
             console.log("YES add")
@@ -232,7 +233,7 @@ exports.AddScore =async(member,job,score)=>{
         })
         return queryresult
 }
-exports.UpdateScore =async(member,job,score)=>{
+exports.UpdateScore =async(member,job,score,IdDepartment)=>{
     console.log("sql update member is",member)
     console.log("sql update job is",job)
     console.log("sql update score is",score)
@@ -243,6 +244,7 @@ exports.UpdateScore =async(member,job,score)=>{
         .input("member",mssql.NVarChar(100),member)
         .input("job",mssql.NVarChar(100),job)
         .input("score",mssql.Int(4),score)
+        .input("department",mssql.Int(4),IdDepartment)
         .query(queryScore)
         .then(()=>{
             console.log("YES add")
