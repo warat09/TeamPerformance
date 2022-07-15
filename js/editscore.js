@@ -345,7 +345,8 @@ const removeuser=async()=>{
         },
         body: JSON.stringify({
             "userName": Userdata.userName,
-            "MemberRemove":memberremove
+            "MemberRemove":memberremove,
+            "IdDepartment": selectchangedepartment.options[selectchangedepartment.selectedIndex].value
         })
     })
 
