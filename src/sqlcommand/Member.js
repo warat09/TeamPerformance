@@ -83,6 +83,6 @@ exports.RemoveScore=()=>{
 }
 exports.RemoveMemberScore=()=>{
     return`
-    DELETE ms FROM TleDatabase.dbo.[member_score] ms WHERE ms.Member_Fname = @fname     
+    DELETE ms FROM TleDatabase.dbo.[member_score] ms WHERE ms.Member_Fname = @fname AND ms.ID_DEPARTMENT = @department    
     `
 }

@@ -56,6 +56,6 @@ exports.OptionRemoveJobScore=()=>{
 }
 exports.RemoveJobScore=()=>{
     return`
-    DELETE js FROM TleDatabase.dbo.[job_score] js JOIN TleDatabase.dbo.[job] j ON js.JOB = j.JOB JOIN TleDatabase.dbo.[job_department] jd ON jd.ID_JOB = j.ID WHERE js.JOB = @job AND jd.ID_DEPARTMENT = @department
+    DELETE js FROM TleDatabase.dbo.[job_score] js JOIN TleDatabase.dbo.[job] j ON js.JOB = j.JOB JOIN TleDatabase.dbo.[job_department] jd ON jd.ID_JOB = j.ID WHERE js.JOB = @job AND js.ID_DEPARTMENT = @department
     `
 }

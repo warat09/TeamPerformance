@@ -242,9 +242,10 @@ exports.RemoveScore=async(req,res,next)=>{
     try{
         var userName = req.body.userName;
         var MemberRemove = req.body.MemberRemove;
+        var IdDepartment = req.body.IdDepartment;
         for(let i = 0;i<MemberRemove.length;i++){
             await sql.RemoveScore(userName,MemberRemove[i])
-            await sql.RemoveMemberScore(MemberRemove[i])
+            await sql.RemoveMemberScore(MemberRemove[i],IdDepartment)
         }
     }catch(err){
         console.log("error is",err);
