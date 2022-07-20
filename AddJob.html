@@ -2,22 +2,50 @@
 <html>
     <head>
         <title>Add Job</title>
+        <link rel="stylesheet" href="css/table.css">
+        <link rel="stylesheet" href="css/menu-setting.css">
+        <link rel="stylesheet" href="css/navbar.css">
+        <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@200;300&display=swap" rel="stylesheet">
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </head>
     <body>
-        <style>
-            table, th, td {
-              border: 1px solid;
-            }
-        </style>
-        Name: <label id="par"></label></br></br>UserName: <label id="username"></label></br></br>Department: <label id="department"></label></br></br><label>logout</label><button onclick="logout()">logout</button>        <form id="form">
-            <input type="text" id="job" placeholder="Add Job">
-            <input type="submit" value="add">
-            <table id="mytable">
-                <thead>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+        <nav>
+            <h2>TeamPerformance</h2>
+            <input type="checkbox" id="active">
+            <label for="active" class="menu-btn"><span></span></label>
+            <label for="active" class="close"></label>
+            <div id="setting" class="wrapper">
+            </div>
+          </nav>
+          <section class="home-section">
+            <div class="container">
+        <br>
+        <div class="dropdown">
+            <label id="username"></label>
+            <div class="dropdown-content">
+                Name: <label id="par"></label>
+                Department: <label id="department"></label>
+                <br>
+                <button onclick="logout()">logout</button>
+            </div>
+          </div>        
+        <form id="form">
+            <div class="input-center">
+                <input type="text" id="job" placeholder="Add Job">
+                <input type="submit" value="Add">
+            </div>
+        </form>
+        <div class="display-tables">
+          <table id="mytable">
+            <thead>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        </div>
+    </div>
+    </section>
         <script src="js/addjob.js"></script>
+
     </body>
 </html>
