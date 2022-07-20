@@ -16,15 +16,15 @@ exports.AddJob=async(req,res,next)=>{
                                 sql.AllJobToDepartment(job,result[i].ID)
                             }
                         })
-                        // return res.json({ status:1,message: `Insert Job ${job} success`});
+                        return res.json({ status:1,message: `Add Job ${job} Success`});
                     }
                     else{
-                        return res.json({ status:0,message: `Can't Insert Job ${job}`});
+                        return res.json({ status:0,message: `Can't Add Job ${job}`});
                     }
                 })
             }
             else{
-                return res.json({ status:0,message: "have Job "+job});
+                return res.json({ status:0,message: "Have Job "+job});
             }
 
         })
@@ -117,7 +117,10 @@ exports.RemoveJobScore=async(req,res,next)=>{
     try{
         var Job_Name = req.body.Job_Name;
         var IdDepartment = req.body.IdDepartment;
-        sql.RemoveJobScore(Job_Name,IdDepartment).then(result=>{
+        await sql.RemoveScore(Job_Name,IdDepartment).then(result=>{
+            console.log(result)
+        })
+        await sql.RemoveJobScore(Job_Name,IdDepartment).then(result=>{
             console.log(result)
         })
     }catch(err){

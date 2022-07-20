@@ -191,6 +191,23 @@ exports.OptionRemoveJobScore=async(IdDepartment)=>{
     })
     return queryresult
 }
+exports.RemoveScore=async(Job_Name,IdDepartment)=>{
+    let queryresult
+    const queryRemovescore = cmdqury.RemoveScore()
+    const pool = await connection
+    await pool.request()
+    .input("job",mssql.NVarChar(100),Job_Name)
+    .input("department",mssql.Int(4),IdDepartment)
+    .query(queryRemovescore)
+    .then(()=>{
+        console.log("YES add")
+        queryresult = new IAdd(1,"success")
+    }).catch(err=>{
+        console.log("no add")
+        queryresult = new IAdd(0,err.message)
+    })
+    return queryresult
+}
 exports.RemoveJobScore=async(Job_Name,IdDepartment)=>{
     const queryRemoveJobScore = cmdqury.RemoveJobScore();
     const pool = await connection

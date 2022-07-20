@@ -54,6 +54,11 @@ exports.OptionRemoveJobScore=()=>{
     SELECT j.ID,j.JOB,jd.ID_DEPARTMENT FROM TleDatabase.dbo.[job] j JOIN TleDatabase.dbo.[job_department] jd ON j.ID = jd.ID_JOB WHERE jd.ID_DEPARTMENT = @department AND j.JOB IN (SELECT js.JOB  FROM TleDatabase.dbo.[job_score] js WHERE js.ID_DEPARTMENT=@department) 
     `
 }
+exports.RemoveScore=()=>{
+    return`
+    DELETE s FROM TleDatabase.dbo.[score] s WHERE s.ID_JOB = (SELECT js.ID FROM TleDatabase.dbo.[job_score] js WHERE js.JOB = @job AND js.ID_DEPARTMENT = @department)
+    `
+}
 exports.RemoveJobScore=()=>{
     return`
     DELETE js FROM TleDatabase.dbo.[job_score] js JOIN TleDatabase.dbo.[job] j ON js.JOB = j.JOB JOIN TleDatabase.dbo.[job_department] jd ON jd.ID_JOB = j.ID WHERE js.JOB = @job AND js.ID_DEPARTMENT = @department
