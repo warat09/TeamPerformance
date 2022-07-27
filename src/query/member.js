@@ -289,14 +289,13 @@ exports.AllScoreTable=async(IdDepartment)=>{
     })
     return queryresult
 }
-exports.RemoveScore=async(userName,MemberRemove)=>{
-    console.log(userName,MemberRemove)
+exports.RemoveScore=async(MemberRemove,IdDepartment)=>{
     let queryresult
     const queryRemovescore = cmdqury.RemoveScore()
     const pool = await connection
     await pool.request()
     .input("fname",mssql.NVarChar(100),MemberRemove)
-    .input("member",mssql.NVarChar(100),userName)
+    .input("department",mssql.Int(4),IdDepartment)
     .query(queryRemovescore)
     .then(()=>{
         console.log("YES add")

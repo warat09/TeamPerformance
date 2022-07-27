@@ -117,12 +117,15 @@ exports.RemoveJobScore=async(req,res,next)=>{
     try{
         var Job_Name = req.body.Job_Name;
         var IdDepartment = req.body.IdDepartment;
-        await sql.RemoveScore(Job_Name,IdDepartment).then(result=>{
-            console.log(result)
-        })
-        await sql.RemoveJobScore(Job_Name,IdDepartment).then(result=>{
-            console.log(result)
-        })
+        var RemoveScore = await sql.RemoveScore(Job_Name,IdDepartment);
+        if(RemoveScore.status == 0){
+            return res.status(400).json({status:0,message:"Can't RemoveScore"});
+        }
+        var RemoveJobScore = await sql.RemoveJobScore(Job_Name,IdDepartment);
+        if(RemoveJobScore.status == 0){
+            return res.status(400).json({status:0,message:"Can't RemoveJobScore"});
+        }
+        return res.json({ status:1,message: `Remove ${Job_Name} Success`});
     }catch(err){
         console.log("error is",err);
         return res.status(500).send()

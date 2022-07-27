@@ -112,7 +112,7 @@ exports.MemberScore=async(req,res,next)=>{
     try{
         var score = req.body.score;
         var columnname = req.body.rowname;
-        var IdDepartment = req.body.IdDepartment
+        var IdDepartment = req.body.IdDepartment;
         console.log(score)
         console.log(columnname)
         console.log(IdDepartment)
@@ -134,19 +134,28 @@ exports.MemberScore=async(req,res,next)=>{
             })
         }
         for(var i =0;i<score.length;i++){
-           await sql.CheckMemberScore(score[i].Name,IdDepartment).then(result=>{
-                if(Object.keys(result.data).length == 0){
-                    // console.log(score[i].Name)
-                    sql.AddMemberScore(score[i].Name,IdDepartment)
+        //    await sql.CheckMemberScore(score[i].Name,IdDepartment).then(result=>{
+        //         if(Object.keys(result.data).length == 0){
+        //             // console.log(score[i].Name)
+        //             sql.AddMemberScore(score[i].Name,IdDepartment)
+        //         }
+        //     })
+              var CheckMemberScore = await sql.CheckMemberScore(score[i].Name,IdDepartment);
+                if(Object.keys(CheckMemberScore.data).length == 0){
+                    var AddMemberScore = await sql.AddMemberScore(score[i].Name,IdDepartment)
+                    if(AddMemberScore.status == 0){
+                        return res.status(400).json({status:0,message:"Can't AddMember"});
+                    }
                 }
-            })
         }
         var Name
+
         await score.forEach(async(item,i) => {
             console.log(item.Name)
             // console.log(item.itemYouWant)
             console.log(i)
             Name = item.Name
+
             await columnname.forEach(async(JOB,i)=>{
                 if(i > 0){
                     // console.log(i)
@@ -164,28 +173,38 @@ exports.MemberScore=async(req,res,next)=>{
                     //  await sql.UpdateScore(Name,JOB,obj[JOB])
                     // await sql.AddScore(Name,JOB,obj[JOB])
 
-                     sql.CheckMemberAndScore(Name,JOB,obj[JOB],IdDepartment).then(result=>{
+                     var CheckMemberAndScore = await sql.CheckMemberAndScore(Name,JOB,obj[JOB],IdDepartment)
                         //  console.log("Job Name",JOB)
                         //  console.log("Name",Name)
-                        console.log(result)
-                        if(result.status == 0){
-                            sql.AddScore(result.member,result.job,result.score,IdDepartment)
+                        if(CheckMemberAndScore.status == 0){
+                            var addScore = await sql.AddScore(CheckMemberAndScore.member,CheckMemberAndScore.job,CheckMemberAndScore.score,IdDepartment)
+                                if(addScore.status == 0){
+                                    return res.status(400).json({status:0,message:"Can't AddScore"});
+                                }
                         }
                         else{
-                            sql.UpdateScore(result.member,result.job,result.score,IdDepartment)
+                            var updatescore = await sql.UpdateScore(CheckMemberAndScore.member,CheckMemberAndScore.job,CheckMemberAndScore.score,IdDepartment)
+                                // console.log("statusstatusstatusstatus11111111111111111111111111",result.status)
+                                if(updatescore.status == 0){
+                                    return res.status(400).json({status:0,message:"Can't UpdateScore"});
+                                }
                         }
                             // if(result.data == 0){
                             //     sql.AddScore(Name,JOB,obj[JOB])
                             // }
-                        })
-                    // sql.AddScore(Name,JOB,obj[JOB])
-
-                    console.log("-----------------------------------------------------------------------------------------------------")
                 }
+                
             })
+            // console.log("statusstatusstatusstatus11111111111111111111111111",statusupdatescore)
+            
+
             // if (item.Name === 'Thanachai Thoungpugdee') {
             // }
         });
+
+            // if(statusaddscore.status == 1 && statusupdatescore.status == 1){
+                return res.json({ status:1,message: `Insert Score success`});
+            // }
 
 
 
@@ -240,12 +259,20 @@ exports.AllScoreTable=async(req,res,next)=>{
 }
 exports.RemoveScore=async(req,res,next)=>{
     try{
-        var userName = req.body.userName;
         var MemberRemove = req.body.MemberRemove;
         var IdDepartment = req.body.IdDepartment;
+        var statusRemoveScore,statusRemoveMemberScore
         for(let i = 0;i<MemberRemove.length;i++){
-            await sql.RemoveScore(userName,MemberRemove[i])
-            await sql.RemoveMemberScore(MemberRemove[i],IdDepartment)
+            var RemoveScore = await sql.RemoveScore(MemberRemove[i],IdDepartment)
+            var RemoveMemberScore = await sql.RemoveMemberScore(MemberRemove[i],IdDepartment)
+            if(RemoveScore.status == 0 || RemoveMemberScore.status ==0){
+                return res.status(400).json({status:0,message:"Can't Delete"});
+            }
+            statusRemoveScore = RemoveScore;
+            statusRemoveMemberScore = RemoveMemberScore;
+        }
+        if(statusRemoveScore.status == 1 && statusRemoveMemberScore.status == 1){
+            return res.json({ status:1,message: `Remove ${MemberRemove} Success`});
         }
     }catch(err){
         console.log("error is",err);

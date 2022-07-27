@@ -78,7 +78,7 @@ exports.ColumName=()=>{
 }
 exports.RemoveScore=()=>{
     return`
-    DELETE s FROM TleDatabase.dbo.[score] s JOIN TleDatabase.dbo.[member_score] ms ON s.ID_MEMBER = ms.ID JOIN TleDatabase.dbo.[member] m ON m.Member_Fname = ms.Member_Fname JOIN TleDatabase.dbo.[member_department] md ON md.ID_MEMBER = m.ID WHERE ms.Member_Fname = @fname AND md.ID_DEPARTMENT = (SELECT md.ID_DEPARTMENT FROM TleDatabase.dbo.[member] m JOIN TleDatabase.dbo.[member_department] md ON m.ID = md.ID_MEMBER WHERE m.Member_Name  = @member)
+    DELETE s FROM TleDatabase.dbo.[score] s JOIN TleDatabase.dbo.[member_score] ms ON s.ID_MEMBER = ms.ID JOIN TleDatabase.dbo.[member] m ON m.Member_Fname = ms.Member_Fname JOIN TleDatabase.dbo.[member_department] md ON md.ID_MEMBER = m.ID WHERE ms.Member_Fname = @fname AND ms.ID_DEPARTMENT = @department 
     `
 }
 exports.RemoveMemberScore=()=>{
