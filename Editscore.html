@@ -2,14 +2,75 @@
 <html>
     <head>
         <title>Edit Score</title>
-        <style>
-            table, th, td {
-              border: 1px solid;
-            }
-            </style>
+        <link rel="stylesheet" href="css/table.css">
+        <link rel="stylesheet" href="css/menu-setting.css">
+        <link rel="stylesheet" href="css/navbar.css">
+        <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@200;300&display=swap" rel="stylesheet">
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <link rel="stylesheet" href="sweetalert2.min.css">
     </head>
-    <br>
-        Name: <label id="par"></label></br></br>UserName: <label id="username"></label></br></br>Department: <label id="department"></label></br></br><label>logout</label><button onclick="logout()">logout</button>            <select id="member">
+    <body>
+        <nav>
+            <h2><a href="./">TeamPerformance</a></h2>
+            <input type="checkbox" id="active">
+            <label for="active" class="menu-btn"><span></span></label>
+            <label for="active" class="close"></label>
+            <div id="setting" class="wrapper">
+            </div>
+          </nav>
+          <section class="home-section">
+            <div class="container">
+        <br>
+        <div class="dropdown">
+            <label id="username"></label>
+            <div class="dropdown-content">
+                Name: <label id="par"></label>
+                Department: <label id="department"></label>
+                <br>
+                <button onclick="logout()">logout</button>
+            </div>
+          </div>
+          <select id="changedepartment" onchange="changedepartment()"></select>
+        </select>        
+        <div class="input-twocenter">
+            <div>
+                <select id="member">
+                </select>
+                <button onclick="addmember()">AddUser</button>
+            </div>
+            <div class="center">
+                <select id="job">
+                </select>
+                <button onclick="addjob()">AddJob</button>
+            </div>
+        </div>
+        <div class="input-center">
+            <select id="removejob">
+            </select>
+        <button class="delete" onclick="removework()">RemoveWork</button>
+        </div>
+
+        <div class="display-tables">
+            <table id="mytable">
+                <thead>
+                    <tr>
+                        <th>select</th>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div class="input-center">
+            <button onclick="onClick()">Submit</button>
+            <button class="delete" onclick="removeuser()">RemoveUser</button>
+        </div>
+    </div>
+    </section>
+    <!-- <br>
+        Name: <label id="par"></label></br></br>UserName: <label id="username"></label></br></br>Department: <label id="department"></label></br></br><label>logout</label><button onclick="logout()">logout</button>            
+            <select id="member">
             </select>
             <button onclick="addmember()">adduser</button>
             <select id="job">
@@ -32,9 +93,9 @@
             <button onclick="removeuser()">removeuser</button>
             <select id="removejob">
               </select>
-          <button onclick="removework()">removework</button>
+          <button onclick="removework()">removework</button> -->
 
-            
+
     </body>
     <script src="js/editscore.js">
     </script>

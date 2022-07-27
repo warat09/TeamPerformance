@@ -49,6 +49,7 @@ const main =async()=>{
                 <li><a class="active" href="./">Home</a></li>
                 <li><a href="./AddJob.html">AddJob</a></li>
                 <li><a href="./AddMember.html">AddMember</a></li>
+                <li><a href="./AddDepartment.html">AddDepartment</a></li>
                 <li><a href="./AddJobToDepartment.html">AddJobToDepartment</a></li>
                 <li><a href="./AddMemberToDepartment.html">AddMemberToDepartment</a></li>
             </ul>

@@ -2,12 +2,54 @@
 <html>
     <head>
         <title>Add Department</title>
+        <link rel="stylesheet" href="css/table.css">
+        <link rel="stylesheet" href="css/menu-setting.css">
+        <link rel="stylesheet" href="css/navbar.css">
+        <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@200;300&display=swap" rel="stylesheet">
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <link rel="stylesheet" href="sweetalert2.min.css">
     </head>
     <body>
-        Name: <label id="par"></label></br></br>UserName: <label id="username"></label></br></br>Department: <label id="department"></label></br></br><label>logout</label><button onclick="logout()">logout</button>        <form id="form">
+        <nav>
+            <h2><a href="./">TeamPerformance</a></h2>
+            <input type="checkbox" id="active">
+            <label for="active" class="menu-btn"><span></span></label>
+            <label for="active" class="close"></label>
+            <div id="setting" class="wrapper">
+            </div>
+          </nav>
+        <!-- Name: <label id="par"></label></br></br>UserName: <label id="username"></label></br></br>Department: <label id="department"></label></br></br><label>logout</label><button onclick="logout()">logout</button>        <form id="form">
             <input type="text" placeholder="Type Department" id="department">
             <input type="submit">
+        </form> -->
+        <section class="home-section">
+            <div class="container">
+        <br>
+        <div class="dropdown">
+            <label id="username"></label>
+            <div class="dropdown-content">
+                Name: <label id="par"></label>
+                Department: <label id="department"></label>
+                <br>
+                <button onclick="logout()">logout</button>
+            </div>
+          </div>   
+        <form id="form">
+            <div class="input-center">
+                <input type="text" placeholder="Type Department" id="department">
+                <input type="submit">
+            </div>
         </form>
+        <div class="display-tables">
+          <table id="mytable">
+            <thead>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        </div>
+    </div>
+    </section>
     </body>
     <script src="js/adddepartment.js"></script>
 </html>

@@ -42,6 +42,7 @@ const main =async()=>{
                 <li><a href="./">Home</a></li>
                 <li><a class="active" href="./AddJob.html">AddJob</a></li>
                 <li><a href="./AddMember.html">AddMember</a></li>
+                <li><a href="./AddDepartment.html">AddDepartment</a></li>
                 <li><a href="./AddJobToDepartment.html">AddJobToDepartment</a></li>
                 <li><a href="./AddMemberToDepartment.html">AddMemberToDepartment</a></li>
             </ul>
@@ -62,9 +63,15 @@ const main =async()=>{
         let headerRow = document.createElement('tr');
         let table = document.getElementById('mytable').tBodies[0]
 
-        Object.keys(job[0]).forEach(headerText => {
+        Object.keys(job[0]).forEach((headerText,i) => {
             var newTH = document.createElement('th');
-                        newTH.style.width = "150px";
+            if(i==0){
+                newTH.className = "before"
+            }
+            else{
+                newTH.className = "after"
+            }
+            newTH.style.width = "150px";
             newTH.innerHTML = `${headerText}`
             
             headerRow.appendChild(newTH)
@@ -89,13 +96,12 @@ main()
 form.addEventListener("submit",async(event)=>{
     event.preventDefault()
     Swal.fire({
-        title: 'Do you want to save the changes?',
+        title: 'Do you want to Add?',
         showDenyButton: true,
         showCancelButton: true,
-        confirmButtonText: 'Save',
-        denyButtonText: `Don't save`,
+        confirmButtonText: 'Add',
+        denyButtonText: `Don't Add`,
       }).then(async(result) => {
-        /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
           var job = document.getElementById("job").value
                 const response = await fetch('http://localhost:9090/Job/AddJob',{

@@ -124,7 +124,7 @@ const main =async()=>{
                 cell.innerHTML = `<td >${text}</td>`
             }
             else{
-                cell.innerHTML = `<td><input type="text" name="array[]" id="row-`+(table.rows.length)+`_col-`+(i+1)+`" `+`value="${text}"/></td>`
+                cell.innerHTML = `<td><input type="number" min="0" max="5" name="array[]" id="row-`+(table.rows.length)+`_col-`+(i+1)+`" `+`value="${text}"/></td>`
             }
             row.appendChild(cell);
         })
@@ -133,9 +133,21 @@ const main =async()=>{
     } )
     var checklink = 0
     Userdata.menu.forEach((Item)=> {
+        var setting = document.getElementById("setting");
         if (Item.menuId === 7) {
-            checklink = 1
-        }
+          var menu = `
+          <ul>
+              <li><a href="./">Home</a></li>
+              <li><a href="./AddJob.html">AddJob</a></li>
+              <li><a href="./AddMember.html">AddMember</a></li>
+              <li><a href="./AddDepartment.html">AddDepartment</a></li>
+              <li><a href="./AddJobToDepartment.html">AddJobToDepartment</a></li>
+              <li><a href="./AddMemberToDepartment.html">AddMemberToDepartment</a></li>
+          </ul>
+          `
+          setting.innerHTML = menu;
+          checklink = 1
+         }
         return checklink
     });
     if(checklink !== 1){
@@ -174,7 +186,7 @@ var cell2 = row.insertCell(i);
         cell2.innerHTML = `<td>${select.options[select.selectedIndex].text}</td>`
     }
     else{
-        cell2.innerHTML = `<td><input type="text" name="array[]" id="row-`+(table.tBodies[0].rows.length-1)+`_col-`+(i)+`" `+`value="0"/></td>`
+        cell2.innerHTML = `<td><input type="number" min="0" max="5" name="array[]" id="row-`+(table.tBodies[0].rows.length-1)+`_col-`+(i)+`" `+`value="0"/></td>`
     }
                 // cell2.innerHTML = '[td] row:' + (table.tBodies[0].rows.length-1) + ', cell: '+i
 }
@@ -218,7 +230,7 @@ const addjob=async()=>{
             var tblBodyObj = document.getElementById("mytable").tBodies[0];
             for (var i=0; i<tblBodyObj.rows.length; i++) {
                 var newCell = tblBodyObj.rows[i].insertCell(-1);
-                newCell.innerHTML = `<td><input type="text" name="array[]" id="row-${i}_col-`+(tblBodyObj.rows[i].cells.length - 1)+`" `+`value="0"/></td>`
+                newCell.innerHTML = `<td><input type="number" min="0" max="5" name="array[]" id="row-${i}_col-`+(tblBodyObj.rows[i].cells.length - 1)+`" `+`value="0"/></td>`
                 // newCell.innerHTML ='[th] row:' + i + ', cell: ' + (tblBodyObj.rows[i].cells.length - 1)
             }
                 var option = document.createElement("option");
@@ -233,88 +245,111 @@ const addjob=async()=>{
         
 }
 const onClick=async()=>{
+    Swal.fire({
+        title: 'Do you want to Submit?',
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'Submit',
+        denyButtonText: `Don't Submit`,
+      }).then(async(result) => {
+        if (result.isConfirmed) {
+            var selectchangedepartment = document.getElementById("changedepartment")
+
+            var tRows = [];
+            var tRowsh = [];
+        
+            tab = document.getElementById('mytable').tBodies[0];
+            tabh = document.getElementById('mytable');
+            var n = 0;
+        
+            for (var r = 0; r < tab.rows.length; r++) {
+            var tRow = [];// start new row array
+            for (var c = 1; c < tab.rows[r].cells.length; c++) {
+                var input = document.getElementsByName('array[]');
+                if(r==0){
+                    tRowsh[c-1] = tabh.rows[r].cells[c].innerHTML;
+                }
+                // console.log(tRow[c-1]);
+                if(c==1){
+                    tRow[0] = tab.rows[r].cells[1].innerHTML;
+                }
+                if(c<=tab.rows[r].cells.length-2 && n<input.length){
+                        tRow[c] = input[n].value;
+                        n++
+                }
+                // console.log(tabh.rows[r].cells[1].innerHTML)
+                    // console.log("hhhhhh",input)
+                    // console.log(c)
+        
+                        // tRow[c-1] = input[i].value;
+                        // console.log(tRow);
+                        // tRow[1] = 1;
+                        // tRow[2] = 1;
+                        // tRow[3] = 1;
+        
+                console.log(`row = ${r},col = ${c}`)
+        
+            }
+            tRows.push(tRow);
+            }
+            console.log(tRows);
+            console.log(tRowsh)
+        
+            //             let rows = [
+            // ["col1val1", "09", "26", "1"],
+            // ["col1val2", "08", "59", "1"],
+            // ["col1val3", "09", "22", "1"]
+            // ];
+        
+            // let columnsNames = ["col1", "col2", "col3", "col4"];
+        
+            const newRows = tRows.map(row => {
+            const object = row.reduce((obj, entry, index) => {
+                return {
+                ...obj,
+                [tRowsh[index]]: entry
+                };
+            }, {});
+        
+            return {
+                ...object
+            };
+            });
+            const response = await fetch('http://localhost:9090/Member/MemberScore',{
+                method:'post',
+                headers:{
+                    'Content-Type':'application/json'    
+                },
+                body: JSON.stringify({
+                    "score":newRows,
+                    "rowname":tRowsh,
+                    "IdDepartment": selectchangedepartment.options[selectchangedepartment.selectedIndex].value   
+                })
+        
+            })
+        
+            const responseData = await response.json();
+            console.log(responseData)
+            if(responseData.status ==0){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: `${responseData.message}`,
+                    footer: '<a href="">Why do I have this issue?</a>'
+                })
+            }
+            else{
+                Swal.fire(`${responseData.message}`, '', 'success')
+            }
+        
+        } else if (result.isDenied) {
+          Swal.fire('Changes are not saved', '', 'info')
+        }
+      })
     // let inputValue = document.getElementById("row-0_col-2").value;
     // let sum = Number(test1) + Number(test2) + Number(test3);
     //  alert(inputValue)
-    var selectchangedepartment = document.getElementById("changedepartment")
 
-    var tRows = [];
-    var tRowsh = [];
-
-    tab = document.getElementById('mytable').tBodies[0];
-    tabh = document.getElementById('mytable');
-    var n = 0;
-
-    for (var r = 0; r < tab.rows.length; r++) {
-    var tRow = [];// start new row array
-    for (var c = 1; c < tab.rows[r].cells.length; c++) {
-        var input = document.getElementsByName('array[]');
-        if(r==0){
-            tRowsh[c-1] = tabh.rows[r].cells[c].innerHTML;
-        }
-        // console.log(tRow[c-1]);
-        if(c==1){
-            tRow[0] = tab.rows[r].cells[1].innerHTML;
-        }
-        if(c<=tab.rows[r].cells.length-2 && n<input.length){
-                tRow[c] = input[n].value;
-                n++
-        }
-        // console.log(tabh.rows[r].cells[1].innerHTML)
-            // console.log("hhhhhh",input)
-            // console.log(c)
-
-                // tRow[c-1] = input[i].value;
-                // console.log(tRow);
-                // tRow[1] = 1;
-                // tRow[2] = 1;
-                // tRow[3] = 1;
-
-        console.log(`row = ${r},col = ${c}`)
-
-    }
-    tRows.push(tRow);
-    }
-    console.log(tRows);
-    console.log(tRowsh)
-
-    //             let rows = [
-    // ["col1val1", "09", "26", "1"],
-    // ["col1val2", "08", "59", "1"],
-    // ["col1val3", "09", "22", "1"]
-    // ];
-
-    // let columnsNames = ["col1", "col2", "col3", "col4"];
-
-    const newRows = tRows.map(row => {
-    const object = row.reduce((obj, entry, index) => {
-        return {
-        ...obj,
-        [tRowsh[index]]: entry
-        };
-    }, {});
-
-    return {
-        ...object
-    };
-    });
-
-    console.log(newRows);
-
-    const response = await fetch('http://localhost:9090/Member/MemberScore',{
-        method:'post',
-        headers:{
-            'Content-Type':'application/json'    
-        },
-        body: JSON.stringify({
-            "score":newRows,
-            "rowname":tRowsh,
-            "IdDepartment": selectchangedepartment.options[selectchangedepartment.selectedIndex].value   
-        })
-
-    })
-
-    const responseData = await response.json();
 }
 const removeuser=async()=>{
 
@@ -329,28 +364,68 @@ const removeuser=async()=>{
         // index of td contain checkbox is 8
         var chkbox = row.cells[0].getElementsByTagName('input')[0];
         console.log(i)
-        console.log(chkbox.checked)
+        console.log(chkbox)
         if('checkbox' == chkbox.type && true == chkbox.checked) {
             // console.log(row.cells[1].innerHTML)
             memberremove.push(row.cells[1].innerHTML)
-            table.deleteRow(i)
-            rowCount--
-            i--
         }
     }
-    const response = await fetch('http://localhost:9090/Member/RemoveScore',{
-        method:'post',
-        headers:{
-            'Content-Type':'application/json'    
-        },
-        body: JSON.stringify({
-            "userName": Userdata.userName,
-            "MemberRemove":memberremove,
-            "IdDepartment": selectchangedepartment.options[selectchangedepartment.selectedIndex].value
-        })
-    })
-
-    const responseData = await response.json();
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then(async(result) => {
+        if (result.isConfirmed) {
+            // console.log(Userdata.userName)
+            console.log(memberremove)
+            console.log(selectchangedepartment.options[selectchangedepartment.selectedIndex].value)
+            const response = await fetch('http://localhost:9090/Member/RemoveScore',{
+                method:'post',
+                headers:{
+                    'Content-Type':'application/json'    
+                },
+                body: JSON.stringify({
+                    userName: Userdata.userName,
+                    MemberRemove:memberremove,
+                    IdDepartment: selectchangedepartment.options[selectchangedepartment.selectedIndex].value
+                })
+            })
+            const responseData = await response.json();
+            console.log(responseData)
+            if(responseData.status == 0){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: `=`,
+                    footer: '<a href="">Why do I have this issue?</a>'
+                })
+            }
+            else{
+                for(var i=0; i<rowCount; i++){
+                    var row = table.rows[i];
+                    // index of td contain checkbox is 8
+                    var chkbox = row.cells[0].getElementsByTagName('input')[0];
+                    console.log(i)
+                    console.log(chkbox)
+                    if('checkbox' == chkbox.type && true == chkbox.checked) {
+                        // console.log(row.cells[1].innerHTML)
+                        table.deleteRow(i)
+                        rowCount--
+                        i--
+                    }
+                }
+                Swal.fire(
+                    'Deleted!',
+                    'Your file has been deleted.',
+                    'success'
+                  )
+            }
+        }
+      })
 }
 const removework=async()=> {
     var selectchangedepartment = document.getElementById("changedepartment")
@@ -377,24 +452,50 @@ const removework=async()=> {
                     break
                 }
                 else{
-                    for (var j = 0; j < row.length; j++) {
-                        row[j].deleteCell(i);
-                    }
-                    const response = await fetch('http://localhost:9090/Job/RemoveJobScore',{
-                        method:'post',
-                        headers:{   
-                            'Content-Type':'application/json'    
-                        },
-                        body: JSON.stringify({
-                            "Job_ID":option[x].value,
-                            "Job_Name":option[x].text,
-                            "IdDepartment": selectchangedepartment.options[selectchangedepartment.selectedIndex].value     
-                        })
-                    })
-                    const responseStatus = await response.json();
-                    selectjob.add(select.options[select.selectedIndex])
-                    select.remove(i-1)
-                    alert("found")           
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete it!'
+                      }).then(async(result) => {
+                        if (result.isConfirmed) {
+                            const response = await fetch('http://localhost:9090/Job/RemoveJobScore',{
+                                method:'post',
+                                headers:{   
+                                    'Content-Type':'application/json'    
+                                },
+                                body: JSON.stringify({
+                                    "Job_ID":option[x].value,
+                                    "Job_Name":option[x].text,
+                                    "IdDepartment": selectchangedepartment.options[selectchangedepartment.selectedIndex].value     
+                                })
+                            })
+                            const responseStatus = await response.json();
+                            if(responseStatus.status == 0){
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: `=`,
+                                    footer: '<a href="">Why do I have this issue?</a>'
+                                })
+                            }
+                            else{
+                                for (var j = 0; j < row.length; j++) {
+                                    row[j].deleteCell(i);
+                                }
+                                selectjob.add(select.options[select.selectedIndex])
+                                select.remove(i-1)
+                                Swal.fire(
+                                    'Deleted!',
+                                    `${responseStatus.message}`,
+                                    'success'
+                                  )
+                            }
+                        }
+                      })        
                     break
                 }
             }
@@ -488,7 +589,6 @@ const changedepartment=async()=>{
             var newTH = document.createElement('th');
             
             tablerow.rows[0].appendChild(newTH);
-            newTH.style.width = "150px";
             newTH.innerHTML = `${headerText}`
 
         // headerRow.appendChild(header);
@@ -507,7 +607,7 @@ const changedepartment=async()=>{
                 cell.innerHTML = `<td >${text}</td>`
             }
             else{
-                cell.innerHTML = `<td><input type="text" name="array[]" id="row-`+(table.rows.length)+`_col-`+(i+1)+`" `+`value="${text}"/></td>`
+                cell.innerHTML = `<td><input type="number" min="0" max="5" name="array[]" id="row-`+(table.rows.length)+`_col-`+(i+1)+`" `+`value="${text}"/></td>`
             }
             row.appendChild(cell);
         })

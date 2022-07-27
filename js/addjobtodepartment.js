@@ -37,9 +37,21 @@ const main =async()=>{
     console.log(Userdata.menu)
     var checklink = 0
     Userdata.menu.forEach((Item)=> {
-        if (Item.menuId === 7) {
-            checklink = 1
-        }
+      var setting = document.getElementById("setting");
+      if (Item.menuId === 7) {
+          var menu = `
+          <ul>
+              <li><a href="./">Home</a></li>
+              <li><a href="./AddJob.html">AddJob</a></li>
+              <li><a href="./AddMember.html">AddMember</a></li>
+              <li><a href="./AddDepartment.html">AddDepartment</a></li>
+              <li><a  class="active" href="./AddJobToDepartment.html">AddJobToDepartment</a></li>
+              <li><a href="./AddMemberToDepartment.html">AddMemberToDepartment</a></li>
+          </ul>
+          `
+          setting.innerHTML = menu;
+          checklink = 1
+      }
         return checklink
     });
     if(checklink !== 1){
@@ -53,9 +65,12 @@ const main =async()=>{
         let headerRow = document.createElement('tr');
         let table = document.getElementById('mytable').tBodies[0]
 
-        Object.keys(job[0]).forEach(headerText => {
+        Object.keys(job[0]).forEach((headerText,i) => {
             var newTH = document.createElement('th');
-                        newTH.style.width = "150px";
+            if(i ==0){
+              newTH.className = "before"
+            }
+            newTH.style.width = "150px";
             newTH.innerHTML = `${headerText}`
             
             headerRow.appendChild(newTH)
@@ -103,7 +118,16 @@ fetch('http://localhost:9090/Department/AllDepartment')
     console.log("Department index is ",x.selectedIndex)
     console.log("Job index is ",y.selectedIndex)
     if(x.selectedIndex !=0){
-      const response = await fetch('http://localhost:9090/Job/AddJobToDepartment',{
+      Swal.fire({
+        title: 'Do you want to Add?',
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'Add',
+        denyButtonText: `Don't Add`,
+      }).then(async(result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          const response = await fetch('http://localhost:9090/Job/AddJobToDepartment',{
           method:'post',
           headers:{
               'Content-Type':'application/json'    
@@ -116,7 +140,24 @@ fetch('http://localhost:9090/Department/AllDepartment')
 
       const responseStatus = await response.json();
       console.log(responseStatus)
-        selectjob.remove(selectjob.selectedIndex)
+            if(responseStatus.status ==0){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: `${responseStatus.message}`,
+                    footer: '<a href="">Why do I have this issue?</a>'
+                })
+            }
+            else{
+                selectjob.remove(selectjob.selectedIndex)
+                Swal.fire(`${responseStatus.message}`, '', 'success')
+            }
+        
+        } else if (result.isDenied) {
+          Swal.fire('Changes are not saved', '', 'info')
+        }
+      })
+      
     }
 
 })

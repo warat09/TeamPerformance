@@ -36,7 +36,19 @@ const main =async()=>{
     console.log(Userdata.menu)
     var checklink = 0
     Userdata.menu.forEach((Item)=> {
+        var setting = document.getElementById("setting");
         if (Item.menuId === 7) {
+            var menu = `
+            <ul>
+                <li><a href="./">Home</a></li>
+                <li><a href="./AddJob.html">AddJob</a></li>
+                <li><a class="active" href="./AddMember.html">AddMember</a></li>
+                <li><a href="./AddDepartment.html">AddDepartment</a></li>
+                <li><a href="./AddJobToDepartment.html">AddJobToDepartment</a></li>
+                <li><a href="./AddMemberToDepartment.html">AddMemberToDepartment</a></li>
+            </ul>
+            `
+            setting.innerHTML = menu;
             checklink = 1
         }
         return checklink
@@ -51,12 +63,18 @@ const main =async()=>{
         var tablerow = document.getElementById("mytable").tHead;
         let headerRow = document.createElement('tr');
         let table = document.getElementById('mytable').tBodies[0]
+        let counttable = Object.keys(member[0]).length-1
 
-        Object.keys(member[0]).forEach(headerText => {
+        Object.keys(member[0]).forEach((headerText,i) => {
+            console.log(counttable)
             var newTH = document.createElement('th');
-                        newTH.style.width = "150px";
+            if(i ==0){
+                newTH.className = "before"
+            }
+            else if(i==counttable){
+                newTH.className = "after"
+            }
             newTH.innerHTML = `${headerText}`
-            
             headerRow.appendChild(newTH)
 
     });
@@ -94,7 +112,16 @@ fetch('http://bwc-webserv02.bdms.co.th:3300/bwcportaluser/api/list/user')
     var textselect = select.options[idxselect].text;
     var valueselect = select.value;
     if(select.selectedIndex !=0){
-        const response = await fetch('http://localhost:9090/Member//AddMember',{
+        Swal.fire({
+            title: 'Do you want to Add?',
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: 'Add',
+            denyButtonText: `Don't Add`,
+          }).then(async(result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                      const response = await fetch('http://localhost:9090/Member//AddMember',{
             method:'post',
             headers:{
                 'Content-Type':'application/json'    
@@ -107,7 +134,22 @@ fetch('http://bwc-webserv02.bdms.co.th:3300/bwcportaluser/api/list/user')
   
         const responseStatus = await response.json();
         console.log(responseStatus)
-          select.remove(select.selectedIndex)
+                if(responseStatus.status ==0){
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: `${responseStatus.message}`,
+                    })
+                }
+                else{
+                    select.remove(select.selectedIndex)
+                    Swal.fire(`${responseStatus.message}`, '', 'success')
+                }
+            
+            } else if (result.isDenied) {
+              Swal.fire('Changes are not saved', '', 'info')
+            }
+          })
       }
 
 })
