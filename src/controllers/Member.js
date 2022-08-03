@@ -217,9 +217,13 @@ exports.AllScoreTable=async(req,res,next)=>{
     try{
         var IdDepartment = req.query.IdDepartment;
         const allcolumn = await sql.AllColumn(IdDepartment)
+        const allcolumnmember = await sql.AllColumnMember(IdDepartment)
         const alltable = await sql.AllScoreTable(IdDepartment)
           var Arraycolumn = allcolumn.map(function (obj) {
             return obj.JOB;
+          });
+          var ArraycolumnnMember = allcolumnmember.map(function (obj) {
+            return obj.MEMBER;
           });
         let a = []
         alltable.forEach((valueData)=>{
@@ -239,7 +243,7 @@ exports.AllScoreTable=async(req,res,next)=>{
                 a.push(someData)
             }
         })
-        return res.json({ status:1,Head:Arraycolumn,Body:a});
+        return res.json({ status:1,Head:Arraycolumn,BodyMember:ArraycolumnnMember,Body:a});
         // console.log(a)
 
         function index(obj,is, value) {

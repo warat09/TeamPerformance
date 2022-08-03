@@ -272,6 +272,23 @@ exports.AllColumn=async(IdDepartment)=>{
     })
     return queryresult
 }
+exports.AllColumnMember=async(IdDepartment)=>{
+    let queryresult
+    const queryColumnName = cmdqury.ColumMemberName()
+    const pool = await connection
+    await pool.request()
+    .input("department",mssql.NVarChar(100),IdDepartment)
+    .query(queryColumnName)
+    .then(res=>{
+        console.log(res.recordset)
+        console.log("YES")
+        queryresult = res.recordset
+    }).catch(err=>{
+        console.log("NO")
+        queryresult = new Iquery(res.recordset,0,err.message)
+    })
+    return queryresult
+}
 exports.AllScoreTable=async(IdDepartment)=>{
     let queryresult
     const queryTableScore = cmdqury.AllTableScore()
