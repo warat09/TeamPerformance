@@ -95,11 +95,15 @@ const main =async()=>{
      }))
     .then(res => res.json())
     .then(data =>{
+        console.log(data)
         let employees = data.Body
         let headers = data.Head;
+        let Member = data.BodyMember;
         var tablerow = document.getElementById("mytable").tHead;
         let headerRow = document.createElement('tr');
         let table = document.getElementById('mytable').tBodies[0]
+        console.log("Member",Member)
+        console.log("employees",employees)
 
         headers.forEach(headerText => {
             var newTH = document.createElement('th');
