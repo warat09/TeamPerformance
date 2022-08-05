@@ -306,6 +306,22 @@ exports.AllScoreTable=async(IdDepartment)=>{
     })
     return queryresult
 }
+exports.RemoveAllMemberScore=async(IdDepartment)=>{
+    let queryresult
+    const queryRemovescore = cmdqury.RemoveAllMemberScore()
+    const pool = await connection
+    await pool.request()
+    .input("department",mssql.Int(4),IdDepartment)
+    .query(queryRemovescore)
+    .then(()=>{
+        console.log("YES add")
+        queryresult = new IAdd(1,"success")
+    }).catch(err=>{
+        console.log("no add")
+        queryresult = new IAdd(0,err.message)
+    })
+    return queryresult
+}
 exports.RemoveScore=async(MemberRemove,IdDepartment)=>{
     let queryresult
     const queryRemovescore = cmdqury.RemoveScore()

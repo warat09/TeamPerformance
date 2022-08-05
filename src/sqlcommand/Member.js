@@ -95,3 +95,8 @@ exports.RemoveMemberScore=()=>{
     DELETE ms FROM TleDatabase.dbo.[member_score] ms JOIN TleDatabase.dbo.[member] m ON ms.ID_MEMBER = m.ID WHERE m.Member_Fname = @fname AND ms.ID_DEPARTMENT = @department
     `
 }
+exports.RemoveAllMemberScore=()=>{
+    return`
+    DELETE ms FROM TleDatabase.dbo.[member_score] ms JOIN TleDatabase.dbo.[member] m ON ms.ID_MEMBER = m.ID WHERE ms.ID_DEPARTMENT = @department
+    `
+}

@@ -1,4 +1,5 @@
 const sql = require("../query/job");
+const sqlmember = require("../query/member");
 const sqldepartment = require("../query/department");
 
 
@@ -125,6 +126,20 @@ exports.RemoveJobScore=async(req,res,next)=>{
         if(RemoveJobScore.status == 0){
             return res.status(400).json({status:0,message:"Can't RemoveJobScore"});
         }
+        await sql.CheckRemoveScore(IdDepartment).then(async(result)=>{
+            if(Object.keys(result.data).length == 0){
+                var RemoveMemberScore =  await sqlmember.RemoveAllMemberScore(IdDepartment);
+                if(RemoveMemberScore.status == 0){
+                    return res.status(400).json({status:0,message:"Can't RemoveMemberScore"});
+                }
+
+            }
+
+        });
+        // console.log("length",Object.keys(CheckRemoveScore).length == 0)
+        // if(Object.keys(CheckRemoveScore).length == 0){
+        //     console.log("0")
+        // }
         return res.json({ status:1,message: `Remove ${Job_Name} Success`});
     }catch(err){
         console.log("error is",err);

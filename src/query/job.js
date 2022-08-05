@@ -75,6 +75,25 @@ exports.CheckJobScore =async(input,IdDepartment)=>{
         })
         return queryresult
 }
+exports.CheckRemoveScore=async(IdDepartment)=>{
+    let queryresult
+    const CheckRemoveScore = cmdqury.CheckRemoveJobScore()
+    const pool = await connection
+    await pool.request()
+    .input("department",mssql.Int(4),IdDepartment)
+    .query(CheckRemoveScore)
+    .then(res=>{
+        console.log(res.recordset)
+        console.log("YES")
+        queryresult = new Iquery(res.recordset,1,"success")
+
+    }).catch(err=>{
+        console.log("NO")
+        queryresult = new Iquery(res.recordset,0,err.message)
+    })   
+    return queryresult
+
+}
 exports.JobToDepartment=async(IdJob,IdDepartment)=>{
     let queryresult
     const queryAddJobToDepartment = cmdqury.AddJobToDepartment()
