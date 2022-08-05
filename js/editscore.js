@@ -116,7 +116,14 @@ const main =async()=>{
         // tablerow.appendChild(headerRow);
 
     });
+
     // tablerow.appendChild(headerRow);
+    // Member.forEach((m,i)=>{
+    //     let row = document.createElement('tr');
+    //     row.innerHTML = `<td><input type="checkbox" name="record"></td>`
+    //     console.log("name",i)
+        
+    // })
     employees.forEach((emp,i) => {
         let row = document.createElement('tr');
         row.innerHTML = `<td><input type="checkbox" name="record"></td>`
@@ -127,7 +134,7 @@ const main =async()=>{
             if(i == 0){
                 cell.innerHTML = `<td >${text}</td>`
             }
-            else{
+            if(i > 0){
                 cell.innerHTML = `<td><input type="number" min="0" max="5" name="array[]" id="row-`+(table.rows.length)+`_col-`+(i+1)+`" `+`value="${text}"/></td>`
             }
             row.appendChild(cell);
