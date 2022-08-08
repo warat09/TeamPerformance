@@ -1,6 +1,8 @@
 var checktoken = localStorage.getItem("tokenlogin")
 var selectchangedepartment = document.getElementById("changedepartment")
+var selectchangegraph = document.getElementById("changegraph")
 var department = document.getElementById("department")
+var myChart
 
 var members,jobs
 
@@ -105,6 +107,7 @@ const main =async()=>{
     // console.log(a)
         return [member,job]
     } )
+    console.log("aaaa",a[0])
     var keep=[]
     var score = a[0]
     var len = score.length, output = [];
@@ -118,7 +121,7 @@ const main =async()=>{
                 scorea.push(score[i][k])
             }
         })
-        console.log(scorea)
+        console.log("123123123",scorea)
         const randomNum = () => Math.floor(Math.random() * (235 - 52 + 1) + 52);
         const randomRGB = () => `rgb(${randomNum()}, ${randomNum()}, ${randomNum()})`;
         var r = randomNum()
@@ -127,7 +130,7 @@ const main =async()=>{
         var c = {
             label:score[i].name,
             data:scorea,
-            fill: false,
+            fill: true,
             backgroundColor: `rgba(${r}, ${g}, ${b}, 0.2)`,
             borderColor: `rgb(${r}, ${g}, ${b})`,
             pointBackgroundColor: `rgb(${r}, ${g}, ${b})`,
@@ -145,44 +148,33 @@ console.log(randomRGB());
     console.log(keep)
 
 // console.log(output);
-var name = "sdsdsdsdsd"
-var score = [1,2,3]
-    var b = {
-        label:name,
-        data:score
-    }
-    output.push(b)
-    console.log(output)
     const data = {
         labels: a[1],
         datasets: keep
       };
-    //   [{
-    //     label: 'My First Dataset',
-    //     data: [5, 3, 4],
-    //     fill: false,
-    //     backgroundColor: 'rgba(255, 99, 132, 0.2)',
-    //     borderColor: 'rgb(255, 99, 132)',
-    //     pointBackgroundColor: 'rgb(255, 99, 132)',
-    //     pointBorderColor: '#fff',
-    //     pointHoverBackgroundColor: '#fff',
-    //     pointHoverBorderColor: 'rgb(255, 99, 132)'
-    //   }, {
-    //     label: 'My Second Dataset',
-    //     data: [2, 4, 4],
-    //     fill: false,
-    //     backgroundColor: 'rgba(54, 162, 235, 0.2)',
-    //     borderColor: 'rgb(54, 162, 235)',
-    //     pointBackgroundColor: 'rgb(54, 162, 235)',
-    //     pointBorderColor: '#fff',
-    //     pointHoverBackgroundColor: '#fff',
-    //     pointHoverBorderColor: 'rgb(54, 162, 235)'
-    //   }]
-      
+ 
       const config = {
         type: 'radar',
         data: data,
         options: {
+            plugins: {
+                legend: {
+                    labels: {
+                        font: {
+                            size: 25
+                        }
+                    }
+                }
+            },
+            scales: {
+                r: {
+                  pointLabels: {
+                    font: {
+                      size: 25
+                    }
+                  }
+                }
+              },
           elements: {
             line: {
               borderWidth: 3
@@ -190,7 +182,7 @@ var score = [1,2,3]
           }
         },
       };
-        const myChart = new Chart(
+       myChart = new Chart(
           document.getElementById('myChart'),
           config
         );
@@ -199,6 +191,7 @@ var score = [1,2,3]
 main()
 
 const changedepartment=async()=>{
+    myChart.destroy();
     console.log(selectchangedepartment.options[selectchangedepartment.selectedIndex].value)
     department.innerHTML = await selectchangedepartment.options[selectchangedepartment.selectedIndex].innerHTML;
     fetch('http://localhost:9090/Member/AllScore?' + new URLSearchParams({
@@ -261,18 +254,145 @@ const changedepartment=async()=>{
             })
             table.appendChild(row);
         });
-        // console.log(tablerow.rows[0].cells.length)
-        // console.log(document.getElementById("mytable").tHead.rows[0].cells[1].innerHTML)
-        // var a=[]
-        // for(var i = 1;i < tablerow.rows[0].cells.length;i++){
-        //     console.log(tablerow.rows[0].cells[i].innerHTML)
-        //     a.push(tablerow.rows[0].cells[i].innerHTML)
-        // }
-        // console.log(a)
+
         console.log(member)
         console.log(job)
+        var keep=[]
+        var score = member
+        var len = score.length, output = [];
+    
+        for(var i = 0; i < len; i++){
+            var scorea =[]
+            console.log(score[i].name)
+            convertedArray = Object.keys(score[i]).map((k,index) => {
+                if(index != 0){
+                    console.log(score[i][k])
+                    scorea.push(score[i][k])
+                }
+            })
+            console.log("123123123",scorea)
+            const randomNum = () => Math.floor(Math.random() * (235 - 52 + 1) + 52);
+            const randomRGB = () => `rgb(${randomNum()}, ${randomNum()}, ${randomNum()})`;
+            var r = randomNum()
+            var g = randomNum()
+            var b = randomNum()
+            var c = {
+                label:score[i].name,
+                data:scorea,
+                fill: true,
+                backgroundColor: `rgba(${r}, ${g}, ${b}, 0.2)`,
+                borderColor: `rgb(${r}, ${g}, ${b})`,
+                pointBackgroundColor: `rgb(${r}, ${g}, ${b})`,
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: `rgb(${r}, ${g}, ${b})`
+            }
+    
+    console.log(randomRGB());
+            keep.push(c)
+
+        }
+
+        const data = {
+            labels: job,
+            datasets: keep
+          };
+          console.log(data)
+
+          
+          const config = {
+            type: 'radar',
+            data: data,
+            options: {
+                plugins: {
+                    legend: {
+                        labels: {
+                            font: {
+                                size: 25
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    r: {
+                      pointLabels: {
+                        font: {
+                          size: 25
+                        }
+                      }
+                    }
+                  },
+              elements: {
+                line: {
+                  borderWidth: 3
+                }
+              }
+            },
+          };
+             myChart = new Chart(
+              document.getElementById('myChart'),
+              config
+            );
+        
         }
     } )
+}
+const changegraph =()=>{
+    myChart.destroy();
+    console.log(selectchangegraph.options[selectchangegraph.selectedIndex].value)
+    switch(selectchangegraph.options[selectchangegraph.selectedIndex].value){
+        case "Chartbar":
+            const labels = [
+                "ME",
+                "SE"
+            ]
+            const data = {
+            labels: labels,
+            datasets: [{
+                axis: 'y',
+                label: 'My First Dataset',
+                data: [65, 59, 80, 81, 56, 55, 40],
+                fill: false,
+                backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 205, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(201, 203, 207, 0.2)'
+                ],
+                borderColor: [
+                'rgb(255, 99, 132)',
+                'rgb(255, 159, 64)',
+                'rgb(255, 205, 86)',
+                'rgb(75, 192, 192)',
+                'rgb(54, 162, 235)',
+                'rgb(153, 102, 255)',
+                'rgb(201, 203, 207)'
+                ],
+                borderWidth: 1
+            }]
+            };
+            const config = {
+                type: 'bar',
+                data,
+                options: {
+                  indexAxis: 'y',
+                }
+              };
+              myChart = new Chart(
+                document.getElementById('myChart'),
+                config
+              );
+            
+            break;
+        default:
+            break;
+
+    }
+
+
 }
 
 // var theadname = document.getElementById("mytable").tHead

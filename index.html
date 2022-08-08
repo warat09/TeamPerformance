@@ -7,6 +7,7 @@
         <link rel="stylesheet" href="css/menu-setting.css">
         <link rel="stylesheet" href="css/navbar.css">
         <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@200;300&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     </head>
     <body>
       <nav>
@@ -28,20 +29,19 @@
                 Name: <label id="par"></label>
                 Department: <label id="department"></label>
                 <br>
-                <button onclick="logout()">logout</button>
+                <button onclick="logout()"><i class="fa fa-sign-out"></i> Log out</button>
             </div>
           </div>
           <select id="changedepartment" onchange="changedepartment()">
+          </select>
+          <select id="changegraph" onchange="changegraph()">
+            <option value="SkillChart">SkillChart</option>
+            <option value="Chartbar">Chartbar</option>
           </select> 
 
-
-          <div style="  
-          margin: auto;
-          width: 40%;
-          padding: 10px;">
+          <div class="chart-container">
             <canvas id="myChart"></canvas>
         </div>
-
 
         <div class="display-tables">
           <table id="mytable">

@@ -53,6 +53,39 @@ const main =async()=>{
     if(checklink !== 1){
         window.location.href = './'
     }
+    fetch('http://localhost:9090/Department/AllDepartment')
+    .then(res => res.json())
+    .then(data =>{
+        let department = data.Department;
+        var tablerow = document.getElementById("mytable").tHead;
+        let headerRow = document.createElement('tr');
+        let table = document.getElementById('mytable').tBodies[0]
+
+        Object.keys(department[0]).forEach((headerText,i) => {
+            var newTH = document.createElement('th');
+            if(i==0){
+                newTH.className = "before"
+            }
+            else{
+                newTH.className = "after"
+            }
+            newTH.style.width = "150px";
+            newTH.innerHTML = `${headerText}`
+            
+            headerRow.appendChild(newTH)
+
+    });
+    tablerow.appendChild(headerRow);
+    department.forEach((emp,i) => {
+        let row = document.createElement('tr');
+        Object.values(emp).forEach((text,i) => {
+            let cell = document.createElement('td');
+            cell.innerHTML = `${text}`
+            row.appendChild(cell);
+        })
+        table.appendChild(row);
+    });
+    } )
 
 }
 main()
