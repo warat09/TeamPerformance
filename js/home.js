@@ -64,8 +64,8 @@ const main =async()=>{
      }))
     .then(res => res.json())
     .then(data =>{
-        let member = data.Body
-        let job = data.Head;
+         members = data.Body
+         jobs = data.Head;
         var tablerow = document.getElementById("mytable").tHead;
         let headerRow = document.createElement('tr');
         let table = document.getElementById('mytable').tBodies[0]
@@ -75,7 +75,7 @@ const main =async()=>{
         newTH.innerHTML = "Name"
         headerRow.appendChild(newTH)
         tablerow.appendChild(headerRow);
-        job.forEach(headerText => {
+        jobs.forEach(headerText => {
             var newTH = document.createElement('th');
             
             tablerow.rows[0].appendChild(newTH);
@@ -87,7 +87,7 @@ const main =async()=>{
 
     });
     // tablerow.appendChild(headerRow);
-    member.forEach((emp,i) => {
+    members.forEach((emp,i) => {
         let row = document.createElement('tr');
         Object.values(emp).forEach((text,i) => {
             let cell = document.createElement('td');
@@ -105,7 +105,7 @@ const main =async()=>{
     //     a.push(tablerow.rows[0].cells[i].innerHTML)
     // }
     // console.log(a)
-        return [member,job]
+        return [members,jobs]
     } )
     console.log("aaaa",a[0])
     var keep=[]
@@ -199,8 +199,8 @@ const changedepartment=async()=>{
      }))
     .then(res => res.json())
     .then(data =>{
-        let member = data.Body
-        let job = data.Head;
+         members = data.Body
+         jobs = data.Head;
         let tableall = document.getElementById('mytable')
         var tablerow = document.getElementById("mytable").tHead;
         let headerRow = document.createElement('tr');
@@ -213,7 +213,7 @@ const changedepartment=async()=>{
         for (var x=rowName-1; x>=0; x--) {
         tableall.rows[0].deleteCell(x);
         }
-        if(job.length != 0){
+        if(jobs.length != 0){
             // var tablerow = document.getElementById("mytable").tHead;
             // let headerRow = document.createElement('tr');
             // let table = document.getElementById('mytable').tBodies[0]
@@ -232,7 +232,7 @@ const changedepartment=async()=>{
             // tablerow.appendChild(headerRow);
             
             
-            job.forEach(headerText => {
+            jobs.forEach(headerText => {
                 var newTH = document.createElement('th');
                 
                 tablerow.rows[0].appendChild(newTH);
@@ -244,7 +244,7 @@ const changedepartment=async()=>{
     
         });
         // tablerow.appendChild(headerRow);
-        member.forEach((emp,i) => {
+        members.forEach((emp,i) => {
             let row = document.createElement('tr');
             Object.values(emp).forEach((text,i) => {
                 let cell = document.createElement('td');
@@ -255,10 +255,10 @@ const changedepartment=async()=>{
             table.appendChild(row);
         });
 
-        console.log(member)
-        console.log(job)
+        console.log(members)
+        console.log(jobs)
         var keep=[]
-        var score = member
+        var score = members
         var len = score.length, output = [];
     
         for(var i = 0; i < len; i++){
@@ -294,7 +294,7 @@ const changedepartment=async()=>{
         }
 
         const data = {
-            labels: job,
+            labels: jobs,
             datasets: keep
           };
           console.log(data)
@@ -342,15 +342,29 @@ const changegraph =()=>{
     console.log(selectchangegraph.options[selectchangegraph.selectedIndex].value)
     switch(selectchangegraph.options[selectchangegraph.selectedIndex].value){
         case "Chartbar":
-            const labels = [
-                "ME",
-                "SE"
-            ]
+            var keep=[]
+        var score = members
+        var len = score.length, output = [];
+    
+        for(var i = 0; i < len; i++){
+            var count = 0;
+            console.log(score[i].name)
+            convertedArray = Object.keys(score[i]).map((k,index) => {
+                if(index != 0){
+                    console.log("scorebar",i,count+score[i][k])
+                    count = count+score[i][k]
+                    keep.push(count)
+                }
+            })
+        }
+        console.log("123123123",keep)
+            console.log("Chartbar",members)
+            const labels = jobs
             const data = {
             labels: labels,
             datasets: [{
                 axis: 'y',
-                label: 'My First Dataset',
+                label: 'Current',
                 data: [65, 59, 80, 81, 56, 55, 40],
                 fill: false,
                 backgroundColor: [
@@ -386,6 +400,151 @@ const changegraph =()=>{
                 config
               );
             
+            break;
+        case "SkillChart":
+            console.log(members)
+            fetch('http://localhost:9090/Member/AllScore?' + new URLSearchParams({
+        IdDepartment: selectchangedepartment.options[selectchangedepartment.selectedIndex].value
+     }))
+    .then(res => res.json())
+    .then(data =>{
+         members = data.Body
+         jobs = data.Head;
+        let tableall = document.getElementById('mytable')
+        var tablerow = document.getElementById("mytable").tHead;
+        let headerRow = document.createElement('tr');
+        let table = document.getElementById('mytable').tBodies[0]
+        var rowName = tablerow.rows[0].cells.length;
+        var rowCount = table.rows.length;
+        for (var x=rowCount-1; x>=0; x--) {
+            table.deleteRow(x);
+        }
+        for (var x=rowName-1; x>=0; x--) {
+        tableall.rows[0].deleteCell(x);
+        }
+        if(jobs.length != 0){
+            // var tablerow = document.getElementById("mytable").tHead;
+            // let headerRow = document.createElement('tr');
+            // let table = document.getElementById('mytable').tBodies[0]
+    
+            // var newTH = document.createElement('th');
+            // newTH.className = "before"
+            // newTH.innerHTML = "Name"
+            // headerRow.appendChild(newTH)
+            // tablerow.appendChild(headerRow);
+            var newTH = document.createElement('th');
+                
+                tablerow.rows[0].appendChild(newTH);
+                newTH.className = "before"
+                newTH.innerHTML = "Name"
+            // headerRow.appendChild(newTH)
+            // tablerow.appendChild(headerRow);
+            
+            
+            jobs.forEach(headerText => {
+                var newTH = document.createElement('th');
+                
+                tablerow.rows[0].appendChild(newTH);
+                newTH.style.width = "150px";
+                newTH.innerHTML = `${headerText}`
+    
+            // headerRow.appendChild(header);
+            // tablerow.appendChild(headerRow);
+    
+        });
+        // tablerow.appendChild(headerRow);
+        members.forEach((emp,i) => {
+            let row = document.createElement('tr');
+            Object.values(emp).forEach((text,i) => {
+                let cell = document.createElement('td');
+                    cell.innerHTML = `<td>${text}</td>`
+                row.appendChild(cell);
+                
+            })
+            table.appendChild(row);
+        });
+
+        console.log(members)
+        console.log(jobs)
+        var keep=[]
+        var score = members
+        var len = score.length, output = [];
+    
+        for(var i = 0; i < len; i++){
+            var scorea =[]
+            console.log(score[i].name)
+            convertedArray = Object.keys(score[i]).map((k,index) => {
+                if(index != 0){
+                    console.log(score[i][k])
+                    scorea.push(score[i][k])
+                }
+            })
+            console.log("123123123",scorea)
+            const randomNum = () => Math.floor(Math.random() * (235 - 52 + 1) + 52);
+            const randomRGB = () => `rgb(${randomNum()}, ${randomNum()}, ${randomNum()})`;
+            var r = randomNum()
+            var g = randomNum()
+            var b = randomNum()
+            var c = {
+                label:score[i].name,
+                data:scorea,
+                fill: true,
+                backgroundColor: `rgba(${r}, ${g}, ${b}, 0.2)`,
+                borderColor: `rgb(${r}, ${g}, ${b})`,
+                pointBackgroundColor: `rgb(${r}, ${g}, ${b})`,
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: `rgb(${r}, ${g}, ${b})`
+            }
+    
+    console.log(randomRGB());
+            keep.push(c)
+
+        }
+
+        const data = {
+            labels: jobs,
+            datasets: keep
+          };
+          console.log(data)
+
+          
+          const config = {
+            type: 'radar',
+            data: data,
+            options: {
+                plugins: {
+                    legend: {
+                        labels: {
+                            font: {
+                                size: 25
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    r: {
+                      pointLabels: {
+                        font: {
+                          size: 25
+                        }
+                      }
+                    }
+                  },
+              elements: {
+                line: {
+                  borderWidth: 3
+                }
+              }
+            },
+          };
+             myChart = new Chart(
+              document.getElementById('myChart'),
+              config
+            );
+        
+        }
+    } )
             break;
         default:
             break;
