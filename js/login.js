@@ -1,4 +1,5 @@
 var form = document.getElementById('form')
+const inputs = document.querySelectorAll(".input");
 var checktoken = localStorage.getItem("tokenlogin")
 if(checktoken !== null) {
     window.location.href = '../'
@@ -27,10 +28,26 @@ if(responseData.status == 200){
     console.log(responseData)
         window.location.href = '../'
         console.log("ok mak")
-
 }
 else if(responseData.status == 400){
     console.log("no")
 }
 // .catch(err=>console.log(err))
 })
+function addcl(){
+	let parent = this.parentNode.parentNode;
+	parent.classList.add("focus");
+}
+
+function remcl(){
+	let parent = this.parentNode.parentNode;
+	if(this.value == ""){
+		parent.classList.remove("focus");
+	}
+}
+
+
+inputs.forEach(input => {
+	input.addEventListener("focus", addcl);
+	input.addEventListener("blur", remcl);
+});

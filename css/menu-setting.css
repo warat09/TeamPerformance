@@ -5,7 +5,9 @@
   -webkit-box-sizing:border-box;
   -moz-box-sizing:border-box;
 }
-
+.menu-setting{
+  visibility: hidden;
+}
 .input-center{
   margin: 25px;
   display: flex;
@@ -265,6 +267,8 @@
     height: auto;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     padding: 12px 16px;
+    border-radius: 10px;
+    box-shadow: 5px 5px 10px #333;
     z-index: 1;
   }
   .dropdown-content button{
@@ -291,6 +295,7 @@
     width: 80vw; */
     
   }
+
   
   @media only screen and (max-width: 1600px) {
     .chart-container {

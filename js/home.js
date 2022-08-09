@@ -2,9 +2,8 @@ var checktoken = localStorage.getItem("tokenlogin")
 var selectchangedepartment = document.getElementById("changedepartment")
 var selectchangegraph = document.getElementById("changegraph")
 var department = document.getElementById("department")
-var myChart
 
-var members,jobs
+var myChart,members,jobs
 
 const main =async()=>{
     if(checktoken === null || checktoken == " ") {
@@ -45,7 +44,9 @@ const main =async()=>{
     console.log(selectchangedepartment.options[selectchangedepartment.selectedIndex].value)
     Userdata.menu.forEach((Item)=> {
         var setting = document.getElementById("setting");
+        var menusetting = document.getElementById("menu-setting");
         if (Item.menuId === 7) {
+            menusetting.style.visibility = "visible";
             var menu = `
             <ul>
                 <li><a class="active" href="./">Home</a></li>
@@ -192,6 +193,7 @@ main()
 
 const changedepartment=async()=>{
     myChart.destroy();
+    selectchangegraph.options[0].selected = true;
     console.log(selectchangedepartment.options[selectchangedepartment.selectedIndex].value)
     department.innerHTML = await selectchangedepartment.options[selectchangedepartment.selectedIndex].innerHTML;
     fetch('http://localhost:9090/Member/AllScore?' + new URLSearchParams({
@@ -342,18 +344,21 @@ const changegraph =()=>{
     console.log(selectchangegraph.options[selectchangegraph.selectedIndex].value)
     switch(selectchangegraph.options[selectchangegraph.selectedIndex].value){
         case "Chartbar":
-            var keep=[]
+        var keep=[]
+        var keepcolor=[]
         var score = members
         var len = score.length, output = [];
-    
+        console.log("lennnnnnn",jobs.length)
+        for(var i = 0;i < jobs.length;i++){
+            keep.push(0)
+            keepcolor.push('rgb(54, 162, 235)')
+        }
         for(var i = 0; i < len; i++){
-            var count = 0;
             console.log(score[i].name)
             convertedArray = Object.keys(score[i]).map((k,index) => {
                 if(index != 0){
-                    console.log("scorebar",i,count+score[i][k])
-                    count = count+score[i][k]
-                    keep.push(count)
+                    console.log("scorebar",i,index-1,score[i][k])
+                    keep[index-1] = keep[index-1]+score[i][k]
                 }
             })
         }
@@ -365,26 +370,10 @@ const changegraph =()=>{
             datasets: [{
                 axis: 'y',
                 label: 'Current',
-                data: [65, 59, 80, 81, 56, 55, 40],
+                data: keep,
                 fill: false,
-                backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(255, 159, 64, 0.2)',
-                'rgba(255, 205, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(201, 203, 207, 0.2)'
-                ],
-                borderColor: [
-                'rgb(255, 99, 132)',
-                'rgb(255, 159, 64)',
-                'rgb(255, 205, 86)',
-                'rgb(75, 192, 192)',
-                'rgb(54, 162, 235)',
-                'rgb(153, 102, 255)',
-                'rgb(201, 203, 207)'
-                ],
+                backgroundColor: keepcolor,
+                borderColor: keepcolor,
                 borderWidth: 1
             }]
             };
@@ -556,6 +545,18 @@ const changegraph =()=>{
 
 // var theadname = document.getElementById("mytable").tHead
 const logout =()=>{
-    window.localStorage.clear();
-    window.location.href = './login.html'
+    Swal.fire({
+        title: 'Are you sure to log out?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Log Out'
+      }).then((result) => {
+        if (result.isConfirmed) {
+            window.localStorage.clear();
+            window.location.href = './login.html'
+        }
+      })
+
 }
