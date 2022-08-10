@@ -30,7 +30,11 @@ if(responseData.status == 200){
         console.log("ok mak")
 }
 else if(responseData.status == 400){
-    console.log("no")
+    Swal.fire({
+        icon: 'error',
+        title: 'Login fail!',
+        text: 'Username or Password incorrect!',
+      })
 }
 // .catch(err=>console.log(err))
 })

@@ -1,6 +1,6 @@
 var form = document.getElementById("form")
-
 var checktoken = localStorage.getItem("tokenlogin")
+
 const main =async()=>{
     if(checktoken === null || checktoken == " ") {
     window.location.href = './login.html'
@@ -62,33 +62,57 @@ const main =async()=>{
         var tablerow = document.getElementById("mytable").tHead;
         let headerRow = document.createElement('tr');
         let table = document.getElementById('mytable').tBodies[0]
+        console.log(Object.keys(job[0]).length-1)
+        console.log(Object.keys(job[0]))
+
 
         Object.keys(job[0]).forEach((headerText,i) => {
+            console.log(i)
             var newTH = document.createElement('th');
             if(i==0){
                 newTH.className = "before"
             }
-            else{
-                newTH.className = "after"
-            }
-            newTH.style.width = "150px";
-            newTH.innerHTML = `${headerText}`
-            
+            newTH.innerHTML = `${headerText}`     
             headerRow.appendChild(newTH)
 
     });
+    headerRow.insertCell(Object.keys(job[0]).length).innerHTML = "Edit"
+    headerRow.insertCell(Object.keys(job[0]).length+1).innerHTML = "Delete"
     tablerow.appendChild(headerRow);
+    let id,namejob
     job.forEach((emp,i) => {
         let row = document.createElement('tr');
         Object.values(emp).forEach((text,i) => {
             let cell = document.createElement('td');
             cell.innerHTML = `${text}`
+            console.log(text,i)
+            if(i == 0){
+                id = text;
+            }
+            else if(i ==1){
+                namejob = text
+            }
             row.appendChild(cell);
         })
+
+        let celledit = document.createElement('td');
+        let celldelete = document.createElement('td');
+        
+        celledit.innerHTML = `<a href="./EditJob.html?id=${id}"><i class='bx bx-edit-alt' ></i></a>`
+        
+        row.appendChild(celledit);
+        celldelete.innerHTML = `<button onclick="deletejob('${id}','${namejob}')" class="btn delete"><i class='bx bxs-trash-alt'></i></button>`
+        row.appendChild(celldelete);
+
+
+
+
+
+        // table.insertCell(0).innerHTML = "12121"
+        
         table.appendChild(row);
     });
     } )
-
 }
 main()
 
@@ -134,6 +158,23 @@ form.addEventListener("submit",async(event)=>{
       })
     
 })
+const deletejob=(id,namejob)=>{
+    console.log(id,namejob)
+    Swal.fire({
+        title: `Do you want to Delete ${namejob}?`,
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'Delete',
+        denyButtonText: `Don't Delete`,
+      }).then(async(result) => {
+        if (result.isConfirmed) {
+            console.log("delete",id,namejob)
+        } else if (result.isDenied) {
+          Swal.fire('Changes are not saved', '', 'info')
+        }
+      })
+}
+
 const logout =()=>{
     window.localStorage.clear();
     window.location.href = './login.html'
