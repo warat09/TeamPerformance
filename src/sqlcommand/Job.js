@@ -8,6 +8,11 @@ exports.EditJob=()=>{
     UPDATE TleDatabase.dbo.[job] SET JOB = @job WHERE ID = @id
     `
 }
+exports.RemoveJob=()=>{
+    return`
+    DELETE j FROM TleDatabase.dbo.[job] j WHERE j.id = @id AND j.JOB = @job
+    `
+}
 exports.CheckJob =()=>{
     return `
     SELECT JOB FROM TleDatabase.dbo.[job] WHERE JOB = @job 

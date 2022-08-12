@@ -19,6 +19,23 @@ exports.AddDepartment =async(input)=>{
         })
         return queryresult
 }
+exports.EditDepartment=async(id,department)=>{
+    let queryresult
+    const queryEditDepartment = cmdqury.EditDepartment()
+    const pool = await connection
+    await pool.request()
+    .input("id",mssql.Int(4),id)
+    .input("department",mssql.NVarChar(100),department)
+    .query(queryEditDepartment)
+    .then(()=>{
+        console.log("YES add")
+        queryresult = new IAdd(1,"success")
+    }).catch(err=>{
+        console.log("no add")
+        queryresult = new IAdd(0,err.message)
+    })
+    return queryresult
+}
 exports.CheckDepartment =async(input)=>{
     let queryresult
         const queryDepartment = cmdqury.CheckDepartment()

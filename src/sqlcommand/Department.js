@@ -3,6 +3,11 @@ exports.AddDepartment =()=>{
     INSERT INTO TleDatabase.dbo.[department] (Department_Name) VALUES (@department)
     `
 }
+exports.EditDepartment=()=>{
+    return`
+    UPDATE TleDatabase.dbo.[department] SET Department_Name = @department WHERE ID = @id
+    `
+}
 exports.CheckDepartment =()=>{
     return `
     SELECT Department_Name FROM TleDatabase.dbo.[department] WHERE Department_Name = @department 

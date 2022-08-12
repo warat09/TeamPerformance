@@ -40,6 +40,31 @@ exports.AddDepartment=async(req,res,next)=>{
         return res.status(500).send()
         }
 }
+exports.EditDepartment=async(req,res,next)=>{
+    try{
+        var id = req.body.id;
+        var olddepartment = req.body.olddepartment;
+        var newdepartment = req.body.newdepartment;
+        sql.CheckDepartment(newdepartment).then(result=>{
+            if(Object.keys(result.data).length == 0){
+                sql.EditDepartment(id,newdepartment).then(result=>{
+                    if(result.status == 1){
+                        return res.json({ status:1,message: `Update Department ${olddepartment} to ${newdepartment} Success`});
+                    }
+                    else{
+                        return res.json({ status:0,message: `Can't Update Department ${olddepartment} to ${newdepartment}`});
+                    }    
+                })
+            }
+            else{
+                return res.json({ status:0,message: "Have Department "+newdepartment});
+            }
+        })
+    }catch(err){
+        return res.status(500).send()
+    }
+
+}
 exports.AllDepartment=async(req,res,next)=>{
     try{
         sql.AllDepartment().then(result=>{
