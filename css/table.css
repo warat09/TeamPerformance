@@ -76,6 +76,13 @@
     border-radius: 6px;
     margin: 10px 0px 10px 0px;
 }
+.home-section .display-tables table input[type="text"]{
+    text-align: center;
+    border: 3px solid ;
+    border-radius: 6px;
+    margin: 10px 0px 10px 0px;
+}
+
 
 .home-section .display-tables table th.before{
     border-radius: 20px 0 0 0;

@@ -66,23 +66,34 @@ const main =async()=>{
             if(i==0){
                 newTH.className = "before"
             }
-            else{
-                newTH.className = "after"
-            }
-            newTH.style.width = "150px";
-            newTH.innerHTML = `${headerText}`
-            
+            newTH.innerHTML = `${headerText}`     
             headerRow.appendChild(newTH)
-
     });
+    headerRow.insertCell(Object.keys(department[0]).length).innerHTML = "Edit"
+    headerRow.insertCell(Object.keys(department[0]).length+1).innerHTML = "Delete"
     tablerow.appendChild(headerRow);
+    let id,namejob
     department.forEach((emp,i) => {
         let row = document.createElement('tr');
         Object.values(emp).forEach((text,i) => {
             let cell = document.createElement('td');
             cell.innerHTML = `${text}`
+            if(i == 0){
+                id = text;
+            }
+            else if(i ==1){
+                namejob = text
+            }
             row.appendChild(cell);
         })
+        let celledit = document.createElement('td');
+        let celldelete = document.createElement('td');
+        let rows = table.rows.length;
+        celledit.innerHTML = `<button onclick="editjob('${id}','${namejob}','${rows}')" class="btn edit"><i class='bx bx-edit-alt' ></i></button>`
+        
+        row.appendChild(celledit);
+        celldelete.innerHTML = `<button onclick="deletejob('${id}','${namejob}')" class="btn delete"><i class='bx bxs-trash-alt'></i></button>`
+        row.appendChild(celldelete);
         table.appendChild(row);
     });
     } )
@@ -130,6 +141,77 @@ Swal.fire({
   })
 
  })
+
+ const deletejob=(id,namejob)=>{
+    console.log(id,namejob)
+    Swal.fire({
+        title: `Do you want to Delete ${namejob}?`,
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'Delete',
+        denyButtonText: `Don't Delete`,
+      }).then(async(result) => {
+        if (result.isConfirmed) {
+            console.log("delete",id,namejob)
+        } else if (result.isDenied) {
+          Swal.fire('Changes are not saved', '', 'info')
+        }
+      })
+}
+const editjob=(id,namejob,row)=>{
+    let table = document.getElementById('mytable').tBodies[0]
+    console.log(id,row)
+    var edittext = table.rows[row].cells[1];
+    var editbutton = table.rows[row].cells[2];
+    edittext.innerHTML = `<td><input type="text" id="row-${row}_col-1" value="${namejob}"/></td>`
+    editbutton.innerHTML=`<td><button onclick="savejob('${id}','${namejob}','${row}')" class="btn save"><i class='bx bxs-save' ></i></button></td>`
+}
+const savejob=async(id,namejob,row)=>{
+    var inputjob = document.getElementById(`row-${row}_col-1`)
+    let table = document.getElementById('mytable').tBodies[0]
+    var edittext = table.rows[row].cells[1];
+    var editbutton = table.rows[row].cells[2];
+
+    Swal.fire({
+        title: 'Do you want to Save?',
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'Save',
+        denyButtonText: `Don't Save`,
+    }).then(async(result) => {
+        if (result.isConfirmed) {
+        const response = await fetch('http://localhost:9090/Department/EditDepartment',{
+            method:'post',
+            headers:{   
+                'Content-Type':'application/json'    
+            },
+            body: JSON.stringify({
+                "id":id ,
+                "olddepartment":namejob,
+                "newdepartment":inputjob.value
+            })
+        })
+        const responseStatus = await response.json();
+        console.log(responseStatus)
+            if(responseStatus.status ==0){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: `${responseStatus.message}`,
+                    footer: '<a href="">Why do I have this issue?</a>'
+                })
+            }
+            else{
+                Swal.fire(`${responseStatus.message}`, '', 'success')
+                edittext.innerHTML = `<td>${inputjob.value}</td>`
+                editbutton.innerHTML=`<td><button onclick="editjob('${id}','${inputjob.value}','${row}')" class="btn edit"><i class='bx bx-edit-alt' ></i></button></td>`
+            }
+        
+        } else if (result.isDenied) {
+        Swal.fire('Changes are not saved', '', 'info')
+        }
+    })
+}
 
 const logout =()=>{
     window.localStorage.clear();
