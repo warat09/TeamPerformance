@@ -190,3 +190,23 @@
     background-color: red;
     color: white;
   }
+  .save {
+    border-color: green;
+    border-radius: 4px;
+    color: green;
+  }
+  
+  .save:hover {
+    background-color: green;
+    color: white;
+  }
+  .edit {
+    border-color: blue;
+    border-radius: 4px;
+    color: blue;
+  }
+  
+  .edit:hover {
+    background-color: blue;
+    color: white;
+  }

@@ -97,8 +97,10 @@ const main =async()=>{
 
         let celledit = document.createElement('td');
         let celldelete = document.createElement('td');
+        let rows = table.rows.length;
+
         
-        celledit.innerHTML = `<a href="./EditJob.html?id=${id}"><i class='bx bx-edit-alt' ></i></a>`
+        celledit.innerHTML = `<button onclick="editjob('${id}','${namejob}','${rows}')" class="btn edit"><i class='bx bx-edit-alt' ></i></button>`
         
         row.appendChild(celledit);
         celldelete.innerHTML = `<button onclick="deletejob('${id}','${namejob}')" class="btn delete"><i class='bx bxs-trash-alt'></i></button>`
@@ -174,7 +176,32 @@ const deletejob=(id,namejob)=>{
         }
       })
 }
-
+const editjob=(id,namejob,row)=>{
+    let table = document.getElementById('mytable').tBodies[0]
+    console.log(id,row)
+    var edittext = table.rows[row].cells[1];
+    var editbutton = table.rows[row].cells[2];
+    edittext.innerHTML = `<td><input type="text" id="row-${row}_col-1" value="${namejob}"/></td>`
+    editbutton.innerHTML=`<td><button onclick="savejob('${id}','${namejob}','${row}')" class="btn save"><i class='bx bxs-save' ></i></button></td>`
+}
+const savejob=async(id,namejob,row)=>{
+    var inputjob = document.getElementById(`row-${row}_col-1`)
+    let table = document.getElementById('mytable').tBodies[0]
+    console.log(inputjob.value)
+    const response = await fetch('http://localhost:9090/Job/EditJob',{
+        method:'post',
+        headers:{   
+            'Content-Type':'application/json'    
+        },
+        body: JSON.stringify({
+            "id":id ,
+            "oldjob":namejob,
+            "newjob":inputjob.value
+        })
+    })
+const responseStatus = await response.json();
+console.log(responseStatus)
+}
 const logout =()=>{
     window.localStorage.clear();
     window.location.href = './login.html'
