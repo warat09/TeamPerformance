@@ -34,6 +34,32 @@ exports.AddJob=async(req,res,next)=>{
         return res.status(500).send()
         }
 }
+exports.EditJob=async(req,res,next)=>{
+    try{
+        var id = req.body.id;
+        var oldjob = req.body.oldjob;
+        var newjob = req.body.newjob;
+        sql.CheckJob(newjob).then(result=>{
+            if(Object.keys(result.data).length == 0){
+                sql.EditJob(id,newjob).then(result=>{
+                    if(result.status == 1){
+                        return res.json({ status:1,message: `Update Job ${oldjob} to ${newjob} Success`});
+                    }
+                    else{
+                        return res.json({ status:0,message: `Can't Update Job ${oldjob} to ${newjob}`});
+                    }    
+                })
+            }
+            else{
+                return res.json({ status:0,message: "Have Job "+newjob});
+            }
+        })
+
+    }catch(err){
+        console.log("error is",err);
+        return res.status(500).send()
+        }
+}
 exports.AddJobToDepartment=async(req,res,next)=>{
     try{
         var Id_Job = req.body.job;

@@ -20,6 +20,23 @@ exports.AddJob =async(input)=>{
         })
         return queryresult
 }
+exports.EditJob =async(id,job)=>{ 
+    let queryresult
+        const queryEditJob = cmdqury.EditJob()
+        const pool = await connection
+        await pool.request()
+        .input("id",mssql.Int(4),id)
+        .input("job",mssql.NVarChar(100),job)
+        .query(queryEditJob)
+        .then(()=>{
+            console.log("YES add")
+            queryresult = new IAdd(1,"success")
+        }).catch(err=>{
+            console.log("no add")
+            queryresult = new IAdd(0,err.message)
+        })
+        return queryresult
+}
 exports.CheckJob =async(input)=>{
         let queryresult
         const queryJob = cmdqury.CheckJob()

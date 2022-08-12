@@ -3,6 +3,11 @@ exports.AddJob =()=>{
     INSERT INTO TleDatabase.dbo.[job] (JOB) VALUES (@job)
     `
 }
+exports.EditJob=()=>{
+    return`
+    UPDATE TleDatabase.dbo.[job] SET JOB = @job WHERE ID = @id
+    `
+}
 exports.CheckJob =()=>{
     return `
     SELECT JOB FROM TleDatabase.dbo.[job] WHERE JOB = @job 
