@@ -4,7 +4,7 @@ var selectremovejob = document.getElementById("removejob");
 var selectchangedepartment = document.getElementById("changedepartment")
 var department = document.getElementById("department")
 var Userdata = JSON.parse(localStorage.getItem("data"))
-var member,job
+var member,job,employees,headers,Member;
 var keepid
 
 var checktoken = localStorage.getItem("tokenlogin")
@@ -96,14 +96,23 @@ const main =async()=>{
     .then(res => res.json())
     .then(data =>{
         console.log(data)
-        let employees = data.Body
-        let headers = data.Head;
-        let Member = data.BodyMember;
+        employees = data.Body
+        headers = data.Head;
+        Member = data.BodyMember;
         var tablerow = document.getElementById("mytable").tHead;
         let headerRow = document.createElement('tr');
         let table = document.getElementById('mytable').tBodies[0]
+
         console.log("Member",Member)
         console.log("employees",employees)
+        var newTH = document.createElement('th');
+        newTH.className = "before"
+        newTH.innerHTML = "SELECT"
+        headerRow.appendChild(newTH)
+        headerRow.insertCell(1).innerHTML = "Name"
+        tablerow.appendChild(headerRow);
+
+
 
         headers.forEach(headerText => {
             var newTH = document.createElement('th');
@@ -184,9 +193,21 @@ const addmember=async()=>{
 // const responseStatus = await response.json();
 // console.log(responseStatus)
 let table = document.getElementById("mytable")
+var tablerow = document.getElementById("mytable").tHead;
 var totalRowCount = table.tBodies[0].rows.length;
 var tbodyColumnCount = table.rows[0].cells.length;
 var row = table.tBodies[0].insertRow(totalRowCount);
+// let headerRow = document.createElement('tr');
+// alert(tablerow.rows[0].cells.length)
+// if(tablerow.rows[0].cells.length == 0){
+//     var newTH = document.createElement('th');
+//     newTH.className = "before"
+//     newTH.innerHTML = "SELECT"
+//     headerRow.appendChild(newTH)
+//     headerRow.insertCell(1).innerHTML = "Name"
+// }
+// tablerow.appendChild(headerRow);
+
 
 for(let i = 0;i < tbodyColumnCount;i++){
 var cell2 = row.insertCell(i);

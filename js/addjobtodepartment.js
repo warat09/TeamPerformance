@@ -145,7 +145,6 @@ fetch('http://localhost:9090/Department/AllDepartment')
                     icon: 'error',
                     title: 'Oops...',
                     text: `${responseStatus.message}`,
-                    footer: '<a href="">Why do I have this issue?</a>'
                 })
             }
             else{

@@ -106,10 +106,6 @@ const main =async()=>{
         celldelete.innerHTML = `<button onclick="deletejob('${id}','${namejob}')" class="btn delete"><i class='bx bxs-trash-alt'></i></button>`
         row.appendChild(celldelete);
 
-
-
-
-
         // table.insertCell(0).innerHTML = "12121"
         
         table.appendChild(row);

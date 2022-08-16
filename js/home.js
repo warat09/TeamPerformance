@@ -72,9 +72,12 @@ const main =async()=>{
         let table = document.getElementById('mytable').tBodies[0]
 
         var newTH = document.createElement('th');
-        newTH.className = "before"
-        newTH.innerHTML = "Name"
-        headerRow.appendChild(newTH)
+        console.log("mmmmmmmm",Object(members).length)
+        if(Object(members).length !==0){
+            newTH.className = "before"
+            newTH.innerHTML = "Name"
+            headerRow.appendChild(newTH)
+        }
         tablerow.appendChild(headerRow);
         jobs.forEach(headerText => {
             var newTH = document.createElement('th');
