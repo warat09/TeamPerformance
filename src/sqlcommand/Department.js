@@ -35,11 +35,11 @@ exports.CheckMemberDepartment=()=>{
 }
 exports.AllMemberDepartment=()=>{
     return`
-    SELECT m.Member_Fname,d.Department_Name  FROM TleDatabase.dbo.[member_department] md JOIN TleDatabase.dbo.[member] m ON m.ID  = md.ID_MEMBER JOIN TleDatabase.dbo.[department] d ON md.ID_DEPARTMENT  = d.ID ORDER BY md.ID_DEPARTMENT  
+    SELECT d.Department_Name,m.Member_Fname  FROM TleDatabase.dbo.[member_department] md JOIN TleDatabase.dbo.[member] m ON m.ID  = md.ID_MEMBER JOIN TleDatabase.dbo.[department] d ON md.ID_DEPARTMENT  = d.ID ORDER BY md.ID_DEPARTMENT  
     `
 }
 exports.AllJobDepartment=()=>{
     return`
-    SELECT j.JOB,d.Department_Name  FROM TleDatabase.dbo.[job_department] jd JOIN TleDatabase.dbo.[job] j ON j.ID = jd.ID_JOB JOIN TleDatabase.dbo.[department] d ON jd.ID_DEPARTMENT = d.ID ORDER BY jd.ID_DEPARTMENT 
+    SELECT d.Department_Name,j.JOB  FROM TleDatabase.dbo.[job_department] jd JOIN TleDatabase.dbo.[job] j ON j.ID = jd.ID_JOB JOIN TleDatabase.dbo.[department] d ON jd.ID_DEPARTMENT = d.ID ORDER BY jd.ID_DEPARTMENT 
     `
 }
