@@ -8,7 +8,7 @@ exports.AddJob=async(req,res,next)=>{
     try{
         sql.CheckJob(job).then(result=>{
             if(Object.keys(result.data).length == 0){
-                sql.AddJob(job).then(result=>{
+                sql.AddJob(job).then(async(result)=>{
                     if(result.status == 1){
                         sqldepartment.AllDepartment().then(result=>{
                             let lengthdepartment = Object.keys(result).length
@@ -17,7 +17,8 @@ exports.AddJob=async(req,res,next)=>{
                                 sql.AllJobToDepartment(job,result[i].ID)
                             }
                         })
-                        return res.json({ status:1,message: `Add Job ${job} Success`});
+                        var datajob = await sql.CheckJob(job);
+                        return res.json({ status:1,value:datajob.data,message: `Add Job ${job} Success`});
                     }
                     else{
                         return res.json({ status:0,message: `Can't Add Job ${job}`});
@@ -59,6 +60,31 @@ exports.EditJob=async(req,res,next)=>{
         console.log("error is",err);
         return res.status(500).send()
         }
+}
+exports.DeleteJob=async(req,res,next)=>{
+    try{
+        var Id_Job = req.body.id;
+        var Name_Job = req.body.job;
+        console.log(Id_Job,Name_Job)
+        var checkscore = await sql.CheckDeleteScore(Id_Job);
+        for(var i = 0;i<Object.keys(checkscore.data).length;i++){
+            await sql.DeleteScore(checkscore.data[i].ID);
+        }
+        await sql.DeleteJobScore(Id_Job);
+        await sql.DeleteAllJobDepartment(Id_Job);
+        await sql.DeleteJobDepartment(Id_Job);
+        var deletejob = await sql.DeleteJob(Id_Job,Name_Job);
+        if(deletejob.status == 1){
+            return res.json({ status:1,message: `Delete Job ${Name_Job} success`});
+        }
+        else{
+            return res.json({ status:0,message: `Can't Delete Job ${Name_Job}`});
+        }
+    }catch(err){
+        console.log("error is",err);
+        return res.status(500).send()
+    }
+
 }
 exports.AddJobToDepartment=async(req,res,next)=>{
     try{

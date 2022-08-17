@@ -13,9 +13,34 @@ exports.RemoveJob=()=>{
     DELETE j FROM TleDatabase.dbo.[job] j WHERE j.id = @id AND j.JOB = @job
     `
 }
+exports.DeleteJobDepartment=()=>{
+    return`
+    DELETE jd FROM TleDatabase.dbo.[job_department] jd WHERE jd.ID_JOB = @id
+    `
+}
+exports.DeleteAllJobDepartment=()=>{
+    return`
+    DELETE ajd FROM TleDatabase.dbo.[all_job_department] ajd WHERE ajd.ID_JOB = @id
+    `
+}
+exports.DeleteJobScore=()=>{
+    return`
+    DELETE js FROM TleDatabase.dbo.[job_score] js WHERE js.ID_JOB = @id   
+    `
+}
+exports.CheckScoreDelete=()=>{
+    return`
+    SELECT js.ID  FROM TleDatabase.dbo.[job_score] js WHERE js.ID_JOB = @id   
+    `
+}
+exports.DeleteScore=()=>{
+    return`
+    DELETE s FROM TleDatabase.dbo.[score] s WHERE s.ID_JOB = @jobscore
+    `
+}
 exports.CheckJob =()=>{
     return `
-    SELECT JOB FROM TleDatabase.dbo.[job] WHERE JOB = @job 
+    SELECT * FROM TleDatabase.dbo.[job] WHERE JOB = @job 
     `
 }
 exports.CheckJobScore=()=>{
@@ -25,7 +50,7 @@ exports.CheckJobScore=()=>{
 }
 exports.AllJob=()=>{
     return `
-    SELECT * FROM TleDatabase.dbo.[job]
+    SELECT * FROM TleDatabase.dbo.[job] j ORDER BY j.ID 
     `
 }
 exports.OptionJob=()=>{
