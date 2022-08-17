@@ -102,6 +102,8 @@ const main =async()=>{
         var tablerow = document.getElementById("mytable").tHead;
         let headerRow = document.createElement('tr');
         let table = document.getElementById('mytable').tBodies[0]
+        var showtable = document.getElementById("mytable");
+
 
         console.log("Member",Member)
         console.log("employees",employees)
@@ -109,11 +111,10 @@ const main =async()=>{
         newTH.className = "before"
         newTH.innerHTML = "SELECT"
         headerRow.appendChild(newTH)
-        headerRow.insertCell(1).innerHTML = "Name"
+        var newTHN = document.createElement('th');
+        newTHN.innerHTML = "Name"
+        headerRow.appendChild(newTHN)
         tablerow.appendChild(headerRow);
-
-
-
         headers.forEach(headerText => {
             var newTH = document.createElement('th');
             
@@ -150,6 +151,15 @@ const main =async()=>{
         })
         table.appendChild(row);
     });
+    if(table.rows.length <= 0 && tablerow.rows[0].cells.length <= 2){
+        showtable.style.visibility = "hidden";
+    }
+    else{
+        showtable.style.visibility = "visible";            
+    }
+    console.log(table.rows.length)
+    console.log(tablerow.rows[0].cells.length)
+
     } )
     var checklink = 0
     Userdata.menu.forEach((Item)=> {
@@ -174,6 +184,7 @@ const main =async()=>{
         window.location.href = './'
     }
 
+
 }
 main()
 
@@ -193,7 +204,6 @@ const addmember=async()=>{
 // const responseStatus = await response.json();
 // console.log(responseStatus)
 let table = document.getElementById("mytable")
-var tablerow = document.getElementById("mytable").tHead;
 var totalRowCount = table.tBodies[0].rows.length;
 var tbodyColumnCount = table.rows[0].cells.length;
 var row = table.tBodies[0].insertRow(totalRowCount);
@@ -227,6 +237,11 @@ var totalRowCount = table.tBodies[0].rows.length;
 var tbodyColumnCount = table.rows[0].cells.length;
 console.log("rows is",totalRowCount)
 console.log("columns is",tbodyColumnCount)
+console.log(totalRowCount)
+if(totalRowCount > 0){
+    table.style.visibility = "visible";
+}
+
 }
 
 const addjob=async()=>{
@@ -271,6 +286,10 @@ const addjob=async()=>{
                 selectremovejob.add(option);
                 selectjob.remove(selectjob.selectedIndex)
         }
+        if(tblHeadObj.rows[0].cells.length > 2){
+            table.style.visibility = "visible";
+        }
+
         
         // selectremovejob.add(selectjob.options[selectjob.selectedIndex])
         
@@ -285,7 +304,14 @@ const onClick=async()=>{
         denyButtonText: `Don't Submit`,
       }).then(async(result) => {
         if (result.isConfirmed) {
-            var selectchangedepartment = document.getElementById("changedepartment")
+            tablerow =  document.getElementById('mytable').tHead
+            console.log(tablerow.rows[0].cells.length)
+            if(tablerow.rows[0].cells.length <=2){
+                alert("nnnnnn");
+
+            }
+            else{
+                var selectchangedepartment = document.getElementById("changedepartment")
 
             var tRows = [];
             var tRowsh = [];
@@ -373,6 +399,8 @@ const onClick=async()=>{
             else{
                 Swal.fire(`${responseData.message}`, '', 'success')
             }
+            }
+            
         
         } else if (result.isDenied) {
           Swal.fire('Changes are not saved', '', 'info')
@@ -645,6 +673,12 @@ const changedepartment=async()=>{
         })
         table.appendChild(row);
     });
+    if(table.rows.length <= 0 && tablerow.rows[0].cells.length <= 2){
+        tableall.style.visibility = "hidden";
+    }
+    else{
+        tableall.style.visibility = "visible";            
+    }
     } )
 }
 const logout =()=>{

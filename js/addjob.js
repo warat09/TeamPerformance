@@ -32,6 +32,7 @@ const main =async()=>{
      }))
      const resultresponse = await response.json();
     document.getElementById("department").innerHTML = await resultresponse[0].Department_Name;
+    department = await resultresponse[0].Department_Name;
     console.log(Userdata.menu)
     var checklink = 0
     Userdata.menu.forEach((Item)=> {
@@ -103,7 +104,7 @@ const main =async()=>{
         celledit.innerHTML = `<button onclick="editjob('${id}','${namejob}','${rows}')" class="btn edit"><i class='bx bx-edit-alt' ></i></button>`
         
         row.appendChild(celledit);
-        celldelete.innerHTML = `<button onclick="deletejob('${id}','${namejob}')" class="btn delete"><i class='bx bxs-trash-alt'></i></button>`
+        celldelete.innerHTML = `<button onclick="deletejob('${id}','${namejob}','${rows}')" class="btn delete"><i class='bx bxs-trash-alt'></i></button>`
         row.appendChild(celldelete);
 
         // table.insertCell(0).innerHTML = "12121"
@@ -124,6 +125,7 @@ form.addEventListener("submit",async(event)=>{
         confirmButtonText: 'Add',
         denyButtonText: `Don't Add`,
       }).then(async(result) => {
+        var table = document.getElementById('mytable').tBodies[0]
         if (result.isConfirmed) {
           var job = document.getElementById("job").value
                 const response = await fetch('http://localhost:9090/Job/AddJob',{
@@ -148,6 +150,17 @@ form.addEventListener("submit",async(event)=>{
             }
             else{
                 Swal.fire(`${responseStatus.message}`, '', 'success')
+                var rows = table.rows.length
+                var addjob = table.insertRow(table.rows.length)
+                var cell1 = addjob.insertCell(0);
+                var cell2 = addjob.insertCell(1);
+                var cell3 = addjob.insertCell(2);
+                var cell4 = addjob.insertCell(3);
+                cell1.innerHTML = responseStatus.value[0].ID;
+                cell2.innerHTML = responseStatus.value[0].JOB;
+                cell3.innerHTML = `<button onclick="editjob('${responseStatus.value[0].ID}','${responseStatus.value[0].JOB}','${rows}')" class="btn edit"><i class='bx bx-edit-alt' ></i></button>`
+                cell4.innerHTML = `<button onclick="deletejob('${responseStatus.value[0].ID}','${responseStatus.value[0].JOB}','${rows}')" class="btn delete"><i class='bx bxs-trash-alt'></i></button>`
+
             }
         
         } else if (result.isDenied) {
@@ -156,7 +169,7 @@ form.addEventListener("submit",async(event)=>{
       })
     
 })
-const deletejob=(id,namejob)=>{
+const deletejob=(id,namejob,rows)=>{
     console.log(id,namejob)
     Swal.fire({
         title: `Do you want to Delete ${namejob}?`,
@@ -167,6 +180,29 @@ const deletejob=(id,namejob)=>{
       }).then(async(result) => {
         if (result.isConfirmed) {
             console.log("delete",id,namejob)
+            const response = await fetch('http://localhost:9090/Job/DeleteJob',{
+                    method:'post',
+                    headers:{   
+                        'Content-Type':'application/json'    
+                    },
+                    body: JSON.stringify({
+                        "id":id ,
+                        "job":namejob
+                    })
+                })
+            const responseStatus = await response.json();
+            if(responseStatus.status == 1){
+                Swal.fire(`${responseStatus.message}`, '', 'success')
+                document.getElementById('mytable').tBodies[0].deleteRow(rows)
+            }
+            else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: `${responseStatus.message}`,
+                    footer: '<a href="">Why do I have this issue?</a>'
+                })
+            }
         } else if (result.isDenied) {
           Swal.fire('Changes are not saved', '', 'info')
         }
