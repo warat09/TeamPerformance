@@ -26,6 +26,121 @@ exports.AllMember=async()=>{
         }
         return queryresult
 }
+exports.Editfmember=async(id,fname)=>{
+    let queryresult
+        const queryMember = cmdqury.Editfmember()
+        const pool = await connection
+        await pool.request()
+        .input("id",mssql.Int(4),id)
+        .input("member_fname",mssql.NVarChar(100),fname)
+        .query(queryMember)
+        .then(()=>{
+            console.log("YES add")
+            queryresult = new IAdd(1,"success")
+        }).catch(err=>{
+            console.log("no add")
+            queryresult = new IAdd(0,err.message)
+        })
+        return queryresult
+}
+exports.CheckDeleteScore=async(id)=>{
+    let queryresult
+        const queryMember = cmdqury.CheckScoreDelete()
+        const pool = await connection
+        await pool.request()
+        .input("id",mssql.Int(4),id)
+        .query(queryMember)
+        .then(res=>{
+            console.log(res.recordset)
+            console.log("YES")
+            queryresult = new Iquery(res.recordset,1,"success")
+
+        }).catch(err=>{
+            console.log("NO")
+            queryresult = new Iquery(res.recordset,0,err.message)
+        })
+        return queryresult
+}
+exports.DeleteMember=async(id)=>{
+    let queryresult
+        const queryMember = cmdqury.RemoveMember()
+        const pool = await connection
+        await pool.request()
+        .input("id",mssql.Int(4),id)
+        .query(queryMember)
+        .then(()=>{
+            console.log("YES add")
+            queryresult = new IAdd(1,"success")
+        }).catch(err=>{
+            console.log("no add")
+            queryresult = new IAdd(0,err.message)
+        })
+        return queryresult
+}
+exports.DeleteMemberDepartment=async(id)=>{
+    let queryresult
+        const queryMember = cmdqury.DeleteMemberDepartment()
+        const pool = await connection
+        await pool.request()
+        .input("id",mssql.Int(4),id)
+        .query(queryMember)
+        .then(()=>{
+            console.log("YES add")
+            queryresult = new IAdd(1,"success")
+        }).catch(err=>{
+            console.log("no add")
+            queryresult = new IAdd(0,err.message)
+        })
+        return queryresult
+}
+exports.DeleteAllMemberDepartment=async(id)=>{
+    let queryresult
+        const queryMember = cmdqury.DeleteAllMemberDepartment()
+        const pool = await connection
+        await pool.request()
+        .input("id",mssql.Int(4),id)
+        .query(queryMember)
+        .then(()=>{
+            console.log("YES add")
+            queryresult = new IAdd(1,"success")
+        }).catch(err=>{
+            console.log("no add")
+            queryresult = new IAdd(0,err.message)
+        })
+        return queryresult
+}
+exports.DeleteMemberScore=async(id)=>{
+    let queryresult
+        const queryMember = cmdqury.DeleteMemberScore()
+        const pool = await connection
+        await pool.request()
+        .input("id",mssql.Int(4),id)
+        .query(queryMember)
+        .then(()=>{
+            console.log("YES add")
+            queryresult = new IAdd(1,"success")
+        }).catch(err=>{
+            console.log("no add")
+            queryresult = new IAdd(0,err.message)
+        })
+        return queryresult
+}
+exports.DeleteScore=async(id)=>{
+    let queryresult
+        const queryMember = cmdqury.DeleteScore()
+        const pool = await connection
+        await pool.request()
+        .input("memberscore",mssql.Int(4),id)
+        .query(queryMember)
+        .then(()=>{
+            console.log("YES add")
+            queryresult = new IAdd(1,"success")
+        }).catch(err=>{
+            console.log("no add")
+            queryresult = new IAdd(0,err.message)
+        })
+        return queryresult
+}
 exports.AddMember =async(Member_Name,Member_FName)=>{
     let queryresult
         const queryMember = cmdqury.AddMember()

@@ -3,6 +3,41 @@ exports.AddMember =()=>{
     INSERT INTO TleDatabase.dbo.[member] (Member_Name,Member_Fname) VALUES (@member_name,@member_fname)
     `
 }
+exports.Editfmember=()=>{
+    return`
+    UPDATE TleDatabase.dbo.[member] SET Member_Fname = @member_fname WHERE ID = @id
+    `
+}
+exports.CheckScoreDelete=()=>{
+    return`
+    SELECT ms.ID  FROM TleDatabase.dbo.[member_score] ms WHERE ms.ID_MEMBER = @id   
+    `
+}
+exports.RemoveMember=()=>{
+    return`
+    DELETE m FROM TleDatabase.dbo.[member] m WHERE m.ID = @id
+    `
+}
+exports.DeleteMemberDepartment=()=>{
+    return`
+    DELETE md FROM TleDatabase.dbo.[member_department] md WHERE md.ID_MEMBER = @id
+    `
+}
+exports.DeleteAllMemberDepartment=()=>{
+    return`
+    DELETE amd FROM TleDatabase.dbo.[all_member_department] amd WHERE amd.ID_MEMBER= @id
+    `
+}
+exports.DeleteMemberScore=()=>{
+    return`
+    DELETE ms FROM TleDatabase.dbo.[member_score] ms WHERE ms.ID_MEMBER = @id   
+    `
+}
+exports.DeleteScore=()=>{
+    return`
+    DELETE s FROM TleDatabase.dbo.[score] s WHERE s.ID_MEMBER = @memberscore
+    `
+}
 exports.CheckMember =()=>{
     return `
     SELECT Member_Name FROM TleDatabase.dbo.[member] WHERE Member_Name = @member 

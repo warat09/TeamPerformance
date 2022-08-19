@@ -37,6 +37,52 @@ exports.AddMember=async(req,res,next)=>{
         return res.status(500).send()
         }
 }
+exports.EditMember=async(req,res,next)=>{
+    try{
+        var id = req.body.id;
+        var uname = req.body.uname;
+        var fname = req.body.fname;
+        var checkmember = await sql.CheckMember(uname);
+        if(Object.keys(checkmember.data).length !== 0){
+            var editmember = await sql.Editfmember(id,fname);
+            if(editmember.status == 1){
+                return res.json({ status:1,message: `Update Memeber ${fname} success`});
+            }
+            else{
+                return res.json({ status:0,message: `Can't Update Member ${fname}`});
+            }
+        }
+    }catch(err){
+        console.log("error is",err);
+        return res.status(500).send()
+    }
+}
+exports.DeleteMember=async(req,res,next)=>{
+    try{
+        var id = req.body.id;
+        var fname = req.body.fname;
+        var checkscore = await sql.CheckDeleteScore(id);
+        for(var i = 0;i<Object.keys(checkscore.data).length;i++){
+            await sql.DeleteScore(checkscore.data[i].ID);
+        }
+        await sql.DeleteMemberScore(id);
+        await sql.DeleteAllMemberDepartment(id);
+        await sql.DeleteMemberDepartment(id);
+        var deletemember = await sql.DeleteMember(id);
+        if(deletemember.status == 1){
+            return res.json({ status:1,message: `Delete Member ${fname} success`});
+        }
+        else{
+            return res.json({ status:0,message: `Can't Delete Member ${fname}`});
+        }
+
+
+    }catch(err){
+        console.log("error is",err);
+        return res.status(500).send()
+    }
+
+}
 exports.AddMemberToDepartment=async(req,res,next)=>{
     try{
         var Id_Member = req.body.member;

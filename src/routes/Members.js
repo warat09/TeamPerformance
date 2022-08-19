@@ -7,6 +7,9 @@ router.post("/AddMemberToDepartment",controller.AddMemberToDepartment)
 router.post("/AddMemberScore",controller.AddMemberScore);
 router.post("/MemberScore",controller.MemberScore);
 router.post("/RemoveScore",controller.RemoveScore);
+router.post("/EditMember",controller.EditMember);
+router.post("/DeleteMember",controller.DeleteMember);
+
 
 
 router.get("/OptionMember",controller.OptionMember);
