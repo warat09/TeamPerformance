@@ -221,6 +221,7 @@ const savejob=async(id,namejob,row)=>{
     let table = document.getElementById('mytable').tBodies[0]
     var edittext = table.rows[row].cells[1];
     var editbutton = table.rows[row].cells[2];
+    var deletebutton = table.rows[row].cells[3];
 
     Swal.fire({
         title: 'Do you want to Save?',
@@ -255,6 +256,7 @@ const savejob=async(id,namejob,row)=>{
                 Swal.fire(`${responseStatus.message}`, '', 'success')
                 edittext.innerHTML = `<td>${inputjob.value}</td>`
                 editbutton.innerHTML=`<td><button onclick="editjob('${id}','${inputjob.value}','${row}')" class="btn edit"><i class='bx bx-edit-alt' ></i></button></td>`
+                deletebutton.innerHTML=`<td><button onclick="deletejob('${id}','${inputjob.value}','${row}')" class="btn delete"><i class='bx bxs-trash-alt'></i></button></td>`
             }
         
         } else if (result.isDenied) {
