@@ -2,7 +2,6 @@ var select = document.getElementById("departments");
 var selectjob = document.getElementById("member")
 
 var form = document.getElementById("form")
-selectjob[0]= new Option("pls select department to add job");
 var checktoken = localStorage.getItem("tokenlogin")
 
 const main =async()=>{
@@ -120,7 +119,8 @@ fetch('http://localhost:9090/Department/AllDepartment')
     console.log(department)
     for (var i=0;i<department.length+1;i++){
         if(i==0){
-          select.options[i] = new Option("selectdepartment");            
+          select.options[i] = new Option("Please Select Department");
+          selectjob[i]= new Option("Please Select Department To Add Job");            
         }
         else{
             select.options[i] = new Option(department[i-1].Department_Name,department[i-1].ID);
@@ -185,7 +185,7 @@ async function myFunction () {
     }
   }
   else{
-    selectjob[0]= new Option("pls select");
+    selectjob[0]= new Option(" Please Select Department To Add Job");
   }
 }
 
@@ -206,18 +206,35 @@ const deletejob=(id,namejob)=>{
     })
 }
 const editjob=(id,namejob,row)=>{
+  var modal = document.getElementById("myModal");
+  modal.style.display = "block";
+  var span = document.getElementsByClassName("closes")[0];
+  span.onclick = function() {
+    modal.style.display = "none";
+  }
+  
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
 
   let table = document.getElementById('mytable').tBodies[0]
   console.log(id,row)
   var editdepartment = table.rows[row].cells[0];
   var edittext = table.rows[row].cells[1];
-  var editbutton = table.rows[row].cells[2];
-  editdepartment.innerHTML = `<td><select id="editdepartment" onchange="editmemberdepartment()"></select></td>` 
-  edittext.innerHTML = `<td><select id="editmember"></select></td>`
-  editbutton.innerHTML=`<td><button onclick="savejob('${id}','${namejob}','${row}')" class="btn save"><i class='bx bxs-save' ></i></button></td>`
+  document.getElementById("inputdepartment").value = editdepartment.innerHTML;
+  document.getElementById("inputmember").value = edittext.innerHTML;
+  console.log(editdepartment.innerHTML,edittext.innerHTML)
+  // var editbutton = table.rows[row].cells[2];
+  // editdepartment.innerHTML = `<td><select id="editdepartment" onchange="editmemberdepartment()"></select></td>` 
+  // edittext.innerHTML = `<td><select id="editmember"></select></td>`
+  // editbutton.innerHTML=`<td><button onclick="savejob('${id}','${namejob}','${row}')" class="btn save"><i class='bx bxs-save' ></i></button></td>`
 
   var editselectdepartment = document.getElementById("editdepartment");
   var editselectmember = document.getElementById("editmember");
+  editselectmember.innerText = null;
 
 
   fetch('http://localhost:9090/Department/AllDepartment')
@@ -228,7 +245,8 @@ const editjob=(id,namejob,row)=>{
     console.log(department)
     for (var i=0;i<department.length+1;i++){
         if(i==0){
-          editselectdepartment.options[i] = new Option("selectsdepartment");            
+          editselectdepartment.options[i] = new Option("Please Select Department");
+          editselectmember[i] = new Option("Please Select Department To Add Job");            
         }
         else{
           editselectdepartment.options[i] = new Option(department[i-1].Department_Name,department[i-1].ID);
@@ -239,20 +257,24 @@ const editjob=(id,namejob,row)=>{
 const editmemberdepartment=async()=>{
   var editselectdepartment = document.getElementById("editdepartment");
   var editselectmember = document.getElementById("editmember");
+  
   editselectmember.innerText = null;
-  if(editselectdepartment.selectedIndex != 0){
+  if(editselectdepartment.selectedIndex == 0){
+    editselectmember[0]= new Option("Please Select Department To Add Job");
+  }
+  else if(editselectdepartment.selectedIndex != 0){
     const response = await fetch('http://localhost:9090/Member/OptionMember?' + new URLSearchParams({
       IdDepartment: editselectdepartment.value
     }))
     const responsedata = await response.json();
     var member = responsedata.member
-    for(j = 0;j<=member.length-1;j++){
+    console.log(member)
+    console.log(member.length)
+    for(j = 0;j<member.length;j++){
       editselectmember[j]= new Option(member[j].Member_Fname,member[j].ID);
     }
   }
-  else{
-    editselectmember[0]= new Option("pls select");
-  }
+  
 }
 const savejob=async(id,namejob,row)=>{
   var inputjob = document.getElementById(`row-${row}_col-1`)
@@ -300,7 +322,16 @@ const savejob=async(id,namejob,row)=>{
       }
   })
 }
-
+const editsubmit=()=>{
+  var select = document.getElementById("editdepartment");
+  var selectjob = document.getElementById("editmember")
+  
+  console.log(select.value,selectjob.value)
+}
+const cancel=()=>{
+  var modal = document.getElementById("myModal");
+  modal.style.display = "none";
+}
 const logout =()=>{
   window.localStorage.clear();
   window.location.href = './login.html'

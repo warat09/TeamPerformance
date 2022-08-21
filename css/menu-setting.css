@@ -38,6 +38,7 @@
 }
 .input-twocenter input:hover[type="submit"] 
 		{
+      transition-duration: 0.4s;
 			background: #305875;
 		}
 .input-center select {
@@ -59,8 +60,14 @@
   border-radius: 10px;
 }
 .input-center input:hover[type="submit"] {
+  transition-duration: 0.4s;
 	background: #305875;
 }
+.input-center input[type="text"]:disabled{
+  background-color:rgb(186, 183, 183);
+  color: #363535;
+}
+
 .input-center button{
   background-color: #58A8DD;
   color: #fff;
@@ -70,13 +77,15 @@
   border-radius: 10px;
 }
 .input-center button:hover{
+  transition-duration: 0.4s;
   background: #305875;
 }
 .input-center button.delete{
   background: #dc3741;
 }
 .input-center button:hover.delete{
-  background: #c8343c;
+  background: #6e1d21;
+  transition-duration: 0.4s;
 }
 .input-twocenter button{
   background-color: #58A8DD;
