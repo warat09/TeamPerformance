@@ -10,8 +10,6 @@ router.post("/RemoveScore",controller.RemoveScore);
 router.post("/EditMember",controller.EditMember);
 router.post("/DeleteMember",controller.DeleteMember);
 
-
-
 router.get("/OptionMember",controller.OptionMember);
 router.get("/OptionMemberDepartment",controller.OptionMemberDepartment);
 router.get("/AllScore",controller.AllScoreTable);

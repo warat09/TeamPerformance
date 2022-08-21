@@ -54,6 +54,152 @@ exports.CheckDepartment =async(input)=>{
         })
         return queryresult
 }
+exports.IdDepartment=async(department)=>{
+    let queryresult
+        const queryDepartment = cmdqury.IdDepartment()
+        const pool = await connection
+        await pool.request()
+        .input("department",mssql.NVarChar(100),department)
+        .query(queryDepartment)
+        .then(res=>{
+            console.log(res.recordset)
+            console.log("YES")
+            queryresult = new Iquery(res.recordset,1,"success")
+
+        }).catch(err=>{
+            console.log("NO")
+            queryresult = new Iquery(res.recordset,0,err.message)
+        })
+        return queryresult
+}
+exports.DeleteDepartment=async(id)=>{
+    let queryresult
+        const queryDepartment = cmdqury.DeleteDepartment()
+        const pool = await connection
+        await pool.request()
+        .input("id",mssql.Int(4),id)
+        .query(queryDepartment)
+        .then(()=>{
+            console.log("YES add")
+            queryresult = new IAdd(1,"success")
+        }).catch(err=>{
+            console.log("no add")
+            queryresult = new IAdd(0,err.message)
+        })
+        return queryresult
+}
+exports.DeleteJobDepartment=async(id)=>{
+    let queryresult
+        const queryDepartment = cmdqury.DeleteJobDepartment()
+        const pool = await connection
+        await pool.request()
+        .input("id",mssql.Int(4),id)
+        .query(queryDepartment)
+        .then(()=>{
+            console.log("YES add")
+            queryresult = new IAdd(1,"success")
+        }).catch(err=>{
+            console.log("no add")
+            queryresult = new IAdd(0,err.message)
+        })
+        return queryresult
+}
+exports.DeleteAllJobDepartment=async(id)=>{
+    let queryresult
+        const queryDepartment = cmdqury.DeleteAllJobDepartment()
+        const pool = await connection
+        await pool.request()
+        .input("id",mssql.Int(4),id)
+        .query(queryDepartment)
+        .then(()=>{
+            console.log("YES add")
+            queryresult = new IAdd(1,"success")
+        }).catch(err=>{
+            console.log("no add")
+            queryresult = new IAdd(0,err.message)
+        })
+        return queryresult
+}
+exports.DeleteMemberDepartment=async(id)=>{
+    let queryresult
+        const queryDepartment = cmdqury.DeleteMemberDepartment()
+        const pool = await connection
+        await pool.request()
+        .input("id",mssql.Int(4),id)
+        .query(queryDepartment)
+        .then(()=>{
+            console.log("YES add")
+            queryresult = new IAdd(1,"success")
+        }).catch(err=>{
+            console.log("no add")
+            queryresult = new IAdd(0,err.message)
+        })
+        return queryresult
+}
+exports.DeleteAllMemberDepartment=async(id)=>{
+    let queryresult
+        const queryDepartment = cmdqury.DeleteAllMemberDepartment()
+        const pool = await connection
+        await pool.request()
+        .input("id",mssql.Int(4),id)
+        .query(queryDepartment)
+        .then(()=>{
+            console.log("YES add")
+            queryresult = new IAdd(1,"success")
+        }).catch(err=>{
+            console.log("no add")
+            queryresult = new IAdd(0,err.message)
+        })
+        return queryresult
+}
+exports.DeleteJobScore=async(id)=>{
+    let queryresult
+        const queryDepartment = cmdqury.DeleteJobScore()
+        const pool = await connection
+        await pool.request()
+        .input("id",mssql.Int(4),id)
+        .query(queryDepartment)
+        .then(()=>{
+            console.log("YES add")
+            queryresult = new IAdd(1,"success")
+        }).catch(err=>{
+            console.log("no add")
+            queryresult = new IAdd(0,err.message)
+        })
+        return queryresult
+}
+exports.DeleteMemberScore=async(id)=>{
+    let queryresult
+        const queryDepartment = cmdqury.DeleteMemberScore()
+        const pool = await connection
+        await pool.request()
+        .input("id",mssql.Int(4),id)
+        .query(queryDepartment)
+        .then(()=>{
+            console.log("YES add")
+            queryresult = new IAdd(1,"success")
+        }).catch(err=>{
+            console.log("no add")
+            queryresult = new IAdd(0,err.message)
+        })
+        return queryresult
+}
+exports.DeleteScore=async(id)=>{
+    let queryresult
+        const queryDepartment = cmdqury.DeleteScore()
+        const pool = await connection
+        await pool.request()
+        .input("id",mssql.Int(4),id)
+        .query(queryDepartment)
+        .then(()=>{
+            console.log("YES add")
+            queryresult = new IAdd(1,"success")
+        }).catch(err=>{
+            console.log("no add")
+            queryresult = new IAdd(0,err.message)
+        })
+        return queryresult
+}
 exports.AllDepartment =async()=>{
     const queryDepartment = cmdqury.AllDepartment()
     const pool = await connection

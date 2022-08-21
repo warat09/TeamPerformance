@@ -7,7 +7,7 @@ exports.AddDepartment=async(req,res,next)=>{
     try{
         sql.CheckDepartment(department).then(result=>{
             if(Object.keys(result.data).length == 0){
-                sql.AddDepartment(department).then(result=>{
+                sql.AddDepartment(department).then(async(result)=>{
                     if(result.status == 1){
                         sqljob.AllJob().then(result=>{
                             console.log("result is ",result)
@@ -23,7 +23,8 @@ exports.AddDepartment=async(req,res,next)=>{
                             }                            
                          })
                         })
-                        
+                        var datadepartment = await sql.IdDepartment(department);
+                        return res.json({ status:1,value:datadepartment.data,message: `Insert department ${department}`});
                     }
                     else{
                         return res.json({ status:0,message: `Can't Insert department ${department}`});
@@ -64,6 +65,33 @@ exports.EditDepartment=async(req,res,next)=>{
         return res.status(500).send()
     }
 
+}
+exports.DeleteDepartment=async(req,res,next)=>{
+    try{
+        var id = req.body.id;
+        var namedepartment = req.body.department;
+        console.log(id,namedepartment)
+        var checkdepartment = await sql.CheckDepartment(namedepartment);
+        if(Object.keys(checkdepartment.data).length != 0){
+            await sql.DeleteScore(id);
+            await sql.DeleteMemberScore(id);
+            await sql.DeleteJobScore(id);
+            await sql.DeleteAllMemberDepartment(id);
+            await sql.DeleteMemberDepartment(id);
+            await sql.DeleteAllJobDepartment(id);
+            await sql.DeleteJobDepartment(id);
+            var DeleteDepartment = await sql.DeleteDepartment(id);
+            if(DeleteDepartment.status == 1){
+                return res.json({ status:1,message: `Delete Department ${namedepartment} success`});
+                }
+                else{
+                    return res.json({ status:0,message: `Can't Delete Department ${namedepartment}`});
+                }
+        }   
+    }catch(err){
+        console.log("error is",err);
+        return res.status(500).send()
+    }
 }
 exports.AllDepartment=async(req,res,next)=>{
     try{

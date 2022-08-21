@@ -55,7 +55,7 @@ exports.CheckMemberAddToDepartment=()=>{
 }
 exports.AllMember=()=>{
     return`
-    SELECT * FROM TleDatabase.dbo.[member]     
+    SELECT * FROM TleDatabase.dbo.[member] m ORDER BY m.ID     
     `
 }
 exports.OptionMember=()=>{
