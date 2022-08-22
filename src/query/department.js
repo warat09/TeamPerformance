@@ -74,6 +74,24 @@ exports.CheckDepartment =async(input)=>{
         })
         return queryresult
 }
+exports.GetIdMemberDepartment=async(department,member)=>{
+    let queryresult
+    const queryDepartment = cmdqury.GetIdMemberDepartment()
+    const pool = await connection
+    await pool.request()
+    .input("member",mssql.NVarChar(100),member)
+    .input("department",mssql.NVarChar(100),department)
+    .query(queryDepartment)
+    .then(res=>{
+        console.log("YES")
+        queryresult = new Iquery(res.recordset,1,"success")
+
+    }).catch(err=>{
+        console.log("NO")
+        queryresult = new Iquery(res.recordset,0,err.message)
+    })
+    return queryresult
+}
 exports.IdDepartment=async(department)=>{
     let queryresult
         const queryDepartment = cmdqury.IdDepartment()
@@ -143,6 +161,22 @@ exports.DeleteAllJobDepartment=async(id)=>{
 exports.DeleteMemberDepartment=async(id)=>{
     let queryresult
         const queryDepartment = cmdqury.DeleteMemberDepartment()
+        const pool = await connection
+        await pool.request()
+        .input("id",mssql.Int(4),id)
+        .query(queryDepartment)
+        .then(()=>{
+            console.log("YES add")
+            queryresult = new IAdd(1,"success")
+        }).catch(err=>{
+            console.log("no add")
+            queryresult = new IAdd(0,err.message)
+        })
+        return queryresult
+}
+exports.DeleteIdMemberDepartment=async(id)=>{
+    let queryresult
+        const queryDepartment = cmdqury.DeleteIdMemberDepartment()
         const pool = await connection
         await pool.request()
         .input("id",mssql.Int(4),id)

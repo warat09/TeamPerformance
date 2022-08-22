@@ -28,6 +28,11 @@ exports.DeleteMemberDepartment=()=>{
     DELETE md FROM TleDatabase.dbo.[member_department] md WHERE md.ID_DEPARTMENT = @id
     `
 }
+exports.DeleteIdMemberDepartment=()=>{
+    return`
+    DELETE md FROM TleDatabase.dbo.[member_department] md WHERE md.ID = @id
+    `
+}
 exports.DeleteAllMemberDepartment=()=>{
     return`
     DELETE amd  FROM TleDatabase.dbo.[all_member_department] amd WHERE amd.ID_DEPARTMENT = @id
@@ -77,6 +82,11 @@ exports.AddAllMemberToDepartment=()=>{
 exports.CheckMemberDepartment=()=>{
     return`
     SELECT d.ID,d.Department_Name FROM TleDatabase.dbo.[member_department] md JOIN TleDatabase.dbo.[member] m ON md.ID_MEMBER = m.ID JOIN TleDatabase.dbo.[department] d ON md.ID_DEPARTMENT = d.ID WHERE m.Member_Name = @member ORDER BY d.ID
+    `
+}
+exports.GetIdMemberDepartment=()=>{
+    return`
+    SELECT md.ID FROM TleDatabase.dbo.[member_department] md JOIN TleDatabase.dbo.[member] m ON m.ID  = md.ID_MEMBER JOIN TleDatabase.dbo.[department] d ON md.ID_DEPARTMENT  = d.ID WHERE d.Department_Name = @department AND m.Member_Fname = @member 
     `
 }
 exports.AllMemberDepartment=()=>{

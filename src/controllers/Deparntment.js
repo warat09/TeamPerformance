@@ -66,6 +66,31 @@ exports.EditDepartment=async(req,res,next)=>{
     }
 
 }
+exports.DeleteMemberDepartment=async(req,res,next)=>{
+    try{
+        var department = req.body.department;
+        var member = req.body.member;
+        console.log(department,member)
+        var idmemberdepartment = await sql.GetIdMemberDepartment(department,member);
+        if(Object.keys(idmemberdepartment.data).length > 0){
+            var deletememberdepartment = await sql.DeleteIdMemberDepartment(idmemberdepartment.data[0].ID);
+            if(deletememberdepartment.status == 1){
+                return res.json({ status:1,message: `Delete Success`});
+            }
+            else{
+                return res.json({ status:0,message: `Can't Delete`});
+            } 
+        }
+        else{
+            return res.json({ status:0,message: `Can't Delete`});
+        }
+
+
+    }catch(err){
+        console.log("error is",err);
+        return res.status(500).send()
+    }
+}
 exports.DeleteDepartment=async(req,res,next)=>{
     try{
         var id = req.body.id;
