@@ -67,6 +67,17 @@
   background-color:rgb(186, 183, 183);
   color: #363535;
 }
+.input-center #label {
+  color: rgba(0,0,0,.99);
+  transition-timing-function: cubic-bezier(.075,.82,.165,1);
+  transition-duration: .5s;
+  position: absolute;
+  width: 100%;
+  text-align: left;
+  font-size: 16px;
+  bottom: 6px;
+  color: #8792a1;
+}
 
 .input-center button{
   background-color: #58A8DD;

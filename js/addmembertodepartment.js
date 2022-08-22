@@ -4,6 +4,7 @@ var selectjob = document.getElementById("member")
 var form = document.getElementById("form")
 var checktoken = localStorage.getItem("tokenlogin")
 
+var editdepartment,editmember,keeprow
 const main =async()=>{
     if(checktoken === null || checktoken == " ") {
     window.location.href = './login.html'
@@ -120,7 +121,7 @@ fetch('http://localhost:9090/Department/AllDepartment')
     for (var i=0;i<department.length+1;i++){
         if(i==0){
           select.options[i] = new Option("Please Select Department");
-          selectjob[i]= new Option("Please Select Department To Add Job");            
+          selectjob[i]= new Option("Please Select Department To Add Member");            
         }
         else{
             select.options[i] = new Option(department[i-1].Department_Name,department[i-1].ID);
@@ -185,14 +186,14 @@ async function myFunction () {
     }
   }
   else{
-    selectjob[0]= new Option(" Please Select Department To Add Job");
+    selectjob[0]= new Option(" Please Select Department To Add Member");
   }
 }
 
 const deletejob=(id,namejob)=>{
   console.log(id,namejob)
   Swal.fire({
-      title: `Do you want to Delete ${namejob}?`,
+      title: `Do you want to Delete?`,
       showDenyButton: true,
       showCancelButton: true,
       confirmButtonText: 'Delete',
@@ -222,11 +223,12 @@ const editjob=(id,namejob,row)=>{
 
   let table = document.getElementById('mytable').tBodies[0]
   console.log(id,row)
-  var editdepartment = table.rows[row].cells[0];
-  var edittext = table.rows[row].cells[1];
-  document.getElementById("inputdepartment").value = editdepartment.innerHTML;
-  document.getElementById("inputmember").value = edittext.innerHTML;
-  console.log(editdepartment.innerHTML,edittext.innerHTML)
+  var rowdepartment = table.rows[row].cells[0];
+  var rowmember = table.rows[row].cells[1];
+  document.getElementById("inputdepartment").value = rowdepartment.innerHTML;
+  document.getElementById("inputmember").value = rowmember.innerHTML;
+  editdepartment = rowdepartment.innerHTML;
+  editmember = rowmember.innerHTML;
   // var editbutton = table.rows[row].cells[2];
   // editdepartment.innerHTML = `<td><select id="editdepartment" onchange="editmemberdepartment()"></select></td>` 
   // edittext.innerHTML = `<td><select id="editmember"></select></td>`
@@ -246,13 +248,14 @@ const editjob=(id,namejob,row)=>{
     for (var i=0;i<department.length+1;i++){
         if(i==0){
           editselectdepartment.options[i] = new Option("Please Select Department");
-          editselectmember[i] = new Option("Please Select Department To Add Job");            
+          editselectmember[i] = new Option("Please Select Department To Add Member");            
         }
         else{
           editselectdepartment.options[i] = new Option(department[i-1].Department_Name,department[i-1].ID);
         }
     }
   } )
+  keeprow = row
 }
 const editmemberdepartment=async()=>{
   var editselectdepartment = document.getElementById("editdepartment");
@@ -260,7 +263,7 @@ const editmemberdepartment=async()=>{
   
   editselectmember.innerText = null;
   if(editselectdepartment.selectedIndex == 0){
-    editselectmember[0]= new Option("Please Select Department To Add Job");
+    editselectmember[0]= new Option("Please Select Department To Add Member");
   }
   else if(editselectdepartment.selectedIndex != 0){
     const response = await fetch('http://localhost:9090/Member/OptionMember?' + new URLSearchParams({
@@ -274,59 +277,59 @@ const editmemberdepartment=async()=>{
       editselectmember[j]= new Option(member[j].Member_Fname,member[j].ID);
     }
   }
-  
 }
-const savejob=async(id,namejob,row)=>{
-  var inputjob = document.getElementById(`row-${row}_col-1`)
-  let table = document.getElementById('mytable').tBodies[0]
-  var edittext = table.rows[row].cells[1];
-  var editbutton = table.rows[row].cells[2];
 
-  Swal.fire({
-      title: 'Do you want to Save?',
-      showDenyButton: true,
-      showCancelButton: true,
-      confirmButtonText: 'Save',
-      denyButtonText: `Don't Save`,
-  }).then(async(result) => {
-      if (result.isConfirmed) {
-      const response = await fetch('http://localhost:9090/Job/EditJob',{
-          method:'post',
-          headers:{   
-              'Content-Type':'application/json'    
-          },
-          body: JSON.stringify({
-              "id":id ,
-              "oldjob":namejob,
-              "newjob":inputjob.value
-          })
-      })
-      const responseStatus = await response.json();
-      console.log(responseStatus)
-          if(responseStatus.status ==0){
-              Swal.fire({
-                  icon: 'error',
-                  title: 'Oops...',
-                  text: `${responseStatus.message}`,
-                  footer: '<a href="">Why do I have this issue?</a>'
-              })
-          }
-          else{
-              Swal.fire(`${responseStatus.message}`, '', 'success')
-              edittext.innerHTML = `<td>${inputjob.value}</td>`
-              editbutton.innerHTML=`<td><button onclick="editjob('${id}','${inputjob.value}','${row}')" class="btn edit"><i class='bx bx-edit-alt' ></i></button></td>`
-          }
-      
-      } else if (result.isDenied) {
-      Swal.fire('Changes are not saved', '', 'info')
-      }
-  })
-}
 const editsubmit=()=>{
   var select = document.getElementById("editdepartment");
   var selectjob = document.getElementById("editmember")
-  
-  console.log(select.value,selectjob.value)
+  Swal.fire({
+    title: 'Do you want to Save?',
+    showDenyButton: true,
+    showCancelButton: true,
+    confirmButtonText: 'Save',
+    denyButtonText: `Don't Save`,
+}).then(async(result) => {
+    if (result.isConfirmed) {
+      console.log(select.value,selectjob.value)
+      console.log(editdepartment,editmember)
+    const response = await fetch('http://localhost:9090/Department/EditMemberDepartment',{
+        method:'post',
+        headers:{   
+            'Content-Type':'application/json'    
+        },
+        body: JSON.stringify({
+            "iddepartment":select.value,
+            "idmember":selectjob.value,
+            "olddepartment":editdepartment,
+            "oldmember":editmember
+        })
+    })
+    const responseStatus = await response.json();
+    console.log(responseStatus)
+        if(responseStatus.status ==0){
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: `${responseStatus.message}`,
+                footer: '<a href="">Why do I have this issue?</a>'
+            })
+        }
+        else{
+            Swal.fire(`${responseStatus.message}`, '', 'success')
+            var modal = document.getElementById("myModal");
+            modal.style.display = "none";
+            let table = document.getElementById('mytable').tBodies[0]
+            var tableeditdepartment = table.rows[keeprow].cells[0];
+            var tableeditmember = table.rows[keeprow].cells[1];
+            console.log(keeprow)
+            tableeditdepartment.innerHTML = `<td>${select[select.selectedIndex].innerText}</td>`
+            tableeditmember.innerHTML=`<td>${selectjob[selectjob.selectedIndex].innerText}</td>`
+        }
+    
+    } else if (result.isDenied) {
+    Swal.fire('Changes are not saved', '', 'info')
+    }
+})
 }
 const cancel=()=>{
   var modal = document.getElementById("myModal");
