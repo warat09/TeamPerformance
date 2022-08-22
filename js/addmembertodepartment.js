@@ -66,9 +66,9 @@ const main =async()=>{
         var tablerow = document.getElementById("mytable").tHead;
         let headerRow = document.createElement('tr');
         let table = document.getElementById('mytable').tBodies[0]
-
         Object.keys(job[0]).forEach((headerText,i) => {
             var newTH = document.createElement('th');
+            console.log(headerText,i)
             if(i ==0){
               newTH.className = "before"
             }
@@ -80,17 +80,17 @@ const main =async()=>{
     headerRow.insertCell(Object.keys(job[0]).length).innerHTML = "Edit"
     headerRow.insertCell(Object.keys(job[0]).length+1).innerHTML = "Delete"
     tablerow.appendChild(headerRow);
-    let id,namejob
+    let department,member
     job.forEach((emp,i) => {
         let row = document.createElement('tr');
         Object.values(emp).forEach((text,i) => {
             let cell = document.createElement('td');
             cell.innerHTML = `${text}`
               if(i == 0){
-                id = text;
+                department = text;
             }
             else if(i ==1){
-                namejob = text
+                member = text
             }
             row.appendChild(cell);
         })
@@ -99,10 +99,10 @@ const main =async()=>{
         let rows = table.rows.length;
 
         
-        celledit.innerHTML = `<button onclick="editjob('${id}','${namejob}','${rows}')" class="btn edit"><i class='bx bx-edit-alt' ></i></button>`
+        celledit.innerHTML = `<button onclick="editjob('${department}','${member}','${rows}')" class="btn edit"><i class='bx bx-edit-alt' ></i></button>`
         
         row.appendChild(celledit);
-        celldelete.innerHTML = `<button onclick="deletejob('${id}','${namejob}')" class="btn delete"><i class='bx bxs-trash-alt'></i></button>`
+        celldelete.innerHTML = `<button onclick="deletejob('${department}','${member}',${rows})" class="btn delete"><i class='bx bxs-trash-alt'></i></button>`
         row.appendChild(celldelete);
 
         table.appendChild(row);
@@ -190,8 +190,8 @@ async function myFunction () {
   }
 }
 
-const deletejob=(id,namejob)=>{
-  console.log(id,namejob)
+const deletejob=(department,member,row)=>{
+  console.log(department,member,row)
   Swal.fire({
       title: `Do you want to Delete?`,
       showDenyButton: true,
@@ -200,7 +200,34 @@ const deletejob=(id,namejob)=>{
       denyButtonText: `Don't Delete`,
     }).then(async(result) => {
       if (result.isConfirmed) {
-          console.log("delete",id,namejob)
+        const response = await fetch('http://localhost:9090/Department/DeleteMemberDepartment',{
+        method:'post',
+        headers:{   
+            'Content-Type':'application/json'    
+        },
+        body: JSON.stringify({
+            "department":department,
+            "member":member,
+        })
+    })
+    const responseStatus = await response.json();
+    console.log(responseStatus)
+        if(responseStatus.status ==0){
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: `${responseStatus.message}`,
+                footer: '<a href="">Why do I have this issue?</a>'
+            })
+        }
+        else{
+            Swal.fire(`${responseStatus.message}`, '', 'success')
+            // var tableeditdepartment = table.rows[keeprow].cells[0];
+            // var tableeditmember = table.rows[keeprow].cells[1];
+            // console.log(keeprow)
+            // tableeditdepartment.innerHTML = `<td>${select[select.selectedIndex].innerText}</td>`
+            // tableeditmember.innerHTML=`<td>${selectjob[selectjob.selectedIndex].innerText}</td>`
+        }
       } else if (result.isDenied) {
         Swal.fire('Changes are not saved', '', 'info')
       }
