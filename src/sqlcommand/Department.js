@@ -40,7 +40,8 @@ exports.DeleteJobScore=()=>{
 }
 exports.DeleteMemberScore=()=>{
     return`
-    DELETE ms FROM TleDatabase.dbo.[member_score] ms WHERE ms.ID_DEPARTMENT = @id
+    DELETE ms FROM TleDatabas
+    e.dbo.[member_score] ms WHERE ms.ID_DEPARTMENT = @id
     `
 }
 exports.DeleteScore=()=>{
@@ -86,5 +87,10 @@ exports.AllMemberDepartment=()=>{
 exports.AllJobDepartment=()=>{
     return`
     SELECT d.Department_Name,j.JOB  FROM TleDatabase.dbo.[job_department] jd JOIN TleDatabase.dbo.[job] j ON j.ID = jd.ID_JOB JOIN TleDatabase.dbo.[department] d ON jd.ID_DEPARTMENT = d.ID ORDER BY jd.ID_DEPARTMENT 
+    `
+}
+exports.EditMemberDepartment=()=>{
+    return`
+    UPDATE TleDatabase.dbo.[member_department] SET ID_MEMBER = @idmember,ID_DEPARTMENT = @iddepartment WHERE ID_DEPARTMENT = (SELECT d.ID FROM TleDatabase.dbo.[department] d WHERE d.Department_Name = @department) AND ID_MEMBER  = (SELECT m.ID FROM TleDatabase.dbo.[member] m WHERE m.Member_Fname = @member)
     `
 }

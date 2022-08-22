@@ -82,11 +82,11 @@ exports.DeleteDepartment=async(req,res,next)=>{
             await sql.DeleteJobDepartment(id);
             var DeleteDepartment = await sql.DeleteDepartment(id);
             if(DeleteDepartment.status == 1){
-                return res.json({ status:1,message: `Delete Department ${namedepartment} success`});
+               return res.json({ status:1,message: `Delete Department ${namedepartment} success`});
                 }
                 else{
                     return res.json({ status:0,message: `Can't Delete Department ${namedepartment}`});
-                }
+                } 
         }   
     }catch(err){
         console.log("error is",err);
@@ -135,4 +135,23 @@ exports.AllMemberDepartment=async(req,res,next)=>{
         console.log("error is",err);
         return res.status(500).send()
         }
+}
+exports.EditMemberDepartment=async(req,res,next)=>{
+    try{
+        var iddepartment = req.body.iddepartment;
+        var idmember = req.body.idmember;
+        var olddepartment = req.body.olddepartment;
+        var oldmember = req.body.oldmember
+
+        var editmemberdepartment = await sql.EditMemberDepartment(iddepartment,idmember,olddepartment,oldmember);
+        if(editmemberdepartment.status == 1){
+            return res.json({ status:1,message: `Update Success`});
+        }
+        else{
+            return res.json({ status:0,message: `Can't Update`});
+        }
+    }catch(err){
+        console.log("error is",err);
+        return res.status(500).send()
+    }
 }
