@@ -8,6 +8,16 @@ exports.EditDepartment=()=>{
     UPDATE TleDatabase.dbo.[department] SET Department_Name = @department WHERE ID = @id
     `
 }
+exports.DeleteScoreJob=()=>{
+    return`
+    DELETE s FROM TleDatabase.dbo.[score] s WHERE s.ID_JOB = @id 
+    `
+}
+exports.DeleteScoreMember=()=>{
+    return`
+    DELETE s FROM TleDatabase.dbo.[score] s WHERE s.ID_MEMBER = @id 
+    `
+}
 exports.DeleteDepartment=()=>{
     return`
     DELETE d FROM TleDatabase.dbo.[department] d WHERE d.ID = @id 
@@ -28,6 +38,11 @@ exports.DeleteMemberDepartment=()=>{
     DELETE md FROM TleDatabase.dbo.[member_department] md WHERE md.ID_DEPARTMENT = @id
     `
 }
+exports.DeleteIdJobDepartment=()=>{
+    return`
+    DELETE jd FROM TleDatabase.dbo.[job_department] jd WHERE jd.ID = @id
+    `
+}
 exports.DeleteIdMemberDepartment=()=>{
     return`
     DELETE md FROM TleDatabase.dbo.[member_department] md WHERE md.ID = @id
@@ -45,13 +60,32 @@ exports.DeleteJobScore=()=>{
 }
 exports.DeleteMemberScore=()=>{
     return`
-    DELETE ms FROM TleDatabas
-    e.dbo.[member_score] ms WHERE ms.ID_DEPARTMENT = @id
+    DELETE ms FROM TleDatabase.dbo.[member_score] ms WHERE ms.ID_DEPARTMENT = @id
+    `
+}
+exports.DeleteJobScoreId=()=>{
+    return`
+    DELETE js FROM TleDatabase.dbo.[job_score] js WHERE js.ID = @id
+    `
+}
+exports.DeleteMemberScoreId=()=>{
+    return`
+    DELETE ms FROM TleDatabase.dbo.[member_score] ms WHERE ms.ID = @id
     `
 }
 exports.DeleteScore=()=>{
     return`
     DELETE s FROM TleDatabase.dbo.[score] s WHERE s.ID_JOB  = (SELECT js.ID  FROM TleDatabase.dbo.[job_score] js WHERE js.ID_DEPARTMENT = @id) OR s.ID_MEMBER = (SELECT ms.ID  FROM TleDatabase.dbo.[member_score] ms WHERE ms.ID_DEPARTMENT = @id)
+    `
+}
+exports.CheckJobScore=()=>{
+    return`
+    SELECT js.ID  FROM TleDatabase.dbo.[job_score] js WHERE ID_JOB = (SELECT j.ID FROM TleDatabase.dbo.[job] j WHERE j.JOB = @job)  AND ID_DEPARTMENT = (SELECT d.ID FROM TleDatabase.dbo.[department] d WHERE d.Department_Name = @department)
+    `
+}
+exports.CheckMemberScore =()=>{
+    return `
+    SELECT ms.ID  FROM TleDatabase.dbo.[member_score] ms WHERE ID_MEMBER = (SELECT m.id FROM TleDatabase.dbo.[member] m WHERE m.Member_Fname = @member)  AND ID_DEPARTMENT = (SELECT d.ID FROM TleDatabase.dbo.[department] d WHERE d.Department_Name = @department)
     `
 }
 exports.CheckDepartment =()=>{
@@ -84,6 +118,11 @@ exports.CheckMemberDepartment=()=>{
     SELECT d.ID,d.Department_Name FROM TleDatabase.dbo.[member_department] md JOIN TleDatabase.dbo.[member] m ON md.ID_MEMBER = m.ID JOIN TleDatabase.dbo.[department] d ON md.ID_DEPARTMENT = d.ID WHERE m.Member_Name = @member ORDER BY d.ID
     `
 }
+exports.GetIdJobDepartment=()=>{
+    return`
+    SELECT jd.ID FROM TleDatabase.dbo.[job_department] jd JOIN TleDatabase.dbo.[job] j ON j.ID  = jd.ID_JOB JOIN TleDatabase.dbo.[department] d ON jd.ID_DEPARTMENT  = d.ID WHERE d.Department_Name = @department AND j.JOB = @job
+    `
+}
 exports.GetIdMemberDepartment=()=>{
     return`
     SELECT md.ID FROM TleDatabase.dbo.[member_department] md JOIN TleDatabase.dbo.[member] m ON m.ID  = md.ID_MEMBER JOIN TleDatabase.dbo.[department] d ON md.ID_DEPARTMENT  = d.ID WHERE d.Department_Name = @department AND m.Member_Fname = @member 
@@ -97,6 +136,11 @@ exports.AllMemberDepartment=()=>{
 exports.AllJobDepartment=()=>{
     return`
     SELECT d.Department_Name,j.JOB  FROM TleDatabase.dbo.[job_department] jd JOIN TleDatabase.dbo.[job] j ON j.ID = jd.ID_JOB JOIN TleDatabase.dbo.[department] d ON jd.ID_DEPARTMENT = d.ID ORDER BY jd.ID_DEPARTMENT 
+    `
+}
+exports.EditJobDepartment=()=>{
+    return`
+    UPDATE TleDatabase.dbo.[job_department] SET ID_JOB = @idjob,ID_DEPARTMENT = @iddepartment WHERE ID_DEPARTMENT = (SELECT d.ID FROM TleDatabase.dbo.[department] d WHERE d.Department_Name = @department) AND ID_JOB  = (SELECT j.ID FROM TleDatabase.dbo.[job] j WHERE j.JOB = @job)
     `
 }
 exports.EditMemberDepartment=()=>{

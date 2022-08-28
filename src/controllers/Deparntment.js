@@ -1,6 +1,7 @@
 const sql = require("../query/department");
 const sqljob = require("../query/job")
-const sqlmember = require("../query/member")
+const sqlmember = require("../query/member");
+const { DeleteScore } = require("../sqlcommand/Department");
 
 exports.AddDepartment=async(req,res,next)=>{
     var department = req.body.department;
@@ -66,13 +67,46 @@ exports.EditDepartment=async(req,res,next)=>{
     }
 
 }
+exports.DeleteJobDepartment=async(req,res,next)=>{
+    try{
+        var department = req.body.department;
+        var job = req.body.job;
+        console.log(job,department)
+        var idjobdepartment = await sql.GetIdJobDepartment(department,job);
+        if(Object.keys(idjobdepartment.data).length > 0){
+            var checkjobscore = await sql.CheckJobScore(job,department);
+            if(Object.keys(checkjobscore.data).length > 0){
+                await sql.DeleteScoreJob(checkjobscore.data[0].ID);
+                await sql.DeleteJobScoreId(checkjobscore.data[0].ID);
+            }
+            var deletejobdepartment = await sql.DeleteIdJobDepartment(idjobdepartment.data[0].ID);
+            if(deletejobdepartment.status == 1){
+                return res.json({ status:1,message: `Delete Success`});
+            }
+            else{
+                return res.json({ status:0,message: `Can't Delete`});
+            } 
+        }
+        else{
+            return res.json({ status:0,message: `Can't Delete`});
+        }
+    }catch(err){
+        console.log("error is",err);
+        return res.status(500).send()
+    }
+}
 exports.DeleteMemberDepartment=async(req,res,next)=>{
     try{
         var department = req.body.department;
         var member = req.body.member;
-        console.log(department,member)
         var idmemberdepartment = await sql.GetIdMemberDepartment(department,member);
         if(Object.keys(idmemberdepartment.data).length > 0){
+            var checkmemberscore = await sql.CheckMemberScore(member,department);
+            if(Object.keys(checkmemberscore.data).length > 0){
+                console.log(checkmemberscore.data)
+                await sql.DeleteScoreMember(checkmemberscore.data[0].ID);
+                await sql.DeleteMemberScoreId(checkmemberscore.data[0].ID);
+            }
             var deletememberdepartment = await sql.DeleteIdMemberDepartment(idmemberdepartment.data[0].ID);
             if(deletememberdepartment.status == 1){
                 return res.json({ status:1,message: `Delete Success`});
@@ -84,8 +118,6 @@ exports.DeleteMemberDepartment=async(req,res,next)=>{
         else{
             return res.json({ status:0,message: `Can't Delete`});
         }
-
-
     }catch(err){
         console.log("error is",err);
         return res.status(500).send()
@@ -160,6 +192,25 @@ exports.AllMemberDepartment=async(req,res,next)=>{
         console.log("error is",err);
         return res.status(500).send()
         }
+}
+exports.EditJobDepartment=async(req,res,next)=>{
+    try{
+        var iddepartment = req.body.iddepartment;
+        var idjob = req.body.idjob;
+        var olddepartment = req.body.olddepartment;
+        var oldjob = req.body.oldjob
+
+        var editjobdepartment = await sql.EditJobDepartment(iddepartment,idjob,olddepartment,oldjob);
+        if(editjobdepartment.status == 1){
+            return res.json({ status:1,message: `Update Success`});
+        }
+        else{
+            return res.json({ status:0,message: `Can't Update`});
+        }
+    }catch(err){
+        console.log("error is",err);
+        return res.status(500).send()
+    }
 }
 exports.EditMemberDepartment=async(req,res,next)=>{
     try{
