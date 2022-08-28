@@ -160,7 +160,6 @@ form.addEventListener("submit",async(event)=>{
                 cell2.innerHTML = responseStatus.value[0].JOB;
                 cell3.innerHTML = `<button onclick="editjob('${responseStatus.value[0].ID}','${responseStatus.value[0].JOB}','${rows}')" class="btn edit"><i class='bx bx-edit-alt' ></i></button>`
                 cell4.innerHTML = `<button onclick="deletejob('${responseStatus.value[0].ID}','${responseStatus.value[0].JOB}','${rows}')" class="btn delete"><i class='bx bxs-trash-alt'></i></button>`
-
             }
         
         } else if (result.isDenied) {

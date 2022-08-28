@@ -139,6 +139,7 @@ fetch('http://localhost:9090/Department/AllDepartment')
         confirmButtonText: 'Add',
         denyButtonText: `Don't Add`,
       }).then(async(result) => {
+        var table = document.getElementById('mytable').tBodies[0]
         if (result.isConfirmed) {
           const response = await fetch('http://localhost:9090/Member/AddMemberToDepartment',{
             method:'post',
@@ -163,7 +164,8 @@ fetch('http://localhost:9090/Department/AllDepartment')
             }
             else{
                 selectjob.remove(selectjob.selectedIndex)
-                Swal.fire(`${responseStatus.message}`, '', 'success')
+                await Swal.fire(`${responseStatus.message}`, '', 'success')
+                location.reload();
             }
         
         } else if (result.isDenied) {
@@ -190,8 +192,8 @@ async function myFunction () {
   }
 }
 
-const deletejob=(department,member,row)=>{
-  console.log(department,member,row)
+const deletejob=(department,member,rows)=>{
+  console.log(department,member,rows)
   Swal.fire({
       title: `Do you want to Delete?`,
       showDenyButton: true,
@@ -222,11 +224,7 @@ const deletejob=(department,member,row)=>{
         }
         else{
             Swal.fire(`${responseStatus.message}`, '', 'success')
-            // var tableeditdepartment = table.rows[keeprow].cells[0];
-            // var tableeditmember = table.rows[keeprow].cells[1];
-            // console.log(keeprow)
-            // tableeditdepartment.innerHTML = `<td>${select[select.selectedIndex].innerText}</td>`
-            // tableeditmember.innerHTML=`<td>${selectjob[selectjob.selectedIndex].innerText}</td>`
+            document.getElementById('mytable').tBodies[0].deleteRow(rows)
         }
       } else if (result.isDenied) {
         Swal.fire('Changes are not saved', '', 'info')
@@ -256,10 +254,6 @@ const editjob=(id,namejob,row)=>{
   document.getElementById("inputmember").value = rowmember.innerHTML;
   editdepartment = rowdepartment.innerHTML;
   editmember = rowmember.innerHTML;
-  // var editbutton = table.rows[row].cells[2];
-  // editdepartment.innerHTML = `<td><select id="editdepartment" onchange="editmemberdepartment()"></select></td>` 
-  // edittext.innerHTML = `<td><select id="editmember"></select></td>`
-  // editbutton.innerHTML=`<td><button onclick="savejob('${id}','${namejob}','${row}')" class="btn save"><i class='bx bxs-save' ></i></button></td>`
 
   var editselectdepartment = document.getElementById("editdepartment");
   var editselectmember = document.getElementById("editmember");

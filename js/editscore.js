@@ -547,7 +547,7 @@ const removework=async()=> {
                                     row[j].deleteCell(i);
                                 }
                                 selectjob.add(select.options[select.selectedIndex])
-                                select.remove(i-1)
+                                console.log("11111111111111111111112",i)
                                 Swal.fire(
                                     'Deleted!',
                                     `${responseStatus.message}`,
